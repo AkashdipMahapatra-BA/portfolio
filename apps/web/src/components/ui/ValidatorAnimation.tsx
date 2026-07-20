@@ -1,15 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   User, GitBranch, Cloud, Search, FileSpreadsheet,
   CheckCircle2, ArrowRight, Zap, Database, Network,
   Server, Shield,
 } from "lucide-react";
+import { useRandomAnimation } from "@/hooks/useRandomAnimation";
 
-const PHASE_DURATION = 3500; // ms per phase
+const PHASE_DURATION = 3500;
 const TOTAL_PHASES = 3;
-const LOOP_DURATION = PHASE_DURATION * TOTAL_PHASES; // full loop = 10500ms
 
 const S = {
   root: {
@@ -121,8 +121,7 @@ function Phase({
   );
 }
 
-/* Timeline bar — fills over one full loop (all 3 phases), resets on loop restart */
-function TimelineBar({ phase, loopKey }: { phase: number; loopKey: number }) {
+function TimelineBar({ phase, loopKey, loopDuration }: { phase: number; loopKey: number; loopDuration: number }) {
   return (
     <div
       style={{
@@ -161,7 +160,7 @@ function TimelineBar({ phase, loopKey }: { phase: number; loopKey: number }) {
           top: 0,
           height: "100%",
           background: "var(--color-accent)",
-          animation: `progress-bar ${LOOP_DURATION}ms linear forwards`,
+          animation: `progress-bar ${loopDuration}ms linear forwards`,
           opacity: 0.7,
         }}
       />
@@ -170,19 +169,7 @@ function TimelineBar({ phase, loopKey }: { phase: number; loopKey: number }) {
 }
 
 export default function ValidatorAnimation() {
-  const [phase, setPhase] = useState(0);
-  const [loopKey, setLoopKey] = useState(0);
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      setPhase((p) => {
-        const next = (p + 1) % TOTAL_PHASES;
-        if (next === 0) setLoopKey((k) => k + 1); // new loop starting
-        return next;
-      });
-    }, PHASE_DURATION);
-    return () => clearInterval(id);
-  }, []);
+  const { phase, loopKey, phaseDuration } = useRandomAnimation(TOTAL_PHASES, PHASE_DURATION);
 
   return (
     <div style={S.root}>
@@ -335,7 +322,7 @@ export default function ValidatorAnimation() {
       </div>
 
       {/* ── Timeline bar ── */}
-      <TimelineBar phase={phase} loopKey={loopKey} />
+      <TimelineBar phase={phase} loopKey={loopKey} loopDuration={phaseDuration * TOTAL_PHASES} />
     </div>
   );
 }

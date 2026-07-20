@@ -4,10 +4,10 @@ import {
   Bot, Brain, Search, Database, ShieldCheck, User,
   MessageSquare, Sparkles, CheckCircle2, ArrowRight, BookOpen,
 } from "lucide-react";
+import { useRandomAnimation } from "@/hooks/useRandomAnimation";
 
 const PHASE_DURATION = 3500;
 const TOTAL_PHASES = 3;
-const LOOP_DURATION = PHASE_DURATION * TOTAL_PHASES;
 
 const S = {
   root: {
@@ -57,7 +57,7 @@ function Phase({ active, children, translateY = 0 }: { active: boolean; children
   );
 }
 
-function TimelineBar({ phase, loopKey }: { phase: number; loopKey: number }) {
+function TimelineBar({ phase, loopKey, loopDuration }: { phase: number; loopKey: number; loopDuration: number }) {
   return (
     <div style={{ position: "relative", height: "3px", background: "color-mix(in srgb, var(--color-accent) 15%, transparent)", flexShrink: 0 }}>
       {Array.from({ length: TOTAL_PHASES }).map((_, i) => (
@@ -70,7 +70,7 @@ function TimelineBar({ phase, loopKey }: { phase: number; loopKey: number }) {
       ))}
       <div key={loopKey} style={{
         position: "absolute", left: 0, top: 0, height: "100%", background: "var(--color-accent)",
-        animation: `progress-bar ${LOOP_DURATION}ms linear forwards`, opacity: 0.7,
+        animation: `progress-bar ${loopDuration}ms linear forwards`, opacity: 0.7,
       }} />
     </div>
   );
@@ -79,8 +79,7 @@ function TimelineBar({ phase, loopKey }: { phase: number; loopKey: number }) {
 export default function GenAIAnimation() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
-  const [phase, setPhase] = useState(0);
-  const [loopKey, setLoopKey] = useState(0);
+  const { phase, loopKey, phaseDuration } = useRandomAnimation(TOTAL_PHASES, PHASE_DURATION);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -92,17 +91,6 @@ export default function GenAIAnimation() {
     });
     observer.observe(containerRef.current);
     return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      setPhase((p) => {
-        const next = (p + 1) % TOTAL_PHASES;
-        if (next === 0) setLoopKey((k) => k + 1);
-        return next;
-      });
-    }, PHASE_DURATION);
-    return () => clearInterval(id);
   }, []);
 
   return (
@@ -216,7 +204,7 @@ export default function GenAIAnimation() {
         </Phase>
 
       </div>
-      <TimelineBar phase={phase} loopKey={loopKey} />
+      <TimelineBar phase={phase} loopKey={loopKey} loopDuration={phaseDuration * TOTAL_PHASES} />
     </div>
   );
 }
