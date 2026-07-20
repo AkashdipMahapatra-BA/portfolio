@@ -2,6 +2,11 @@
 
 import { useEffect, useRef } from "react";
 import { registerGSAP, gsap } from "@/lib/gsap-init";
+import ValidatorAnimation from "@/components/ui/ValidatorAnimation";
+import HealthCheckAnimation from "@/components/ui/HealthCheckAnimation";
+import VulnerabilityAnimation from "@/components/ui/VulnerabilityAnimation";
+import DataDumpAnimation from "@/components/ui/DataDumpAnimation";
+import GenAIAnimation from "@/components/ui/GenAIAnimation";
 
 /* ─── Types & Data ───────────────────────────────────────────────────────── */
 interface Project {
@@ -189,25 +194,58 @@ function ProjectCard({ project }: { project: Project }) {
           fontSize: "0.8rem",
           color: "var(--color-muted)",
           lineHeight: 1.7,
-          flex: project.image ? "none" : 1,
+          flex: "none",
         }}
       >
         {project.description}
       </p>
 
-      {/* Architecture diagram — 16:9, only rendered when image is provided */}
-      {project.image && (
+      {/* Validator animation — p1 only */}
+      {project.id === "p1" && (
+        <div style={{ flex: 1, minHeight: "140px" }}>
+          <ValidatorAnimation />
+        </div>
+      )}
+
+      {/* Health-check animation — p2 only */}
+      {project.id === "p2" && (
+        <div style={{ flex: 1, minHeight: "140px" }}>
+          <HealthCheckAnimation />
+        </div>
+      )}
+
+      {/* Vulnerability animation — p3 only */}
+      {project.id === "p3" && (
+        <div style={{ flex: 1, minHeight: "140px" }}>
+          <VulnerabilityAnimation />
+        </div>
+      )}
+
+      {/* Data-dump animation — p4 only */}
+      {project.id === "p4" && (
+        <div style={{ flex: 1, minHeight: "140px" }}>
+          <DataDumpAnimation />
+        </div>
+      )}
+
+      {/* GenAI animation — p5 only */}
+      {project.id === "p5" && (
+        <div style={{ flex: 1, minHeight: "140px" }}>
+          <GenAIAnimation />
+        </div>
+      )}
+
+      {/* Architecture diagram — fallback for any future projects */}
+      {project.id !== "p1" && project.id !== "p2" && project.id !== "p3" && project.id !== "p4" && project.id !== "p5" && project.image && (
         <div
-          ref={(el) => {
-            if (el) el.style.display = "block";
-          }}
+          ref={(el) => { if (el) el.style.display = "flex"; }}
           style={{
             width: "100%",
-            aspectRatio: "16 / 9",
+            flex: 1,
+            minHeight: "120px",
             borderRadius: "0.375rem",
             overflow: "hidden",
             border: "1px solid var(--color-border)",
-            flex: 1,
           }}
         >
           <img
