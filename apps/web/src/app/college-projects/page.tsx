@@ -404,12 +404,12 @@ export default function CollegeProjectsPage() {
       {(
         [
           { label: "Development", id: "development" },
-          { label: "IoT", id: "iot" },
-          { label: "Networking", id: "networking" },
-          { label: "H@cking", id: "hacking" },
+          { label: "IoT",         id: "iot"         },
+          { label: "Networking",  id: "networking"  },
+          { label: "H@cking",     id: "hacking"     },
         ] as const
       ).map(({ label, id }) => (
-        <div key={id} className="category">
+        <div key={id} id={id} className="category">
           <h2>{label}</h2>
           <div className="projects">
             {byCategory(label).map((project, i) => (
@@ -591,12 +591,11 @@ export default function CollegeProjectsPage() {
         <div className="modal-overlay" onClick={() => setSubmitModal(false)}>
           <div
             className="modal-content"
-            style={{ maxWidth: 500 }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="concluded-content">
               <h2>Voucher Program Concluded</h2>
-              <p>
+              <p style={{ lineHeight: "1.6", marginBottom: "20px" }}>
                 Thank you for your interest! During my college years, I
                 distributed GitHub vouchers to encourage students to contribute
                 to these open-source projects. Since I graduated in 2025, this
@@ -607,7 +606,27 @@ export default function CollegeProjectsPage() {
             </div>
             <button
               onClick={() => setSubmitModal(false)}
-              style={{ marginTop: 20, color: "#ff9800", cursor: "pointer", background: "none", border: "none", fontSize: "0.95rem" }}
+              style={{
+                display: "block",
+                margin: "0 auto",
+                padding: "8px 24px",
+                color: "#ff9800",
+                cursor: "pointer",
+                background: "transparent",
+                border: "1.5px solid #ff9800",
+                borderRadius: "999px",
+                fontSize: "0.9rem",
+                fontWeight: 600,
+                transition: "background 0.2s, color 0.2s",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.background = "#ff9800";
+                (e.currentTarget as HTMLButtonElement).style.color = "#fff";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.background = "transparent";
+                (e.currentTarget as HTMLButtonElement).style.color = "#ff9800";
+              }}
             >
               Close
             </button>
@@ -620,11 +639,10 @@ export default function CollegeProjectsPage() {
         <div className="modal-overlay" onClick={() => setTermsModal(false)}>
           <div
             className="modal-content"
-            style={{ maxWidth: 600 }}
             onClick={(e) => e.stopPropagation()}
           >
             <h3 style={{ marginBottom: 15 }}>🎓 Terms and Conditions</h3>
-            <ul style={{ paddingLeft: 20, fontSize: "0.9rem", color: "#ddd" }}>
+            <ul style={{ paddingLeft: 20, fontSize: "0.9rem", color: "#ddd", textAlign: "left" }}>
               <li>This time I am a final year B.Tech Mechanical Engineering student.</li>
               <li>And because I am a GitHub Campus Expert, I get the vouchers 🎟️.</li>
               <li>So I give those vouchers to students who have a hunger to create something new.</li>
@@ -635,7 +653,18 @@ export default function CollegeProjectsPage() {
             </ul>
             <button
               onClick={() => setTermsModal(false)}
-              style={{ marginTop: 15, color: "#ff9800", cursor: "pointer", background: "none", border: "none", fontSize: "0.95rem" }}
+              style={{
+                display: "block",
+                margin: "15px auto 0",
+                padding: "8px 24px",
+                color: "#ff9800",
+                cursor: "pointer",
+                background: "transparent",
+                border: "1.5px solid #ff9800",
+                borderRadius: "999px",
+                fontSize: "0.9rem",
+                fontWeight: 600,
+              }}
             >
               Close
             </button>

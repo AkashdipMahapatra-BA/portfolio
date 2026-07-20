@@ -1,16 +1,28 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
-const NAV_LINKS = [
+const MAIN_NAV = [
   { label: "Experience", href: "#experience" },
   { label: "Projects",   href: "#projects"   },
   { label: "Education",  href: "#education"  },
   { label: "Contact",    href: "#contact"    },
 ];
 
+const COLLEGE_NAV = [
+  { label: "Development", href: "#development" },
+  { label: "IoT",         href: "#iot"         },
+  { label: "Networking",  href: "#networking"  },
+  { label: "H@cking",     href: "#hacking"     },
+];
+
 export function Navbar() {
+  const pathname = usePathname();
+  const isCollegePage = pathname === "/college-projects";
+  const navLinks = isCollegePage ? COLLEGE_NAV : MAIN_NAV;
+
   return (
     <header
       className="glass"
@@ -35,7 +47,7 @@ export function Navbar() {
           gap: "1rem",
         }}
       >
-        {/* Logo */}
+        {/* Logo — always links back to home */}
         <Link
           href="/"
           style={{
@@ -51,7 +63,7 @@ export function Navbar() {
           akashdip<span style={{ color: "var(--color-muted)" }}>.</span>
         </Link>
 
-        {/* Nav links — hidden on small screens */}
+        {/* Nav links — swap based on current page */}
         <ul
           style={{
             display: "flex",
@@ -62,7 +74,7 @@ export function Navbar() {
           }}
           className="hidden-mobile"
         >
-          {NAV_LINKS.map(({ label, href }) => (
+          {navLinks.map(({ label, href }) => (
             <li key={href}>
               <a
                 href={href}
