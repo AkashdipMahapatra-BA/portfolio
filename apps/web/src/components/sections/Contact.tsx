@@ -64,7 +64,7 @@ export function Contact() {
           {/* Contact meta */}
           <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
             {[
-              { label: "Location", value: "London, UK" },
+              { label: "Location", value: "Chennai, India" },
               { label: "Availability", value: "Open to opportunities" },
               { label: "Response time", value: "< 24 hours" },
             ].map(({ label, value }) => (
