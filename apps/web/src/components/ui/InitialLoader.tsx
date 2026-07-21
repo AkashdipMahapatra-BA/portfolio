@@ -25,19 +25,23 @@ export default function InitialLoader({ onComplete }: { onComplete: () => void }
     document.documentElement.style.overflow = "hidden";
     document.body.style.overflow = "hidden";
 
-    // How much time has already passed since page navigation started
-    const elapsed = performance.now();
-    const remaining = Math.max(0, 3500 - elapsed);
+    // Dismiss as soon as HTML + scripts are ready — don't wait for images
+    if (document.readyState === "interactive" || document.readyState === "complete") {
+      dismiss();
+    } else {
+      document.addEventListener("DOMContentLoaded", dismiss);
+    }
 
-    // Show override after 3.5s from page start (may fire immediately if already past)
-    const overrideTimer = setTimeout(() => setShowOverride(true), remaining);
+    // Fallback: force dismiss after 4s no matter what
+    const fallbackTimer = setTimeout(dismiss, 4000);
 
-    // Only dismiss when ALL network resources finish — never on readyState
-    window.addEventListener("load", dismiss);
+    // Show override hint after 2.5s
+    const overrideTimer = setTimeout(() => setShowOverride(true), 2500);
 
     return () => {
+      clearTimeout(fallbackTimer);
       clearTimeout(overrideTimer);
-      window.removeEventListener("load", dismiss);
+      document.removeEventListener("DOMContentLoaded", dismiss);
       document.documentElement.style.overflow = "";
       document.body.style.overflow = "";
     };
