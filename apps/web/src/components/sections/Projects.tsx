@@ -107,11 +107,20 @@ export function Projects() {
     <section
       ref={sectionRef}
       id="projects"
-      style={{ overflow: "hidden", background: "var(--color-bg)", position: "relative" }}
+      style={{
+        overflow: "hidden",
+        background: "var(--color-bg)",
+        position: "relative",
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "flex-start",
+        paddingTop: "3.5rem",
+      }}
     >
       <ScrollHint />
       {/* Section header */}
-      <div style={{ maxWidth: "72rem", margin: "0 auto", padding: "4rem 1.5rem 2rem" }}>
+      <div style={{ padding: "1.25rem 3rem 0.75rem" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
           <span
             style={{
@@ -144,9 +153,11 @@ export function Projects() {
         style={{
           display: "flex",
           gap: "1.5rem",
-          padding: "0 3rem 4rem",
+          padding: "0 3rem 1.25rem",
           width: "max-content",
           alignItems: "stretch",
+          flex: 1,
+          minHeight: 0,
         }}
       >
         {PROJECTS.map((project) => (
@@ -163,13 +174,16 @@ function ProjectCard({ project }: { project: Project }) {
     <article
       className="card"
       style={{
-        width: "clamp(280px, 30vw, 360px)",
+        width: "clamp(280px, 28vw, 340px)",
         flexShrink: 0,
-        padding: "1.5rem",
+        padding: "1.25rem",
         display: "flex",
         flexDirection: "column",
-        gap: "1rem",
+        gap: "0.75rem",
         transition: "border-color 0.2s ease",
+        height: "100%",
+        overflow: "hidden",
+        boxSizing: "border-box",
       }}
       onMouseEnter={(e) =>
         ((e.currentTarget as HTMLElement).style.borderColor = "var(--color-accent)")
@@ -202,40 +216,14 @@ function ProjectCard({ project }: { project: Project }) {
         {project.description}
       </p>
 
-      {/* Validator animation — p1 only */}
-      {project.id === "p1" && (
-        <div style={{ flex: 1, minHeight: "140px" }}>
-          <ValidatorAnimation />
-        </div>
-      )}
-
-      {/* Health-check animation — p2 only */}
-      {project.id === "p2" && (
-        <div style={{ flex: 1, minHeight: "140px" }}>
-          <HealthCheckAnimation />
-        </div>
-      )}
-
-      {/* Vulnerability animation — p3 only */}
-      {project.id === "p3" && (
-        <div style={{ flex: 1, minHeight: "140px" }}>
-          <VulnerabilityAnimation />
-        </div>
-      )}
-
-      {/* Data-dump animation — p4 only */}
-      {project.id === "p4" && (
-        <div style={{ flex: 1, minHeight: "140px" }}>
-          <DataDumpAnimation />
-        </div>
-      )}
-
-      {/* GenAI animation — p5 only */}
-      {project.id === "p5" && (
-        <div style={{ flex: 1, minHeight: "140px" }}>
-          <GenAIAnimation />
-        </div>
-      )}
+      {/* Animation — fills all remaining space between description and metric */}
+      <div style={{ flex: 1, minHeight: 0, overflow: "hidden" }}>
+        {project.id === "p1" && <ValidatorAnimation />}
+        {project.id === "p2" && <HealthCheckAnimation />}
+        {project.id === "p3" && <VulnerabilityAnimation />}
+        {project.id === "p4" && <DataDumpAnimation />}
+        {project.id === "p5" && <GenAIAnimation />}
+      </div>
 
       {/* Architecture diagram — fallback for any future projects */}
       {project.id !== "p1" && project.id !== "p2" && project.id !== "p3" && project.id !== "p4" && project.id !== "p5" && project.image && (
@@ -262,9 +250,10 @@ function ProjectCard({ project }: { project: Project }) {
         </div>
       )}
 
-      {/* Impact metric — Before → After */}
+      {/* Impact metric — always visible, never shrinks */}
       <div
         style={{
+          flexShrink: 0,
           borderRadius: "0.5rem",
           padding: "0.75rem 1rem",
           background: "color-mix(in srgb, var(--color-accent) 8%, transparent)",
@@ -309,8 +298,8 @@ function ProjectCard({ project }: { project: Project }) {
         </div>
       </div>
 
-      {/* Tags */}
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "0.35rem" }}>
+      {/* Tags — always visible, never shrinks */}
+      <div style={{ flexShrink: 0, display: "flex", flexWrap: "wrap", gap: "0.35rem" }}>
         {project.tags.map((t) => (
           <span key={t} className="tag" style={{ fontSize: "0.65rem" }}>
             {t}
