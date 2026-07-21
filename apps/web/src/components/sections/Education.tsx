@@ -64,6 +64,161 @@ const CERTIFICATIONS: Certification[] = [
   },
 ];
 
+/* ─── Shimmer Button ────────────────────────────────────────────────────── */
+const shimmerStyles = `
+  @keyframes shimmer-btn {
+    0%     { transform: translateX(-150%) skewX(-20deg); opacity: 1; }
+    20%    { transform: translateX(150%)  skewX(-20deg); opacity: 1; }
+    20.01% { transform: translateX(-150%) skewX(-20deg); opacity: 1; }
+    33%    { transform: translateX(150%)  skewX(-20deg); opacity: 1; }
+    33.01% { transform: translateX(150%)  skewX(-20deg); opacity: 1; }
+    44%    { transform: translateX(-150%) skewX(-20deg); opacity: 1; }
+    44.01% { opacity: 0; }
+    100%   { opacity: 0; transform: translateX(-150%) skewX(-20deg); }
+  }
+  @keyframes shimmer-btn-2 {
+    0%     { transform: translateX(-150%) skewX(-20deg); opacity: 0; }
+    20%    { transform: translateX(-150%) skewX(-20deg); opacity: 0; }
+    20.01% { opacity: 1; }
+    33%    { transform: translateX(150%)  skewX(-20deg); opacity: 1; }
+    33.01% { transform: translateX(150%)  skewX(-20deg); opacity: 1; }
+    44%    { transform: translateX(-150%) skewX(-20deg); opacity: 1; }
+    44.01% { opacity: 0; }
+    100%   { opacity: 0; transform: translateX(-150%) skewX(-20deg); }
+  }
+  .edu-btn-row {
+    display: flex;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+    align-items: center;
+  }
+  .edu-btn {
+    white-space: nowrap;
+  }
+  .pub-btn-row {
+    display: flex;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 1rem;
+  }
+  @media (max-width: 600px) {
+    .edu-btn-row,
+    .pub-btn-row {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .edu-btn {
+      width: 100% !important;
+      justify-content: center;
+      white-space: normal;
+      text-align: center;
+    }
+  }
+`;
+
+function ShimmerButton({
+  href, label, external, accent, delay, paused, onHoverChange,
+}: {
+  href: string;
+  label: string;
+  external?: boolean;
+  accent: "slate" | "red";
+  delay: number;
+  paused: boolean;
+  onHoverChange: (hovered: boolean) => void;
+}) {
+  const [hovered, setHovered] = useState(false);
+  const isRed = accent === "red";
+  const shimmerState = paused ? "paused" : "running";
+
+  const handleEnter = () => { setHovered(true); onHoverChange(true); };
+  const handleLeave = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    setHovered(false);
+    onHoverChange(false);
+    (e.currentTarget as HTMLElement).style.transform = "scale(1)";
+  };
+  return (
+    <a
+      href={href}
+      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+      className="edu-btn"
+      style={{
+        textDecoration: "none",
+        position: "relative",
+        overflow: "hidden",
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "0.45rem 1rem",
+        borderRadius: "0.5rem",
+        fontSize: "0.72rem",
+        fontWeight: 500,
+        fontFamily: "var(--font-mono)",
+        letterSpacing: "0.02em",
+        userSelect: "none",
+        cursor: "pointer",
+        backdropFilter: "blur(10px)",
+        WebkitBackdropFilter: "blur(10px)",
+        background: hovered
+          ? (isRed ? "rgba(220,38,38,0.2)" : "rgba(255,255,255,0.1)")
+          : (isRed ? "rgba(220,38,38,0.1)" : "rgba(255,255,255,0.05)"),
+        border: `1px solid ${isRed ? "rgba(220,38,38,0.35)" : "rgba(255,255,255,0.12)"}`,
+        color: hovered ? (isRed ? "#fecaca" : "#fff") : (isRed ? "#fca5a5" : "#cbd5e1"),
+        boxShadow: "0 4px 15px rgba(0,0,0,0.15)",
+        transition: "background 0.2s ease, color 0.2s ease, transform 0.1s ease",
+      }}
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
+      onMouseDown={(e) => ((e.currentTarget as HTMLElement).style.transform = "scale(0.96)")}
+      onMouseUp={(e) => ((e.currentTarget as HTMLElement).style.transform = "scale(1)")}
+    >
+      {/* shimmer layer 1 */}
+      <span aria-hidden style={{
+        position: "absolute", inset: 0, pointerEvents: "none",
+        background: isRed
+          ? "linear-gradient(105deg, transparent 35%, rgba(255,150,150,0.45) 50%, transparent 65%)"
+          : "linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.35) 50%, transparent 65%)",
+        animation: `shimmer-btn 6s ease-in-out ${delay}s infinite`,
+        animationPlayState: shimmerState,
+      }} />
+      {/* shimmer layer 2 */}
+      <span aria-hidden style={{
+        position: "absolute", inset: 0, pointerEvents: "none",
+        background: isRed
+          ? "linear-gradient(105deg, transparent 35%, rgba(255,150,150,0.3) 50%, transparent 65%)"
+          : "linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.22) 50%, transparent 65%)",
+        animation: `shimmer-btn-2 6s ease-in-out ${delay}s infinite`,
+        animationPlayState: shimmerState,
+      }} />
+      {label}
+    </a>
+  );
+}
+
+function BtechButtons() {
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+  const buttons = [
+    { href: "/college-projects", label: "🔬 Mechanical Engineering Projects ↗", accent: "slate" as const, external: false, delay: 0 },
+    { href: "https://www.youtube.com/playlist?list=PL_RecMEcs_p-5UwLqFBFtat90L8IOc1bZ", label: "▶ IoT & Engineering Projects — YouTube", accent: "red" as const, external: true, delay: 0.8 },
+    { href: "https://www.youtube.com/playlist?list=PL_RecMEcs_p__J3GSHkKfLjC08q0NmWtR", label: "▶ Mechanical Projects — YouTube", accent: "red" as const, external: true, delay: 1.6 },
+  ];
+  return (
+    <div style={{ display: "flex", gap: "0.65rem", flexWrap: "wrap", marginTop: "1rem", alignItems: "center" }}
+         className="edu-btn-row">
+      {buttons.map((btn, i) => (
+        <ShimmerButton
+          key={btn.href}
+          {...btn}
+          paused={hoveredIdx !== null && hoveredIdx !== i}
+          onHoverChange={(h) => setHoveredIdx(h ? i : null)}
+        />
+      ))}
+    </div>
+  );
+}
+
 /* ─── Component ─────────────────────────────────────────────────────────── */
 export function Education() {
   return (
@@ -136,6 +291,10 @@ export function Education() {
               automation projects as a self-directed initiative.
             </p>
 
+            {/* ── B.Tech project buttons ── */}
+            <style>{shimmerStyles}</style>
+            <BtechButtons />
+
             {/* ── Final-year publication ── */}
             <div
               style={{
@@ -190,14 +349,92 @@ export function Education() {
                 Abhijit Mallick, Akashdip Mahapatra, Suman Maji, Vikash Kumar, Debamalya Ghosh,
                 Jhumpa De
               </p>
-              <a
-                href="https://scholar.google.com/citations?view_op=view_citation&hl=en&user=EQqm0DEAAAAJ&sortby=pubdate&citation_for_view=EQqm0DEAAAAJ:YOwf2qJgpHMC"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 mt-4 rounded-lg bg-white/5 border border-white/10 backdrop-blur-md text-xs font-medium text-slate-300 hover:bg-white/10 hover:text-white transition-all duration-300 shadow-[0_4px_15px_rgba(0,0,0,0.1)]"
-              >
-                Verify Publication on Google Scholar ↗
-              </a>
+              <div className="pub-btn-row">
+                <a
+                  href="https://scholar.google.com/citations?view_op=view_citation&hl=en&user=EQqm0DEAAAAJ&sortby=pubdate&citation_for_view=EQqm0DEAAAAJ:YOwf2qJgpHMC"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="edu-btn"
+                  style={{
+                    textDecoration: "none",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "0.45rem 1rem",
+                    borderRadius: "0.5rem",
+                    fontSize: "0.72rem",
+                    fontWeight: 500,
+                    fontFamily: "var(--font-mono)",
+                    letterSpacing: "0.02em",
+                    userSelect: "none",
+                    cursor: "pointer",
+                    backdropFilter: "blur(10px)",
+                    WebkitBackdropFilter: "blur(10px)",
+                    background: "rgba(212,175,55,0.08)",
+                    border: "1px solid rgba(212,175,55,0.25)",
+                    color: "#e8d48b",
+                    boxShadow: "0 4px 15px rgba(0,0,0,0.15)",
+                    transition: "background 0.2s ease, color 0.2s ease, transform 0.1s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    const el = e.currentTarget as HTMLElement;
+                    el.style.background = "rgba(212,175,55,0.16)";
+                    el.style.color = "#f5e6a3";
+                  }}
+                  onMouseLeave={(e) => {
+                    const el = e.currentTarget as HTMLElement;
+                    el.style.background = "rgba(212,175,55,0.08)";
+                    el.style.color = "#e8d48b";
+                    el.style.transform = "scale(1)";
+                  }}
+                  onMouseDown={(e) => ((e.currentTarget as HTMLElement).style.transform = "scale(0.96)")}
+                  onMouseUp={(e) => ((e.currentTarget as HTMLElement).style.transform = "scale(1)")}
+                >
+                  Verify Publication on Google Scholar ↗
+                </a>
+                <a
+                  href="https://orcid.org/0009-0002-3839-5290"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="edu-btn"
+                  style={{
+                    textDecoration: "none",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "0.45rem 1rem",
+                    borderRadius: "0.5rem",
+                    fontSize: "0.72rem",
+                    fontWeight: 500,
+                    fontFamily: "var(--font-mono)",
+                    letterSpacing: "0.02em",
+                    userSelect: "none",
+                    cursor: "pointer",
+                    backdropFilter: "blur(10px)",
+                    WebkitBackdropFilter: "blur(10px)",
+                    background: "rgba(38,180,80,0.08)",
+                    border: "1px solid rgba(38,180,80,0.25)",
+                    color: "#86efac",
+                    boxShadow: "0 4px 15px rgba(0,0,0,0.15)",
+                    transition: "background 0.2s ease, color 0.2s ease, transform 0.1s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    const el = e.currentTarget as HTMLElement;
+                    el.style.background = "rgba(38,180,80,0.16)";
+                    el.style.color = "#bbf7d0";
+                  }}
+                  onMouseLeave={(e) => {
+                    const el = e.currentTarget as HTMLElement;
+                    el.style.background = "rgba(38,180,80,0.08)";
+                    el.style.color = "#86efac";
+                    el.style.transform = "scale(1)";
+                  }}
+                  onMouseDown={(e) => ((e.currentTarget as HTMLElement).style.transform = "scale(0.96)")}
+                  onMouseUp={(e) => ((e.currentTarget as HTMLElement).style.transform = "scale(1)")}
+                >
+                  ORCID Profile ↗
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -248,9 +485,6 @@ export function Education() {
             style={{ textDecoration: "none" }}
           >
             Verify Credentials on Credly ↗
-          </a>
-          <a href="/college-projects" className="btn-accent" style={{ textDecoration: "none" }}>
-            View College Projects Archive
           </a>
         </div>
       </div>
