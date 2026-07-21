@@ -7,6 +7,7 @@ import HealthCheckAnimation from "@/components/ui/HealthCheckAnimation";
 import VulnerabilityAnimation from "@/components/ui/VulnerabilityAnimation";
 import DataDumpAnimation from "@/components/ui/DataDumpAnimation";
 import GenAIAnimation from "@/components/ui/GenAIAnimation";
+import ScrollHint from "@/components/ui/ScrollHint";
 
 /* ─── Types & Data ───────────────────────────────────────────────────────── */
 interface Project {
@@ -106,8 +107,9 @@ export function Projects() {
     <section
       ref={sectionRef}
       id="projects"
-      style={{ overflow: "hidden", background: "var(--color-bg)" }}
+      style={{ overflow: "hidden", background: "var(--color-bg)", position: "relative" }}
     >
+      <ScrollHint />
       {/* Section header */}
       <div style={{ maxWidth: "72rem", margin: "0 auto", padding: "4rem 1.5rem 2rem" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
