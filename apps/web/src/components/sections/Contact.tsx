@@ -1,3 +1,5 @@
+"use client";
+import { useEffect, useRef, useState } from "react";
 import { ContactForm } from "@/components/ui/ContactForm";
 
 const contactStyles = `
@@ -60,42 +62,185 @@ const contactStyles = `
     .contact-photo-meta {
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
+      align-items: center;
       gap: 2rem;
     }
   }
 `;
 
+/* ─── Squiggly ring helpers ───────────────────────────────────────────── */
+
+// Build a wavy closed path around a circle — shape is fixed per lap, not per frame
+function buildSquigglyPath(cx: number, cy: number, r: number, seed: number): string {
+  const rng = (n: number) => Math.abs(Math.sin(seed * 9301 + n * 49297) % 1);
+  const waves = 11;
+  const steps = waves * 10;
+  const pts: Array<[number, number]> = [];
+  for (let i = 0; i <= steps; i++) {
+    const angle = (i / steps) * Math.PI * 2 - Math.PI / 2;
+    const wavePhase = (i / steps) * waves * Math.PI * 2;
+    const amp = 4 + rng(i) * 4;
+    const offset = amp * Math.sin(wavePhase);
+    const pr = r + offset;
+    pts.push([cx + pr * Math.cos(angle), cy + pr * Math.sin(angle)]);
+  }
+  const first = pts[0]!;
+  let d = `M ${first[0].toFixed(2)} ${first[1].toFixed(2)}`;
+  for (let i = 1; i < pts.length - 1; i++) {
+    const p = pts[i]!;
+    const n = pts[i + 1]!;
+    const mx = (p[0] + n[0]) / 2;
+    const my = (p[1] + n[1]) / 2;
+    d += ` Q ${p[0].toFixed(2)} ${p[1].toFixed(2)} ${mx.toFixed(2)} ${my.toFixed(2)}`;
+  }
+  d += " Z";
+  return d;
+}
+
 function ProfilePhoto({ size = 140 }: { size?: number }) {
   const r1 = size / 2 + 12;
   const r2 = size / 2 + 20;
   const total = (r2 + 8) * 2;
+  const cx = total / 2;
+  const cy = total / 2;
+
+  const pathRef = useRef<SVGPathElement>(null);
+  const [squigglyActive, setSquigglyActive] = useState(false);
+  const [strokeColor, setStrokeColor] = useState("var(--color-accent)");
+
+  useEffect(() => {
+    let animId: number;
+    let timeoutId: ReturnType<typeof setTimeout>;
+
+    const pickColor = () => {
+      const isDark = document.documentElement.classList.contains("dark") ||
+        window.matchMedia("(prefers-color-scheme: dark)").matches;
+      // dark: 80% accent (blue), 20% yellow; light: 80% yellow, 20% accent
+      const useYellow = isDark ? Math.random() < 0.2 : Math.random() < 0.8;
+      return useYellow ? "#f5c518" : "var(--color-accent)";
+    };
+
+const runSquiggly = () => {
+      if (!pathRef.current) { scheduleNext(); return; }
+
+      const color = pickColor();
+      setStrokeColor(color);
+      setSquigglyActive(true);
+
+      const laps = 1 + Math.floor(Math.random() * 3);
+      let lapsLeft = laps;
+
+      const startLap = () => {
+        if (!pathRef.current) { setSquigglyActive(false); scheduleNext(); return; }
+
+        const seed = Math.random() * 1000;
+        pathRef.current.setAttribute("d", buildSquigglyPath(cx, cy, r2 - 4, seed));
+        const len = pathRef.current.getTotalLength();
+        const speed = 1.2 + Math.random() * 2.0; // deg/frame, random per lap
+
+        // arc length visible = fraction of full circumference
+        // arcLen grows during phase1, shrinks during phase2
+        // dashoffset shifts the start point of the visible arc forward
+        let headDeg = 0;  // how far the head has travelled (0→360)
+        let tailDeg = 0;  // how far the tail has travelled (0→360, lags behind head)
+        let phase: "draw" | "erase" = "draw";
+
+        const tick = () => {
+          if (!pathRef.current) { setSquigglyActive(false); scheduleNext(); return; }
+
+          if (phase === "draw") {
+            headDeg = Math.min(headDeg + speed, 360);
+            // arc = from tailDeg to headDeg
+            const arcLen = ((headDeg - tailDeg) / 360) * len;
+            const offset = len - (tailDeg / 360) * len;
+            pathRef.current.style.strokeDasharray = `${arcLen} ${len - arcLen}`;
+            pathRef.current.style.strokeDashoffset = `${offset}`;
+
+            if (headDeg >= 360) phase = "erase";
+            animId = requestAnimationFrame(tick);
+
+          } else {
+            // tail catches up to head (head is fixed at 360 = start point)
+            tailDeg = Math.min(tailDeg + speed, 360);
+            const arcLen = Math.max(((360 - tailDeg) / 360) * len, 0);
+            const offset = len - (tailDeg / 360) * len;
+            pathRef.current.style.strokeDasharray = `${arcLen} ${len - arcLen}`;
+            pathRef.current.style.strokeDashoffset = `${offset}`;
+
+            if (tailDeg >= 360) {
+              lapsLeft--;
+              if (lapsLeft > 0) {
+                animId = requestAnimationFrame(startLap);
+              } else {
+                setSquigglyActive(false);
+                scheduleNext();
+              }
+              return;
+            }
+            animId = requestAnimationFrame(tick);
+          }
+        };
+        animId = requestAnimationFrame(tick);
+      };
+
+      startLap();
+    };
+
+    const scheduleNext = () => {
+      const delay = 4000 + Math.random() * 8000;
+      timeoutId = setTimeout(runSquiggly, delay);
+    };
+
+    timeoutId = setTimeout(runSquiggly, 1000 + Math.random() * 2000);
+
+    return () => {
+      cancelAnimationFrame(animId);
+      clearTimeout(timeoutId);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div style={{ position: "relative", width: total, height: total, flexShrink: 0 }}>
-      {/* outer dashed ring */}
-      <div style={{
-        position: "absolute",
-        top: "50%", left: "50%",
-        width: r2 * 2, height: r2 * 2,
-        marginTop: -r2, marginLeft: -r2,
-        borderRadius: "50%",
-        border: "1px dashed color-mix(in srgb, var(--color-accent) 30%, transparent)",
-        pointerEvents: "none",
-      }} />
-      {/* inner dashed ring */}
-      <div style={{
-        position: "absolute",
-        top: "50%", left: "50%",
-        width: r1 * 2, height: r1 * 2,
-        marginTop: -r1, marginLeft: -r1,
-        borderRadius: "50%",
-        border: "1px dashed color-mix(in srgb, var(--color-accent) 18%, transparent)",
-        pointerEvents: "none",
-      }} />
 
-      {/* 3 outer orbiting dots */}
-      {[0, 1, 2].map((i) => (
+      <svg
+        width={total} height={total}
+        style={{ position: "absolute", inset: 0, pointerEvents: "none", overflow: "visible" }}
+      >
+        {/* outer dashed ring — hidden during squiggly */}
+        {!squigglyActive && (
+          <circle cx={cx} cy={cy} r={r2}
+            fill="none"
+            stroke="color-mix(in srgb, var(--color-accent) 30%, transparent)"
+            strokeWidth="1"
+            strokeDasharray="4 4"
+          />
+        )}
+        {/* inner dashed ring — always visible */}
+        <circle cx={cx} cy={cy} r={r1}
+          fill="none"
+          stroke="color-mix(in srgb, var(--color-accent) 18%, transparent)"
+          strokeWidth="1"
+          strokeDasharray="3 5"
+        />
+        {/* squiggly ring — drawn progressively via dashoffset */}
+        <path
+          ref={pathRef}
+          fill="none"
+          stroke={strokeColor}
+          strokeWidth="3.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          style={{
+            filter: `drop-shadow(0 0 1.5px ${strokeColor})`,
+            opacity: squigglyActive ? 0.95 : 0,
+            transition: "opacity 0.3s",
+          }}
+        />
+      </svg>
+
+      {/* orbiting dots — hidden during squiggly */}
+      {!squigglyActive && [0, 1, 2].map((i) => (
         <div key={`o${i}`} style={{
           position: "absolute",
           top: "50%", left: "50%",
@@ -116,9 +261,7 @@ function ProfilePhoto({ size = 140 }: { size?: number }) {
           }} />
         </div>
       ))}
-
-      {/* 2 inner reverse dots */}
-      {[0, 1].map((i) => (
+      {!squigglyActive && [0, 1].map((i) => (
         <div key={`i${i}`} style={{
           position: "absolute",
           top: "50%", left: "50%",
@@ -149,7 +292,7 @@ function ProfilePhoto({ size = 140 }: { size?: number }) {
         borderRadius: "50%",
         overflow: "hidden",
         border: "3px solid color-mix(in srgb, var(--color-accent) 50%, transparent)",
-        boxShadow: "0 0 24px color-mix(in srgb, var(--color-accent) 20%, transparent), 0 8px 32px rgba(0,0,0,0.4)",
+        boxShadow: "0 0 10px color-mix(in srgb, var(--color-accent) 12%, transparent), 3px 4px 0px rgba(0,0,0,0.10)",
         filter: "saturate(1.1) contrast(1.05)",
       }}>
         <img
@@ -225,7 +368,7 @@ export function Contact() {
             </div>
 
             {/* Meta — on mobile/tablet sits on the LEFT */}
-            <div className="contact-meta-list" style={{ order: 1 }}>
+            <div className="contact-meta-list" style={{ order: 1, alignSelf: "flex-start" }}>
               <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
                 {META.map(({ label, value }) => (
                   <div key={label} style={{ display: "flex", gap: "0.5rem", alignItems: "baseline", flexWrap: "wrap" }}>
