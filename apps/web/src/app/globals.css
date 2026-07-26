@@ -274,11 +274,18 @@ body {
 
 /* In Dark Mode: Translucent light backdrop track so all dark logos (Ollama, GitHub, Vercel, etc.) & text pop with 100% crisp visibility */
 [data-theme="dark"] .hero-ribbon-wrapper {
-  background: rgba(245, 243, 239, 0.88);
+  background: rgba(245, 243, 239, 0.88); /* Desktop default: 0.88 opacity */
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-top: 1px solid rgba(255, 255, 255, 0.15);
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Mobile responsive override: 0.70 opacity on screens 768px and under */
+@media (max-width: 768px) {
+  [data-theme="dark"] .hero-ribbon-wrapper {
+    background: rgba(245, 243, 239, 0.70);
+  }
 }
 
 [data-theme="dark"] .hero-ribbon-wrapper .hero-ribbon-item {
