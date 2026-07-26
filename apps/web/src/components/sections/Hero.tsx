@@ -82,7 +82,7 @@ export function Hero() {
             </div>
 
             {/* Terminal body */}
-            <div style={{ padding: "1.75rem 1.75rem 2rem" }}>
+            <div className="hero-body" style={{ padding: "1.75rem 1.75rem 2rem" }}>
 
               {/* Prompt line */}
               <p
@@ -91,6 +91,7 @@ export function Hero() {
                   fontSize: "0.8rem",
                   color: "var(--color-muted)",
                   marginBottom: "1.25rem",
+                  overflowWrap: "anywhere",
                 }}
               >
                 <span style={{ color: "var(--color-accent)" }}>akashdip@cloud</span>
@@ -104,11 +105,13 @@ export function Hero() {
               <h1
                 style={{
                   fontFamily: "var(--font-mono)",
-                  fontSize: "clamp(1.1rem, 3vw, 1.5rem)",
+                  fontSize: "clamp(1rem, 4vw, 1.5rem)",
                   fontWeight: 700,
                   color: "var(--color-text)",
                   marginBottom: "1.5rem",
                   lineHeight: 1.4,
+                  overflowWrap: "anywhere",
+                  wordBreak: "break-word",
                 }}
               >
                 {/* ▶ replay button — inline so text wraps naturally beside it */}

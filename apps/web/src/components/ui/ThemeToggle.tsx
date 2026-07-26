@@ -9,7 +9,7 @@ export function ThemeToggle() {
 
   // Avoid hydration mismatch — render only after mount
   useEffect(() => setMounted(true), []);
-  if (!mounted) return <div className="w-8 h-8" />;
+  if (!mounted) return <div style={{ width: "2rem", height: "2rem", flexShrink: 0 }} />;
 
   const isDark = theme === "dark";
 

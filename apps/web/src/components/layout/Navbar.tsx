@@ -36,15 +36,17 @@ export function Navbar() {
       }}
     >
       <nav
+        className="nav-container"
         style={{
           maxWidth: "72rem",
           margin: "0 auto",
           height: "100%",
-          padding: "0 1.5rem",
+          padding: "0 1rem",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          gap: "1rem",
+          gap: "0.5rem",
+          width: "100%",
         }}
       >
         {/* Logo — always links back to home */}

@@ -95,6 +95,8 @@ const shimmerStyles = `
   }
   .edu-btn {
     white-space: nowrap;
+    max-width: 100%;
+    box-sizing: border-box;
   }
   .pub-btn-row {
     display: flex;
@@ -112,7 +114,8 @@ const shimmerStyles = `
     .edu-btn {
       width: 100% !important;
       justify-content: center;
-      white-space: normal;
+      white-space: normal !important;
+      word-break: break-word;
       text-align: center;
     }
   }

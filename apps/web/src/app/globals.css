@@ -64,6 +64,8 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 body {
@@ -72,6 +74,9 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
 
   /* ── Geometric SVG grid background ──────────────────────────────────────
      Inline SVG data-URI: 40×40 grid with a single cross-hair dot at origin.
@@ -123,6 +128,8 @@ body {
 
 @media (max-width: 640px) {
   .hidden-mobile { display: none !important; }
+  .hero-body { padding: 1.25rem 1rem 1.5rem !important; }
+  section { padding-left: 1rem !important; padding-right: 1rem !important; }
 }
 
 .tag {
@@ -180,3 +187,59 @@ body {
 }
 .animate-swipe-up    { animation: swipe-up 1.5s ease-in-out infinite; }
 .animate-scroll-wheel { animation: scroll-wheel 1.5s ease-in-out infinite; }
+
+/* ── Other Domains Section ─────────────────────────────────── */
+
+/* Scrollable row — always horizontally scrollable so every column is reachable */
+.domains-scroll-container {
+  display: flex;
+  flex-direction: row;
+  gap: 1.25rem;
+  width: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 0.75rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+.domains-scroll-container::-webkit-scrollbar { height: 4px; }
+.domains-scroll-container::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 2px;
+}
+
+/* Each column card */
+.domain-col {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  width: min(82vw, 320px);    /* Mobile: one column almost full-width */
+}
+
+/* Portrait / narrow (≥ 600px) — 2 columns fit per screen */
+@media (min-width: 600px) {
+  .domain-col { width: min(46vw, 340px); }
+}
+
+/* Landscape laptop / standard desktop (≥ 1024px) — 3 columns per screen */
+@media (min-width: 1024px) and (max-aspect-ratio: 2/1) {
+  .domain-col { width: min(30vw, 380px); }
+}
+
+/* Ultra-wide / high-res (≥ 1536px OR aspect-ratio > 2:1) — 4 columns per screen */
+@media (min-width: 1536px) {
+  .domain-col { width: calc(25% - 1rem); }
+}
+@media (min-aspect-ratio: 2/1) and (min-width: 1200px) {
+  .domain-col { width: calc(25% - 1rem); }
+}
+
+/* Scroll hint — visible only on mobile/tablet where not all columns fit in view */
+.domains-scroll-hint { display: block; }
+@media (min-width: 1536px) {
+  .domains-scroll-hint { display: none; }
+}
+@media (min-aspect-ratio: 2/1) and (min-width: 1200px) {
+  .domains-scroll-hint { display: none; }
+}
+
