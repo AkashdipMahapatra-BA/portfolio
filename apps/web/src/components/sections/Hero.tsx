@@ -2,8 +2,81 @@
 
 import { useState, useEffect, useRef } from "react";
 import InitialLoader from "@/components/ui/InitialLoader";
+import {
+  SolidWorksLogo,
+  JenkinsLogo,
+  GithubLogo,
+  DatadogLogo,
+  WiresharkLogo,
+  TerraformLogo,
+  DockerLogo,
+  LinuxLogo,
+  KaliLinuxLogo,
+  AwsLogo,
+  AwsLambdaLogo,
+  GcpLogo,
+  AzureLogo,
+  VercelLogo,
+  NetlifyLogo,
+  PythonLogo,
+  FastApiLogo,
+  NginxLogo,
+  ApacheKafkaLogo,
+  Auth0Logo,
+  SalesforceLogo,
+  OllamaLogo,
+  HuggingFaceLogo,
+  QdrantLogo,
+  Neo4jLogo,
+  RedisLogo,
+  SqLiteLogo,
+} from "@/components/ui/BrandLogos";
 
 const FULL_TEXT = "Akashdip Mahapatra | Data Engineer & Cloud Automation Specialist";
+
+const TECH_STACK = [
+  // ⚙️ CAD & Design - not related to cloud but have knowledge
+  { name: "SolidWorks", icon: SolidWorksLogo },
+  { name: "Salesforce", icon: SalesforceLogo },
+
+  // 🛠️ CI/CD, Observability & Networking
+  { name: "Jenkins", icon: JenkinsLogo },
+  { name: "GitHub Actions", icon: GithubLogo },
+  { name: "Datadog", icon: DatadogLogo },
+  { name: "Wireshark", icon: WiresharkLogo },
+
+  // 🧱 IaC, Containers & Operating Systems
+  { name: "Terraform", icon: TerraformLogo },
+  { name: "Docker", icon: DockerLogo },
+  { name: "Linux (Ubuntu/RHEL)", icon: LinuxLogo },
+  { name: "Kali Linux", icon: KaliLinuxLogo },
+
+  // ☁️ Cloud Platforms & Serverless
+  { name: "AWS", icon: AwsLogo },
+  // { name: "AWS Lambda", icon: AwsLambdaLogo },
+  { name: "GCP", icon: GcpLogo },
+  { name: "Azure", icon: AzureLogo },
+  { name: "Vercel", icon: VercelLogo },
+  { name: "Netlify", icon: NetlifyLogo },
+
+  // 🐍 Backend, APIs, Streaming & Enterprise
+  { name: "Python (Boto3)", icon: PythonLogo },
+  { name: "FastAPI", icon: FastApiLogo },
+  { name: "Nginx", icon: NginxLogo },
+  { name: "Apache Kafka", icon: ApacheKafkaLogo },
+  { name: "Auth0", icon: Auth0Logo },
+
+  // 🤖 AI/LLMs & Vector/Graph/SQL Databases
+  { name: "Ollama", icon: OllamaLogo },
+  { name: "Hugging Face", icon: HuggingFaceLogo },
+  { name: "Qdrant", icon: QdrantLogo },
+  { name: "Neo4j", icon: Neo4jLogo },
+  { name: "Redis / Valkey", icon: RedisLogo },
+  { name: "SQLite", icon: SqLiteLogo },
+];
+
+// Duplicate the array so the marquee seamlessly loops without snapping
+const LOOPED_STACK = [...TECH_STACK, ...TECH_STACK];
 
 export function Hero() {
   const [startTyping, setStartTyping] = useState(false);
@@ -165,9 +238,40 @@ export function Hero() {
                   marginBottom: "2rem",
                 }}
               >
-                Building unbreakable, scalable systems. Transitioned from Mechanical Engineering
-                to engineering enterprise cloud pipelines and Agentic AI.
+                Building unbreakable, scalable cloud systems. Specializing in infrastructure automation, deep-stack observability, and orchestrating Enterprise Agentic AI.
               </p>
+
+              {/* Infinite Tech Stack Ribbon */}
+              <div className="hero-ribbon-wrapper">
+                <div className="hero-ribbon-content">
+                  {LOOPED_STACK.map((tech, i) => (
+                    <div 
+                      key={i} 
+                      className="hero-ribbon-item"
+                      style={{ 
+                        display: "flex", 
+                        alignItems: "center", 
+                        gap: "0.65rem", 
+                        transition: "color 0.3s ease",
+                        cursor: "default"
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.color = "var(--color-accent)"}
+                      onMouseLeave={(e) => e.currentTarget.style.color = "var(--color-muted)"}
+                    >
+                      <tech.icon size={24} />
+                      <span style={{ 
+                        fontFamily: "var(--font-mono)", 
+                        fontSize: "0.95rem", 
+                        fontWeight: 700, 
+                        letterSpacing: "0.05em",
+                        whiteSpace: "nowrap"
+                      }}>
+                        {tech.name}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
               {/* CTA row */}
               <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap", alignItems: "center" }}>

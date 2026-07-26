@@ -243,3 +243,62 @@ body {
   .domains-scroll-hint { display: none; }
 }
 
+/* ── Hero Tech Ribbon ─────────────────────────────────── */
+@keyframes scroll-ribbon {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.hero-ribbon-wrapper {
+  display: flex;
+  overflow: hidden;
+  width: 100%;
+  margin: 1.5rem 0;
+  padding: 0.75rem 0;
+  border-top: 1px dashed color-mix(in srgb, var(--color-border) 50%, transparent);
+  border-bottom: 1px dashed color-mix(in srgb, var(--color-border) 50%, transparent);
+  background: color-mix(in srgb, var(--color-surface) 40%, transparent);
+  /* Fades the left and right edges to transparent */
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.hero-ribbon-item {
+  color: var(--color-muted);
+}
+
+.hero-ribbon-item:hover {
+  color: var(--color-accent);
+}
+
+/* In Dark Mode: Translucent light backdrop track so all dark logos (Ollama, GitHub, Vercel, etc.) & text pop with 100% crisp visibility */
+[data-theme="dark"] .hero-ribbon-wrapper {
+  background: rgba(245, 243, 239, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .hero-ribbon-wrapper .hero-ribbon-item {
+  color: #1e293b;
+}
+
+[data-theme="dark"] .hero-ribbon-wrapper .hero-ribbon-item:hover {
+  color: #0284c7;
+}
+
+.hero-ribbon-content {
+  display: flex;
+  gap: 2.5rem;
+  align-items: center;
+  width: max-content;
+  animation: scroll-ribbon 35s linear infinite;
+}
+
+/* Pause animation when the user hovers over it */
+.hero-ribbon-wrapper:hover .hero-ribbon-content {
+  animation-play-state: paused;
+}
+

@@ -48,23 +48,23 @@ const EXPERIENCE = [
 const SKILL_GROUPS: { label: string; tags: string[] }[] = [
   {
     label: "Cloud & Infrastructure",
-    tags: ["AWS", "Azure", "GCP", "Terraform", "Docker", "CloudFormation", "Lambda", "S3", "EC2"],
+    tags: ["AWS", "Azure", "GCP", "Terraform", "Docker", "S3", "EC2", "Vercel", "Netlify"],
   },
   {
     label: "Languages & Scripting",
-    tags: ["Python", "Bash", "SQL", "TypeScript"],
+    tags: ["Python (Boto3)", "Bash", "SQL", "TypeScript", "FastAPI"],
   },
   {
-    label: "Data & AI",
-    tags: ["Amazon Bedrock", "GenAI", "RAG Pipelines", "Agentic AI", "Data Engineering", "Glue", "Athena"],
+    label: "Data, Streaming & AI/LLMs",
+    tags: ["Amazon Bedrock", "Ollama", "Hugging Face", "RAG Pipelines", "Agentic AI", "Qdrant", "Neo4j", "Redis / Valkey", "SQLite", "Apache Kafka"],
   },
   {
     label: "Networking & Security",
-    tags: ["Wireshark", "Nmap", "tcpdump", "Nginx", "UFW", "iptables", "Linux"],
+    tags: ["Wireshark", "tcpdump", "Nginx", "Linux (Ubuntu/RHEL)", "Kali Linux", "Auth0"],
   },
   {
-    label: "Practices",
-    tags: ["System Design", "CI/CD", "DevOps", "IaC", "Observability", "Automation"],
+    label: "Engineering & Practices",
+    tags: ["System Design", "CI/CD (Jenkins/GitHub)", "Datadog Observability", "SolidWorks", "Salesforce"],
   },
 ];
 
