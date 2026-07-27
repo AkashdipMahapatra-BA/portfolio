@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useCallback, useEffect } from "react";
+import { V6EngineViewer } from "@/components/ui/V6EngineViewer";
 
 /* =============================================================================
    DATA CONFIGURATION — add / reorder YouTube Shorts IDs here easily
@@ -59,28 +60,28 @@ const SOLIDWORKS_BADGES: SWBadge[] = [
     title: "Certified SOLIDWORKS xDesign Associate",
     shortTitle: "xDesign Associate",
     img: "/badges/certified-solidworks-xdesign-associate.png",
-    credlyUrl: "https://www.credly.com/earner/earned/badge/1bd37313-fa7f-48a0-9562-cf0d37347b1c",
+    credlyUrl: "https://www.credly.com/earner/1bd37313-fa7f-48a0-9562-cf0d37347b1c",
   },
   {
     id: "xmold",
     title: "Certified SOLIDWORKS xMold Associate",
     shortTitle: "xMold Associate",
     img: "/badges/certified-solidworks-xmold-associate.png",
-    credlyUrl: "https://www.credly.com/earner/earned/badge/e91c80d5-6955-4612-a80a-64f56b2ca7e0",
+    credlyUrl: "https://www.credly.com/earner/e91c80d5-6955-4612-a80a-64f56b2ca7e0",
   },
   {
     id: "3dswymer",
     title: "Certified 3DEXPERIENCE 3DSwymer — Associate",
     shortTitle: "3DSwymer",
     img: "/badges/certified-3dexperience-3dswymer-associate.png",
-    credlyUrl: "https://www.credly.com/earner/earned/badge/5eb5f0ea-2961-483b-93c6-7bdd930b6c80",
+    credlyUrl: "https://www.credly.com/earner/5eb5f0ea-2961-483b-93c6-7bdd930b6c80",
   },
   {
     id: "draftsight",
     title: "Certified DraftSight Associate — 2D Design & Drafting",
     shortTitle: "DraftSight",
     img: "/badges/certified-draftsight-associate-2d-design-and-drafti.png",
-    credlyUrl: "https://www.credly.com/earner/earned/badge/0abce572-16b2-42ca-ac00-9e0e723b09ac",
+    credlyUrl: "https://www.credly.com/earner/0abce572-16b2-42ca-ac00-9e0e723b09ac",
   },
 ];
 
@@ -565,106 +566,135 @@ export function OtherDomains() {
       }}
         className="domains-scroll-hint"
       >
-        ← swipe to see all columns including 🎨 Painting &amp; National Award →
       </p>
 
-      {/* SolidWorks / Dassault Certifications */}
+      {/* SolidWorks / Dassault Certifications & 3D Interactive Model */}
       <div style={{ marginTop: "3.5rem", paddingTop: "2.5rem", borderTop: "1px solid var(--color-border)" }}>
-        
-        {/* Header row */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            flexWrap: "wrap",
-            gap: "1rem",
-            marginBottom: "1.75rem",
-          }}
-        >
-          <div>
-            <p
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.7rem",
-                letterSpacing: "0.12em",
-                color: "var(--color-accent)",
-                textTransform: "uppercase",
-                margin: "0 0 0.25rem 0",
-              }}
-            >
-              Mechanical Certifications
-            </p>
-            <h3
-              style={{
-                fontSize: "1.1rem",
-                fontWeight: 700,
-                color: "var(--color-text)",
-                margin: 0,
-              }}
-            >
-              Dassault Systèmes
-            </h3>
-          </div>
-
-          <a
-            href="https://www.credly.com/users/akashdip2001"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              fontSize: "0.72rem",
-              fontFamily: "var(--font-mono)",
-              color: "#e63329",
-              textDecoration: "none",
-              whiteSpace: "nowrap",
-              border: "1px solid rgba(230,51,41,0.35)",
-              background: "rgba(230,51,41,0.08)",
-              padding: "0.4rem 0.85rem",
-              borderRadius: "9999px",
-              transition: "all 0.2s ease",
-            }}
-            onMouseEnter={(e) => {
-              const el = e.currentTarget as HTMLElement;
-              el.style.background = "rgba(230,51,41,0.18)";
-              el.style.borderColor = "rgba(230,51,41,0.6)";
-            }}
-            onMouseLeave={(e) => {
-              const el = e.currentTarget as HTMLElement;
-              el.style.background = "rgba(230,51,41,0.08)";
-              el.style.borderColor = "rgba(230,51,41,0.35)";
-            }}
-          >
-            Verify on Credly ↗
-          </a>
-        </div>
-
-        {/* Badge cards grid */}
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 7.5rem), 1fr))",
-            gap: "0.875rem",
+            gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 28rem), 1fr))",
+            gap: "2.5rem",
+            alignItems: "center",
           }}
         >
-          {SOLIDWORKS_BADGES.map((badge) => (
-            <SWBadgeCard key={badge.id} badge={badge} />
-          ))}
-        </div>
+          {/* Left Column: Certifications */}
+          <div>
+            {/* Header row */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "flex-start",
+                flexWrap: "wrap",
+                gap: "1rem",
+                marginBottom: "1.75rem",
+              }}
+            >
+              <div>
+                <p
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "0.7rem",
+                    letterSpacing: "0.12em",
+                    color: "var(--color-accent)",
+                    textTransform: "uppercase",
+                    margin: "0 0 0.25rem 0",
+                  }}
+                >
+                  Mechanical Certifications
+                </p>
+                <h3
+                  style={{
+                    fontSize: "1.1rem",
+                    fontWeight: 700,
+                    color: "var(--color-text)",
+                    margin: 0,
+                  }}
+                >
+                  Dassault Systèmes
+                </h3>
+              </div>
 
-        <p style={{
-          marginTop: "1.25rem", fontSize: "0.7rem",
-          color: "var(--color-muted)", fontFamily: "var(--font-mono)", lineHeight: 1.6,
-        }}>
-          * SOLIDWORKS Design Associate (CSWA) — issued July 16, 2025 · Verified July 26, 2026.{" "}
-          <a
-            href="https://cv.virtualtester.com/qr/?b=SLDWRKS&i=C-ME4NJVYF5R"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: "var(--color-accent)", textDecoration: "none" }}
-          >
-            Validate certificate ↗
-          </a>
-        </p>
+              <a
+                href="https://www.credly.com/users/akashdip2001"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  fontSize: "0.72rem",
+                  fontFamily: "var(--font-mono)",
+                  color: "#e63329",
+                  textDecoration: "none",
+                  whiteSpace: "nowrap",
+                  border: "1px solid rgba(230,51,41,0.35)",
+                  background: "rgba(230,51,41,0.08)",
+                  padding: "0.4rem 0.85rem",
+                  borderRadius: "9999px",
+                  transition: "all 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  const el = e.currentTarget as HTMLElement;
+                  el.style.background = "rgba(230,51,41,0.18)";
+                  el.style.borderColor = "rgba(230,51,41,0.6)";
+                }}
+                onMouseLeave={(e) => {
+                  const el = e.currentTarget as HTMLElement;
+                  el.style.background = "rgba(230,51,41,0.08)";
+                  el.style.borderColor = "rgba(230,51,41,0.35)";
+                }}
+              >
+                Verify on Credly ↗
+              </a>
+            </div>
+
+            {/* Badge cards grid */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 7.5rem), 1fr))",
+                gap: "0.875rem",
+              }}
+            >
+              {SOLIDWORKS_BADGES.map((badge) => (
+                <SWBadgeCard key={badge.id} badge={badge} />
+              ))}
+            </div>
+
+            <p style={{
+              marginTop: "1.25rem", fontSize: "0.7rem",
+              color: "var(--color-muted)", fontFamily: "var(--font-mono)", lineHeight: 1.6,
+            }}>
+              * SOLIDWORKS Design Associate (CSWA) — issued July 16, 2025 · Verified July 26, 2026.{" "}
+              <a
+                href="https://cv.virtualtester.com/qr/?b=SLDWRKS&i=C-ME4NJVYF5R"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "var(--color-accent)", textDecoration: "none" }}
+              >
+                Validate certificate ↗
+              </a>
+            </p>
+          </div>
+
+          {/* Right Column: Interactive 3D V6 Engine Canvas */}
+          <div style={{ width: "100%" }}>
+            <div style={{ width: "100%", height: "380px" }}>
+              <V6EngineViewer />
+            </div>
+            <p style={{
+              marginTop: "0.75rem", fontSize: "0.7rem",
+              color: "var(--color-muted)", fontFamily: "var(--font-mono)",
+              textAlign: "right", opacity: 0.85,
+            }}>
+              - Modeled &amp; assembled in SOLIDWORKS 2023 (<a
+                href="https://github.com/akashdip2001/SOLIDWORKS"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "var(--color-accent)", textDecoration: "none" }}
+              >GitHub repo ↗</a>) · College 3rd Year by Akashdip Mahapatra
+            </p>
+          </div>
+        </div>
       </div>
     </section>
   );

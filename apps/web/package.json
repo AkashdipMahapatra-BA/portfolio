@@ -25,6 +25,8 @@
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.82.0",
     "superjson": "^2.2.2",
+    "three": "^0.174.0",
+    "three-stdlib": "^2.35.0",
     "validators": "*"
   },
   "devDependencies": {
@@ -32,6 +34,7 @@
     "@types/node": "^24.0.7",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.5",
+    "@types/three": "^0.174.0",
     "tailwindcss": "^4.1.10",
     "typescript": "^5.8.3"
   }
