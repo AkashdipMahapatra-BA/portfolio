@@ -9,6 +9,23 @@ export function V6EngineViewer() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // HD Mode state (defaults to false on mobile for max page smoothness)
+  const [isHdMode, setIsHdMode] = useState(false);
+  const [showWarningModal, setShowWarningModal] = useState(false);
+
+  const handleToggleClick = () => {
+    if (!isHdMode) {
+      setShowWarningModal(true);
+    } else {
+      setIsHdMode(false);
+    }
+  };
+
+  const confirmEnableHd = () => {
+    setShowWarningModal(false);
+    setIsHdMode(true);
+  };
+
   useEffect(() => {
     if (!containerRef.current) return;
     const container = containerRef.current;
@@ -16,23 +33,24 @@ export function V6EngineViewer() {
     const height = container.clientHeight || 350;
     const isMobile = window.innerWidth <= 768 || navigator.maxTouchPoints > 0;
 
+    // Determine quality: HD mode forces ultra-high quality antialiasing and 2.0x pixel ratio
+    const useHighQuality = isHdMode || !isMobile;
+
     // 1. Scene setup
     const scene = new THREE.Scene();
 
     // 2. Camera setup
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-    camera.position.set(3.0, 2.2, 3.8);
 
-    // 3. Optimized Renderer setup
+    // 3. Renderer setup
     const renderer = new THREE.WebGLRenderer({
-      antialias: !isMobile, // Disable MSAA on mobile for 60FPS smoothness
+      antialias: useHighQuality,
       alpha: true,
       powerPreference: "high-performance",
     });
     renderer.setSize(width, height);
-    // Cap pixel ratio at 1.25 on mobile to avoid GPU thermal throttling
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.25 : 1.75));
-    renderer.shadowMap.enabled = !isMobile; // Disable shadow passes on mobile for zero hitching
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, useHighQuality ? 2.0 : 1.25));
+    renderer.shadowMap.enabled = useHighQuality;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.35;
@@ -40,7 +58,7 @@ export function V6EngineViewer() {
     container.innerHTML = "";
     container.appendChild(renderer.domElement);
 
-    // 4. Efficient Lighting & Reflections
+    // 4. Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 1.8);
     scene.add(ambientLight);
 
@@ -49,19 +67,18 @@ export function V6EngineViewer() {
 
     const mainLight = new THREE.DirectionalLight(0xffffff, 2.8);
     mainLight.position.set(6, 12, 8);
-    if (!isMobile) mainLight.castShadow = true;
+    if (useHighQuality) mainLight.castShadow = true;
     scene.add(mainLight);
 
-    const rimLight = new THREE.DirectionalLight(0x0ea5e9, 1.8); // Vibrant cyan rim light
+    const rimLight = new THREE.DirectionalLight(0x0ea5e9, 1.8);
     rimLight.position.set(-6, -4, -6);
     scene.add(rimLight);
 
-    // Orange spotlight specifically aimed at engraved name "AKASHDIP MAHAPATRA"
     const orangeSpotLight = new THREE.PointLight(0xf97316, 3.2, 12);
     orangeSpotLight.position.set(-3, 1, 4);
     scene.add(orangeSpotLight);
 
-    // 5. Orbit Controls with smooth damping
+    // 5. Orbit Controls
     let controls: any = null;
     import("three-stdlib").then(({ OrbitControls }) => {
       controls = new OrbitControls(camera, renderer.domElement);
@@ -70,47 +87,48 @@ export function V6EngineViewer() {
       controls.autoRotate = true;
       controls.autoRotateSpeed = 1.0;
       controls.maxPolarAngle = Math.PI / 1.6;
-      controls.minDistance = 1.2;
-      controls.maxDistance = 8.0;
+      controls.minDistance = 0.8;
+      controls.maxDistance = 10.0;
     });
 
-    // 6. Materials matching SolidWorks colors exactly
+    // 6. Materials
     const pistonGoldMaterial = new THREE.MeshStandardMaterial({
-      color: new THREE.Color("#e29547"), // SolidWorks Piston Gold/Bronze
+      color: new THREE.Color("#e29547"),
       metalness: 0.75,
       roughness: 0.25,
     });
 
     const rodMagentaMaterial = new THREE.MeshStandardMaterial({
-      color: new THREE.Color("#c026d3"), // SolidWorks Connecting Rod Pink/Magenta
+      color: new THREE.Color("#c026d3"),
       metalness: 0.6,
       roughness: 0.3,
     });
 
     const chromeCrankMaterial = new THREE.MeshStandardMaterial({
-      color: new THREE.Color("#f1f5f9"), // Polished Silver Chrome Crankshaft
+      color: new THREE.Color("#f1f5f9"),
       metalness: 0.92,
       roughness: 0.12,
     });
 
     const pistonRingDarkMaterial = new THREE.MeshStandardMaterial({
-      color: new THREE.Color("#1e293b"), // Dark Steel Piston Rings
+      color: new THREE.Color("#1e293b"),
       metalness: 0.85,
       roughness: 0.4,
     });
 
     const engravedTextPlateMaterial = new THREE.MeshStandardMaterial({
-      color: new THREE.Color("#cbd5e1"), // Aluminum flywheel base
+      color: new THREE.Color("#cbd5e1"),
       metalness: 0.85,
       roughness: 0.2,
-      emissive: new THREE.Color("#ea580c"), // Warm orange glow on engraved text
+      emissive: new THREE.Color("#ea580c"),
       emissiveIntensity: 0.2,
     });
 
-    // 7. Load GLB model & assign materials without Garbage Collection spikes
+    // 7. Load GLB model & Calculate Optimal Camera Distance to Fill Maximum Canvas Area without Clipping
     const tempBox = new THREE.Box3();
     const tempCenter = new THREE.Vector3();
     const tempSize = new THREE.Vector3();
+    const tempSphere = new THREE.Sphere();
 
     const loader = new GLTFLoader();
     loader.load(
@@ -118,20 +136,39 @@ export function V6EngineViewer() {
       (gltf) => {
         const model = gltf.scene;
 
+        // Center model at origin
         tempBox.setFromObject(model);
         tempBox.getCenter(tempCenter);
-        tempBox.getSize(tempSize);
-        const maxDim = Math.max(tempSize.x, tempSize.y, tempSize.z);
-        const scale = 2.4 / maxDim;
+        model.position.sub(tempCenter);
 
-        model.scale.set(scale, scale, scale);
-        model.position.sub(tempCenter.multiplyScalar(scale));
+        // Compute 3D bounding sphere radius
+        tempBox.setFromObject(model);
+        tempBox.getBoundingSphere(tempSphere);
+        const radius = tempSphere.radius || 1.0;
+
+        // Calculate optimal camera distance to fill maximum viewport space without clipping on 360° rotation
+        const aspect = width / height;
+        const fovRad = (camera.fov * Math.PI) / 180;
+        const hFovRad = 2 * Math.atan(Math.tan(fovRad / 2) * aspect);
+        const minFovRad = Math.min(fovRad, hFovRad);
+
+        // Fit sphere with a tight 10% safety margin so model is prominent & never clipped during rotation
+        const fitDistance = (radius / Math.sin(minFovRad / 2)) * 1.10;
+
+        const viewDirection = new THREE.Vector3(0.65, 0.42, 0.75).normalize();
+        camera.position.copy(viewDirection.multiplyScalar(fitDistance));
+        camera.lookAt(0, 0, 0);
+
+        if (controls) {
+          controls.target.set(0, 0, 0);
+          controls.update();
+        }
 
         const meshes: THREE.Mesh[] = [];
         model.traverse((child) => {
           if ((child as THREE.Mesh).isMesh) {
             const mesh = child as THREE.Mesh;
-            if (!isMobile) {
+            if (useHighQuality) {
               mesh.castShadow = true;
               mesh.receiveShadow = true;
             }
@@ -139,7 +176,6 @@ export function V6EngineViewer() {
           }
         });
 
-        // Smart color classification using reusable objects to avoid GC pauses
         meshes.forEach((mesh) => {
           tempBox.setFromObject(mesh);
           tempBox.getCenter(tempCenter);
@@ -172,7 +208,7 @@ export function V6EngineViewer() {
       }
     );
 
-    // 8. IntersectionObserver to completely PAUSE rendering when off-screen (0% GPU/CPU when scrolled away!)
+    // 8. IntersectionObserver to pause rendering when off-screen
     let isVisible = true;
     const observer = new IntersectionObserver(
       (entries) => {
@@ -182,11 +218,11 @@ export function V6EngineViewer() {
     );
     observer.observe(container);
 
-    // 9. Animation loop (Pauses when off-screen)
+    // 9. Animation loop
     let animationFrameId: number;
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
-      if (!isVisible) return; // ⚡ ZERO CPU/GPU OVERHEAD WHEN OFF-SCREEN
+      if (!isVisible) return;
       if (controls) controls.update();
       renderer.render(scene, camera);
     };
@@ -208,7 +244,7 @@ export function V6EngineViewer() {
       cancelAnimationFrame(animationFrameId);
       renderer.dispose();
     };
-  }, []);
+  }, [isHdMode]);
 
   return (
     <div
@@ -224,6 +260,47 @@ export function V6EngineViewer() {
         boxShadow: "0 12px 32px rgba(0, 0, 0, 0.35)",
       }}
     >
+      {/* Top Floating HD Toggle Button */}
+      <div
+        style={{
+          position: "absolute",
+          top: "0.75rem",
+          right: "0.75rem",
+          zIndex: 20,
+        }}
+      >
+        <button
+          onClick={handleToggleClick}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.4rem",
+            background: isHdMode
+              ? "linear-gradient(135deg, #0284c7 0%, #0369a1 100%)"
+              : "rgba(15, 23, 42, 0.85)",
+            color: "#ffffff",
+            border: isHdMode
+              ? "1px solid rgba(56, 189, 248, 0.5)"
+              : "1px solid rgba(255, 255, 255, 0.2)",
+            padding: "0.35rem 0.75rem",
+            borderRadius: "9999px",
+            fontSize: "0.72rem",
+            fontWeight: 600,
+            fontFamily: "var(--font-mono)",
+            cursor: "pointer",
+            backdropFilter: "blur(8px)",
+            boxShadow: isHdMode
+              ? "0 4px 14px rgba(2, 132, 199, 0.35)"
+              : "0 4px 12px rgba(0, 0, 0, 0.25)",
+            transition: "all 0.2s ease",
+          }}
+        >
+          <span>{isHdMode ? " HD View Active" : " Render HD View"}</span>
+          {isHdMode && <span style={{ fontSize: "0.65rem", opacity: 0.9 }}>(Tap for Normal)</span>}
+        </button>
+      </div>
+
+      {/* Loading state indicator */}
       {loading && (
         <div
           style={{
@@ -254,6 +331,7 @@ export function V6EngineViewer() {
         </div>
       )}
 
+      {/* Error display */}
       {error && (
         <div
           style={{
@@ -321,6 +399,125 @@ export function V6EngineViewer() {
           🖱️ Rotate / Zoom 3D
         </div>
       </div>
+
+      {/* ⚠️ Performance Warning Confirmation Modal */}
+      {showWarningModal && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 99999,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "1.25rem",
+            background: "rgba(15, 23, 42, 0.75)",
+            backdropFilter: "blur(12px)",
+          }}
+        >
+          <div
+            style={{
+              maxWidth: "28rem",
+              width: "100%",
+              background: "#0f172a",
+              border: "1px solid rgba(56, 189, 248, 0.3)",
+              borderRadius: "1.25rem",
+              padding: "1.75rem 1.5rem 1.5rem 1.5rem",
+              boxShadow: "0 20px 50px rgba(0, 0, 0, 0.6)",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              textAlign: "center",
+            }}
+          >
+            <div
+              style={{
+                width: "3.25rem",
+                height: "3.25rem",
+                borderRadius: "50%",
+                background: "rgba(249, 115, 22, 0.12)",
+                border: "1px solid rgba(249, 115, 22, 0.3)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                marginBottom: "1rem",
+                fontSize: "1.5rem",
+              }}
+            >
+              ⚠️
+            </div>
+
+            <h3
+              style={{
+                margin: "0 0 0.6rem 0",
+                fontSize: "1.15rem",
+                fontWeight: 700,
+                color: "#f8fafc",
+                lineHeight: 1.3,
+              }}
+            >
+              Enable High Fidelity HD Rendering?
+            </h3>
+
+            <p
+              style={{
+                margin: "0 0 1.5rem 0",
+                fontSize: "0.82rem",
+                color: "#94a3b8",
+                lineHeight: 1.6,
+              }}
+            >
+              Enabling HD mode activates constant 60Hz full antialiasing and studio lighting reflections. On some mobile devices, this may increase CPU/GPU load and cause temporary page scrolling lag.
+            </p>
+
+            <div
+              style={{
+                display: "flex",
+                gap: "0.75rem",
+                width: "100%",
+                justifyContent: "center",
+              }}
+            >
+              <button
+                onClick={() => setShowWarningModal(false)}
+                style={{
+                  flex: 1,
+                  padding: "0.65rem 1rem",
+                  borderRadius: "0.75rem",
+                  border: "1px solid rgba(255, 255, 255, 0.15)",
+                  background: "rgba(30, 41, 59, 0.7)",
+                  color: "#cbd5e1",
+                  fontSize: "0.82rem",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
+                }}
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={confirmEnableHd}
+                style={{
+                  flex: 1,
+                  padding: "0.65rem 1rem",
+                  borderRadius: "0.75rem",
+                  border: "1px solid rgba(56, 189, 248, 0.5)",
+                  background: "linear-gradient(135deg, #0284c7 0%, #0369a1 100%)",
+                  color: "#ffffff",
+                  fontSize: "0.82rem",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  boxShadow: "0 4px 14px rgba(2, 132, 199, 0.4)",
+                  transition: "all 0.15s ease",
+                }}
+              >
+                Proceed to HD
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
