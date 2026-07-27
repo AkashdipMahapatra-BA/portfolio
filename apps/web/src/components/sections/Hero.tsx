@@ -4,74 +4,106 @@ import { useState, useEffect, useRef } from "react";
 import InitialLoader from "@/components/ui/InitialLoader";
 import {
   SolidWorksLogo,
-  JenkinsLogo,
+  FigmaLogo,
+  GimpLogo,
+  SalesforceLogo,
+  JiraLogo,
+  ConfluenceLogo,
+  GitLogo,
   GithubLogo,
+  JenkinsLogo,
   DatadogLogo,
+  GrafanaLogo,
   WiresharkLogo,
   TerraformLogo,
   DockerLogo,
+  KubernetesLogo,
   LinuxLogo,
+  UbuntuLogo,
+  FedoraLogo,
   KaliLinuxLogo,
+  MsDosLogo,
   AwsLogo,
   AwsLambdaLogo,
+  FirebaseLogo,
   GcpLogo,
   AzureLogo,
   VercelLogo,
   NetlifyLogo,
   PythonLogo,
+  NodeJsLogo,
   FastApiLogo,
+  PostmanLogo,
   NginxLogo,
   ApacheKafkaLogo,
   Auth0Logo,
-  SalesforceLogo,
   OllamaLogo,
   HuggingFaceLogo,
   QdrantLogo,
   Neo4jLogo,
   RedisLogo,
+  PostgreSqlLogo,
+  MySqlLogo,
+  MongoDbLogo,
   SqLiteLogo,
 } from "@/components/ui/BrandLogos";
 
 const FULL_TEXT = "Akashdip Mahapatra | Data Engineer & Cloud Automation Specialist";
 
 const TECH_STACK = [
-  // ⚙️ CAD & Design - not related to cloud but have knowledge
+  // ⚙️ Design & CAD
   { name: "SolidWorks", icon: SolidWorksLogo },
+  { name: "Figma", icon: FigmaLogo },
+  { name: "GIMP", icon: GimpLogo },
   { name: "Salesforce", icon: SalesforceLogo },
 
-  // 🛠️ CI/CD, Observability & Networking
-  { name: "Jenkins", icon: JenkinsLogo },
+  // 🛠️ CI/CD, Agile & Observability
+  { name: "Jira", icon: JiraLogo },
+  { name: "Confluence", icon: ConfluenceLogo },
+  { name: "Git", icon: GitLogo },
   { name: "GitHub Actions", icon: GithubLogo },
+  { name: "Jenkins", icon: JenkinsLogo },
   { name: "Datadog", icon: DatadogLogo },
+  { name: "Grafana", icon: GrafanaLogo },
   { name: "Wireshark", icon: WiresharkLogo },
 
-  // 🧱 IaC, Containers & Operating Systems
+  // 🧱 IaC, Containers & OS
   { name: "Terraform", icon: TerraformLogo },
   { name: "Docker", icon: DockerLogo },
+  { name: "Kubernetes", icon: KubernetesLogo },
   { name: "Linux (Ubuntu/RHEL)", icon: LinuxLogo },
+  { name: "Ubuntu", icon: UbuntuLogo },
+  { name: "Fedora", icon: FedoraLogo },
   { name: "Kali Linux", icon: KaliLinuxLogo },
+  { name: "MS-DOS", icon: MsDosLogo },
 
   // ☁️ Cloud Platforms & Serverless
   { name: "AWS", icon: AwsLogo },
   // { name: "AWS Lambda", icon: AwsLambdaLogo },
+  { name: "Firebase", icon: FirebaseLogo },
   { name: "GCP", icon: GcpLogo },
   { name: "Azure", icon: AzureLogo },
   { name: "Vercel", icon: VercelLogo },
   { name: "Netlify", icon: NetlifyLogo },
 
-  // 🐍 Backend, APIs, Streaming & Enterprise
+  // 🐍 Backend, APIs, Streaming & Identity
   { name: "Python (Boto3)", icon: PythonLogo },
+  { name: "Node.js", icon: NodeJsLogo },
   { name: "FastAPI", icon: FastApiLogo },
+  { name: "Postman", icon: PostmanLogo },
   { name: "Nginx", icon: NginxLogo },
   { name: "Apache Kafka", icon: ApacheKafkaLogo },
   { name: "Auth0", icon: Auth0Logo },
 
-  // 🤖 AI/LLMs & Vector/Graph/SQL Databases
+  // 🤖 AI / LLMs & Vector / Graph / SQL / NoSQL Databases
   { name: "Ollama", icon: OllamaLogo },
   { name: "Hugging Face", icon: HuggingFaceLogo },
   { name: "Qdrant", icon: QdrantLogo },
   { name: "Neo4j", icon: Neo4jLogo },
   { name: "Redis / Valkey", icon: RedisLogo },
+  { name: "PostgreSQL", icon: PostgreSqlLogo },
+  { name: "MySQL", icon: MySqlLogo },
+  { name: "MongoDB", icon: MongoDbLogo },
   { name: "SQLite", icon: SqLiteLogo },
 ];
 
