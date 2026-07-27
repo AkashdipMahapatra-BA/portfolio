@@ -301,7 +301,9 @@ body {
   gap: 2.5rem;
   align-items: center;
   width: max-content;
-  animation: scroll-ribbon 35s linear infinite;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  animation: scroll-ribbon 45s linear infinite;
 }
 
 /* Pause animation when the user hovers over it */
