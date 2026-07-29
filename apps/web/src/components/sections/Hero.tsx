@@ -117,6 +117,94 @@ export function Hero() {
   const [playKey, setPlayKey] = useState(0);
   const typedRef = useRef<HTMLSpanElement>(null);
 
+  // Ribbon interactive state
+  const ribbonWrapperRef = useRef<HTMLDivElement>(null);
+  const ribbonContentRef = useRef<HTMLDivElement>(null);
+  const xPosRef = useRef(0);
+  const speedRef = useRef(-1.7); // Default right-to-left
+  const isDraggingRef = useRef(false);
+  const dragStartXRef = useRef(0);
+  const idleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Ribbon animation loop
+  useEffect(() => {
+    let animationFrameId: number;
+    const content = ribbonContentRef.current;
+    if (!content) return;
+    
+    const loop = () => {
+      if (!isDraggingRef.current) {
+        xPosRef.current += speedRef.current;
+      }
+      
+      const contentWidth = content.scrollWidth / 2;
+      
+      if (contentWidth > 0) {
+        if (xPosRef.current <= -contentWidth) {
+          xPosRef.current += contentWidth;
+        } else if (xPosRef.current > 0) {
+          xPosRef.current -= contentWidth;
+        }
+      }
+      
+      content.style.transform = `translate3d(${xPosRef.current}px, 0, 0)`;
+      animationFrameId = requestAnimationFrame(loop);
+    };
+    
+    animationFrameId = requestAnimationFrame(loop);
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      if (idleTimeoutRef.current) clearTimeout(idleTimeoutRef.current);
+    };
+  }, []);
+
+  const handleRibbonPointerDown = (e: React.PointerEvent) => {
+    isDraggingRef.current = true;
+    dragStartXRef.current = e.clientX;
+    if (idleTimeoutRef.current) clearTimeout(idleTimeoutRef.current);
+    
+    // Change cursor
+    if (ribbonWrapperRef.current) {
+      ribbonWrapperRef.current.style.cursor = "grabbing";
+    }
+  };
+
+  const handleRibbonPointerMove = (e: React.PointerEvent) => {
+    const wrapper = ribbonWrapperRef.current;
+    if (!wrapper) return;
+
+    if (isDraggingRef.current) {
+      const deltaX = e.clientX - dragStartXRef.current;
+      xPosRef.current += deltaX;
+      dragStartXRef.current = e.clientX;
+    } else if (e.pointerType === "mouse") {
+      if (idleTimeoutRef.current) clearTimeout(idleTimeoutRef.current);
+      const rect = wrapper.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const normalizedX = mouseX / rect.width;
+      
+      if (normalizedX < 0.4) {
+        speedRef.current = ((0.4 - normalizedX) / 0.4) * 2.5;
+      } else if (normalizedX > 0.6) {
+        speedRef.current = -(((normalizedX - 0.6) / 0.4) * 2.5);
+      } else {
+        speedRef.current = 0;
+      }
+    }
+  };
+
+  const handleRibbonPointerUpOrLeave = () => {
+    isDraggingRef.current = false;
+    if (ribbonWrapperRef.current) {
+      ribbonWrapperRef.current.style.cursor = "grab";
+    }
+    
+    if (idleTimeoutRef.current) clearTimeout(idleTimeoutRef.current);
+    idleTimeoutRef.current = setTimeout(() => {
+      speedRef.current = -1.7;
+    }, 800);
+  };
+
   const handleLoaderComplete = () => {
     setThreadsActive(true);
     setTimeout(() => setStartTyping(true), 1000);
@@ -299,8 +387,17 @@ export function Hero() {
               </p>
 
               {/* Infinite Tech Stack Ribbon */}
-              <div className="hero-ribbon-wrapper">
-                <div className="hero-ribbon-content">
+              <div 
+                className="hero-ribbon-wrapper"
+                ref={ribbonWrapperRef}
+                style={{ cursor: "grab" }}
+                onPointerDown={handleRibbonPointerDown}
+                onPointerMove={handleRibbonPointerMove}
+                onPointerUp={handleRibbonPointerUpOrLeave}
+                onPointerLeave={handleRibbonPointerUpOrLeave}
+                onPointerCancel={handleRibbonPointerUpOrLeave}
+              >
+                <div className="hero-ribbon-content" ref={ribbonContentRef}>
                   {LOOPED_STACK.map((tech, i) => (
                     <div 
                       key={i} 
@@ -310,10 +407,7 @@ export function Hero() {
                         alignItems: "center", 
                         gap: "0.65rem", 
                         transition: "color 0.3s ease",
-                        cursor: "default"
                       }}
-                      onMouseEnter={(e) => e.currentTarget.style.color = "var(--color-accent)"}
-                      onMouseLeave={(e) => e.currentTarget.style.color = "var(--color-muted)"}
                     >
                       <tech.icon size={24} />
                       <span style={{ 
