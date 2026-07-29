@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import InitialLoader from "@/components/ui/InitialLoader";
+import { HeroThreads } from "@/components/ui/HeroThreads";
 import {
   SolidWorksLogo,
   FigmaLogo,
@@ -112,10 +113,12 @@ const LOOPED_STACK = [...TECH_STACK, ...TECH_STACK];
 
 export function Hero() {
   const [startTyping, setStartTyping] = useState(false);
+  const [threadsActive, setThreadsActive] = useState(false);
   const [playKey, setPlayKey] = useState(0);
   const typedRef = useRef<HTMLSpanElement>(null);
 
   const handleLoaderComplete = () => {
+    setThreadsActive(true);
     setTimeout(() => setStartTyping(true), 1000);
   };
 
@@ -148,6 +151,7 @@ export function Hero() {
       <section
         id="hero"
         style={{
+          position: "relative",
           minHeight: "calc(100vh - 3.5rem)",
           display: "flex",
           alignItems: "center",
@@ -155,10 +159,19 @@ export function Hero() {
           padding: "4rem 1.5rem",
         }}
       >
-        <div style={{ maxWidth: "52rem", width: "100%" }}>
+        <HeroThreads active={threadsActive} />
+        <div style={{ maxWidth: "52rem", width: "100%", position: "relative", zIndex: 2 }}>
 
           {/* Terminal window chrome */}
-          <div className="card" style={{ overflow: "hidden" }}>
+          <div className="card" style={{ overflow: "hidden", position: "relative" }}>
+            {/* Desktop Top-Left Glass Edge Reflection (Point 2) */}
+            {threadsActive && <div className="terminal-glass-edge-top" aria-hidden="true" />}
+            {/* Desktop Bottom Glass Edge Reflection (Point 3) */}
+            {threadsActive && <div className="terminal-glass-edge-bottom" aria-hidden="true" />}
+            {/* Mobile Top Edge Glass Reflection (Point 2) */}
+            {threadsActive && <div className="terminal-glass-edge-top-mobile" aria-hidden="true" />}
+            {/* Mobile Bottom Edge Glass Reflection (Point 3) */}
+            {threadsActive && <div className="terminal-glass-edge-bottom-mobile" aria-hidden="true" />}
 
             {/* Title bar */}
             <div

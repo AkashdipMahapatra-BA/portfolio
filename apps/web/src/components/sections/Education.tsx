@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { EducationThreads } from "@/components/ui/EducationThreads";
 
 /* ─── Data ───────────────────────────────────────────────────────────────── */
 interface Certification {
@@ -93,6 +94,67 @@ const shimmerStyles = `
     margin-top: 1rem;
   }
 
+  /* ── Agentic Conic Rotating Glow Button Effect (Signature Border Orbit) ── */
+  .edu-btn-agentic-glow {
+    position: relative;
+    padding: 2px !important;
+    border: none !important;
+    background: transparent !important;
+    border-radius: 9999px !important;
+    cursor: pointer;
+    display: inline-flex;
+    overflow: hidden;
+    box-shadow: 0 0 16px rgba(66, 133, 244, 0.4), 0 0 25px rgba(155, 81, 224, 0.3);
+    text-decoration: none;
+  }
+
+  .edu-btn-agentic-glow::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+      from 0deg,
+      #4285f4,
+      #9b51e0,
+      #e91e63,
+      #10b981,
+      #facc15,
+      #4285f4
+    );
+    animation: spin-border 3s linear infinite;
+    z-index: 1;
+  }
+
+  .edu-btn-agentic-glow .btn-inner-content {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.48rem 1.05rem;
+    background: #0f172a;
+    color: #ffffff;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
+    z-index: 2;
+    white-space: nowrap;
+  }
+
+  [data-theme="light"] .edu-btn-agentic-glow .btn-inner-content {
+    background: #ffffff;
+    color: #0f172a;
+  }
+
+  @keyframes spin-border {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
   .edu-btn {
     white-space: nowrap;
     max-width: 100%;
@@ -146,6 +208,27 @@ const shimmerStyles = `
   }
   .edu-btn-red .shimmer-layer {
     background: linear-gradient(105deg, transparent 35%, rgba(255, 200, 200, 0.5) 50%, transparent 65%);
+  }
+
+  @media (max-width: 640px) {
+    .edu-btn-agentic-glow {
+      max-width: 100%;
+      width: fit-content;
+    }
+    .edu-btn-agentic-glow .btn-inner-content {
+      padding: 0.42rem 0.8rem !important;
+      font-size: 0.68rem !important;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      max-width: 100%;
+    }
+    .edu-btn {
+      padding: 0.42rem 0.8rem !important;
+      font-size: 0.68rem !important;
+      max-width: 100%;
+      white-space: nowrap;
+    }
   }
 
   .pub-btn-scholar {
@@ -476,11 +559,46 @@ const shimmerStyles = `
       justify-content: center;
       border-radius: 0.85rem;
     }
+  @keyframes ai-border-orbit {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .edu-btn-ai-highlight {
+    position: relative;
+    border-color: rgba(6, 182, 212, 0.6) !important;
+    box-shadow: 0 0 16px rgba(6, 182, 212, 0.4), 0 0 24px rgba(168, 85, 247, 0.3) !important;
+  }
+  .edu-btn-ai-highlight::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 0.6rem;
+    padding: 2px;
+    background: linear-gradient(
+      90deg,
+      #06B6D4,
+      #3B82F6,
+      #A855F7,
+      #EC4899,
+      #EF4444,
+      #F97316,
+      #FACC15,
+      #10B981,
+      #06B6D4
+    );
+    background-size: 300% 300%;
+    animation: ai-border-orbit 3.5s ease infinite;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
   }
 `;
 
 function ShimmerButton({
-  href, label, external, accent, delay, paused, onHoverChange,
+  href, label, external, accent, delay, paused, highlight, onHoverChange,
 }: {
   href: string;
   label: string;
@@ -488,6 +606,7 @@ function ShimmerButton({
   accent: "slate" | "red";
   delay: number;
   paused: boolean;
+  highlight?: boolean | undefined;
   onHoverChange: (hovered: boolean) => void;
 }) {
   const isRed = accent === "red";
@@ -498,6 +617,20 @@ function ShimmerButton({
     onHoverChange(false);
     (e.currentTarget as HTMLElement).style.transform = "scale(1)";
   };
+
+  if (highlight) {
+    return (
+      <a
+        href={href}
+        {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+        className="edu-btn-agentic-glow"
+        onMouseEnter={handleEnter}
+        onMouseLeave={handleLeave}
+      >
+        <span className="btn-inner-content">{label}</span>
+      </a>
+    );
+  }
 
   return (
     <a
@@ -526,12 +659,12 @@ function ShimmerButton({
   );
 }
 
-function BtechButtons() {
+function BtechButtons({ isAbsorbed }: { isAbsorbed?: boolean }) {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const buttons = [
-    { href: "/college-projects", label: "🔬 Mechanical Engineering Projects ↗", accent: "slate" as const, external: false, delay: 0 },
-    { href: "https://www.youtube.com/playlist?list=PL_RecMEcs_p-5UwLqFBFtat90L8IOc1bZ", label: "▶ IoT & Engineering Projects — YouTube", accent: "red" as const, external: true, delay: 0.8 },
-    { href: "https://www.youtube.com/playlist?list=PL_RecMEcs_p__J3GSHkKfLjC08q0NmWtR", label: "▶ Mechanical Projects — YouTube", accent: "red" as const, external: true, delay: 1.6 },
+    { href: "/college-projects", label: "💻 IT and Software Projects ↗", accent: "slate" as const, external: false, delay: 0, highlight: Boolean(isAbsorbed) },
+    { href: "https://www.youtube.com/playlist?list=PL_RecMEcs_p-5UwLqFBFtat90L8IOc1bZ", label: "▶ IoT & Engineering Projects — YouTube", accent: "red" as const, external: true, delay: 0.8, highlight: false },
+    { href: "https://www.youtube.com/playlist?list=PL_RecMEcs_p__J3GSHkKfLjC08q0NmWtR", label: "▶ Mechanical Projects — YouTube", accent: "red" as const, external: true, delay: 1.6, highlight: false },
   ];
   return (
     <div className="edu-btn-row">
@@ -715,10 +848,12 @@ function CredlyWidget() {
 
 /* ─── Component ─────────────────────────────────────────────────────────── */
 export function Education() {
+  const [isAbsorbed, setIsAbsorbed] = useState(false);
+
   return (
     <section
       id="education"
-      style={{ padding: "5rem 1.5rem", maxWidth: "72rem", margin: "0 auto" }}
+      style={{ padding: "5rem 1.5rem", maxWidth: "72rem", margin: "0 auto", position: "relative" }}
     >
       {/* Section label */}
       <div
@@ -744,8 +879,11 @@ export function Education() {
         <div style={{ flex: 1, height: "1px", background: "var(--color-border)" }} />
       </div>
 
-      {/* ── B.Tech block ── */}
-      <div className="card edu-main-card" style={{ padding: "1.5rem", marginBottom: "2rem" }}>
+      {/* ── B.Tech block wrapper with EducationThreads overlay ── */}
+      <div style={{ position: "relative" }}>
+        <EducationThreads onAbsorption={() => setIsAbsorbed(true)} />
+
+        <div className="card edu-main-card" style={{ padding: "1.5rem", marginBottom: "2rem", position: "relative", zIndex: 1 }}>
         <div style={{ display: "flex", gap: "1rem", alignItems: "flex-start" }}>
           <span style={{ fontSize: "1.5rem", lineHeight: 1, flexShrink: 0 }}>🎓</span>
           <div style={{ width: "100%" }}>
@@ -793,7 +931,7 @@ export function Education() {
 
             {/* ── B.Tech project buttons ── */}
             <style>{shimmerStyles}</style>
-            <BtechButtons />
+            <BtechButtons isAbsorbed={isAbsorbed} />
 
             {/* ── Final-year publication ── */}
             <div className="pub-box">
@@ -870,6 +1008,7 @@ export function Education() {
             </div>
           </div>
         </div>
+      </div>
       </div>
 
       {/* ── Certifications sub-section ── */}
