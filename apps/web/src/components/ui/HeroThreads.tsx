@@ -254,6 +254,12 @@ export function HeroThreads({ active }: { active: boolean }) {
           transform-origin: 700px 660px;
         }
 
+        /* ── LIGHT MODE OVERRIDES FOR STRINGS ── */
+        [data-theme="light"] .grp1-path,
+        [data-theme="light"] .grp2-path {
+          filter: drop-shadow(0 2px 6px rgba(15, 23, 42, 0.12));
+        }
+
         @keyframes float-string-up-1 { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-1.2deg); } }
         @keyframes float-string-down-2 { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(1.4deg); } }
         @keyframes float-string-up-3 { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-0.9deg); } }
