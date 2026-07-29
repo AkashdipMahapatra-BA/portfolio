@@ -226,6 +226,13 @@ export function EducationThreads({
           filter: drop-shadow(0 0 3px rgba(255,255,255,0.2)) drop-shadow(0 0 5px currentColor);
         }
 
+        /* ── LIGHT MODE OVERRIDES FOR STRINGS ── */
+        [data-theme="light"] .edu-path,
+        [data-theme="light"] .edu-path-grp2,
+        [data-theme="light"] .edu-path-mob {
+          filter: drop-shadow(0 2px 6px rgba(15, 23, 42, 0.12));
+        }
+
         /* ── MOBILE ANIMATION: Replicates desktop Point 8 absorption ── */
         /* Thread draws forward, reaches button, then slides THROUGH into button (negative dashoffset = absorption) */
         @keyframes draw-absorb-edu-mob {
