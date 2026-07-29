@@ -2,15 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 
-const THREAD_COLORS = [
-  "#06B6D4", // Cyan
-  "#FACC15", // Bright Yellow
-  "#EF4444", // Crimson Red
-  "#10B981", // Emerald Green
-  "#F97316", // Amber Orange
-  "#A855F7", // Purple
-  "#3B82F6", // Royal Blue
-];
+import { THREAD_COLORS } from "@/lib/theme";
 
 export function EducationThreads({
   onAbsorption,
@@ -78,36 +70,36 @@ export function EducationThreads({
       >
         {/* 1. Point 5 -> Point 6 Stream: 15 dense randomized color threads with longer tails starting deep in Showcase section (y=-180) & terminating at top border edge of card (y=0, wide 300px gap x=420..720) */}
         <g className={`edu-grp1-container ${inView ? "animate" : ""}`}>
-          <path d="M 100,-180 C 180,-100 420,-40 420,0" stroke="#FACC15" strokeWidth="2.6" strokeLinecap="round" className="edu-path string-indep-1" />
-          <path d="M 140,-180 C 210,-100 440,-40 440,0" stroke="#EF4444" strokeWidth="2.8" strokeLinecap="round" className="edu-path string-indep-2" />
-          <path d="M 180,-180 C 240,-100 460,-40 460,0" stroke="#10B981" strokeWidth="2.4" strokeLinecap="round" className="edu-path string-indep-3" />
+          <path d="M 100,-180 C 180,-100 420,-40 420,0" stroke="#FACC15" strokeWidth="2.6" strokeLinecap="round" className="edu-path thread-glow-path string-indep-1" />
+          <path d="M 140,-180 C 210,-100 440,-40 440,0" stroke="#EF4444" strokeWidth="2.8" strokeLinecap="round" className="edu-path thread-glow-path string-indep-2" />
+          <path d="M 180,-180 C 240,-100 460,-40 460,0" stroke="#10B981" strokeWidth="2.4" strokeLinecap="round" className="edu-path thread-glow-path string-indep-3" />
 
-          <path d="M 280,-180 C 330,-100 480,-40 480,0" stroke="#EF4444" strokeWidth="2.7" strokeLinecap="round" className="edu-path string-indep-4" />
-          <path d="M 320,-180 C 360,-100 500,-40 500,0" stroke="#FACC15" strokeWidth="2.9" strokeLinecap="round" className="edu-path string-indep-5" />
-          <path d="M 360,-180 C 390,-100 520,-40 520,0" stroke="#A855F7" strokeWidth="2.5" strokeLinecap="round" className="edu-path string-indep-6" />
-          <path d="M 400,-180 C 420,-100 540,-40 540,0" stroke="#06B6D4" strokeWidth="2.3" strokeLinecap="round" className="edu-path string-indep-7" />
+          <path d="M 280,-180 C 330,-100 480,-40 480,0" stroke="#EF4444" strokeWidth="2.7" strokeLinecap="round" className="edu-path thread-glow-path string-indep-4" />
+          <path d="M 320,-180 C 360,-100 500,-40 500,0" stroke="#FACC15" strokeWidth="2.9" strokeLinecap="round" className="edu-path thread-glow-path string-indep-5" />
+          <path d="M 360,-180 C 390,-100 520,-40 520,0" stroke="#A855F7" strokeWidth="2.5" strokeLinecap="round" className="edu-path thread-glow-path string-indep-6" />
+          <path d="M 400,-180 C 420,-100 540,-40 540,0" stroke="#06B6D4" strokeWidth="2.3" strokeLinecap="round" className="edu-path thread-glow-path string-indep-7" />
 
-          <path d="M 540,-180 C 545,-100 560,-40 560,0" stroke="#F97316" strokeWidth="2.6" strokeLinecap="round" className="edu-path string-indep-1" />
-          <path d="M 580,-180 C 580,-100 585,-40 585,0" stroke="#EF4444" strokeWidth="2.8" strokeLinecap="round" className="edu-path string-indep-2" />
-          <path d="M 620,-180 C 615,-100 610,-40 610,0" stroke="#10B981" strokeWidth="2.4" strokeLinecap="round" className="edu-path string-indep-3" />
-          <path d="M 660,-180 C 640,-100 630,-40 630,0" stroke="#FACC15" strokeWidth="2.7" strokeLinecap="round" className="edu-path string-indep-4" />
+          <path d="M 540,-180 C 545,-100 560,-40 560,0" stroke="#F97316" strokeWidth="2.6" strokeLinecap="round" className="edu-path thread-glow-path string-indep-1" />
+          <path d="M 580,-180 C 580,-100 585,-40 585,0" stroke="#EF4444" strokeWidth="2.8" strokeLinecap="round" className="edu-path thread-glow-path string-indep-2" />
+          <path d="M 620,-180 C 615,-100 610,-40 610,0" stroke="#10B981" strokeWidth="2.4" strokeLinecap="round" className="edu-path thread-glow-path string-indep-3" />
+          <path d="M 660,-180 C 640,-100 630,-40 630,0" stroke="#FACC15" strokeWidth="2.7" strokeLinecap="round" className="edu-path thread-glow-path string-indep-4" />
 
-          <path d="M 800,-180 C 760,-100 660,-40 660,0" stroke="#A855F7" strokeWidth="2.8" strokeLinecap="round" className="edu-path string-indep-5" />
-          <path d="M 860,-180 C 800,-100 680,-40 680,0" stroke="#F97316" strokeWidth="2.5" strokeLinecap="round" className="edu-path string-indep-6" />
-          <path d="M 920,-180 C 850,-100 700,-40 700,0" stroke="#06B6D4" strokeWidth="2.6" strokeLinecap="round" className="edu-path string-indep-7" />
-          <path d="M 980,-180 C 900,-100 720,-40 720,0" stroke="#EF4444" strokeWidth="2.3" strokeLinecap="round" className="edu-path string-indep-1" />
+          <path d="M 800,-180 C 760,-100 660,-40 660,0" stroke="#A855F7" strokeWidth="2.8" strokeLinecap="round" className="edu-path thread-glow-path string-indep-5" />
+          <path d="M 860,-180 C 800,-100 680,-40 680,0" stroke="#F97316" strokeWidth="2.5" strokeLinecap="round" className="edu-path thread-glow-path string-indep-6" />
+          <path d="M 920,-180 C 850,-100 700,-40 700,0" stroke="#06B6D4" strokeWidth="2.6" strokeLinecap="round" className="edu-path thread-glow-path string-indep-7" />
+          <path d="M 980,-180 C 900,-100 720,-40 720,0" stroke="#EF4444" strokeWidth="2.3" strokeLinecap="round" className="edu-path thread-glow-path string-indep-1" />
         </g>
 
         {/* 2. Point 7 -> Point 8 Stream: Re-emerges from behind left border wall at Point 7 (x=0) with organic random gaps (y=295..415), looping in a single ultra-smooth continuous arc into IT Button left edge (x=60, y=195) */}
         <g className={`edu-grp2-container ${inView ? "animate" : ""}`}>
-          <path d="M 0,295 C -100,295 -40,140 60,195" stroke={THREAD_COLORS[0]} strokeWidth="2.5" strokeLinecap="round" className="edu-path-grp2 string-indep-1" />
-          <path d="M 0,302 C -105,302 -38,142 62,195" stroke={THREAD_COLORS[1]} strokeWidth="2.8" strokeLinecap="round" className="edu-path-grp2 string-indep-2" />
-          <path d="M 0,322 C -110,322 -36,144 64,195" stroke={THREAD_COLORS[2]} strokeWidth="2.5" strokeLinecap="round" className="edu-path-grp2 string-indep-3" />
-          <path d="M 0,328 C -115,328 -34,146 66,195" stroke={THREAD_COLORS[3]} strokeWidth="2.6" strokeLinecap="round" className="edu-path-grp2 string-indep-4" />
-          <path d="M 0,355 C -120,355 -32,148 68,195" stroke={THREAD_COLORS[4]} strokeWidth="2.4" strokeLinecap="round" className="edu-path-grp2 string-indep-5" />
-          <path d="M 0,385 C -125,385 -30,150 70,195" stroke={THREAD_COLORS[5]} strokeWidth="2.7" strokeLinecap="round" className="edu-path-grp2 string-indep-6" />
-          <path d="M 0,392 C -130,392 -28,152 72,195" stroke={THREAD_COLORS[6]} strokeWidth="2.3" strokeLinecap="round" className="edu-path-grp2 string-indep-7" />
-          <path d="M 0,415 C -135,415 -26,154 74,195" stroke={THREAD_COLORS[1]} strokeWidth="2.6" strokeLinecap="round" className="edu-path-grp2 string-indep-1" />
+          <path d="M 0,295 C -100,295 -40,140 60,195" stroke={THREAD_COLORS[0]} strokeWidth="2.5" strokeLinecap="round" className="edu-path-grp2 thread-glow-path string-indep-1" />
+          <path d="M 0,302 C -105,302 -38,142 62,195" stroke={THREAD_COLORS[1]} strokeWidth="2.8" strokeLinecap="round" className="edu-path-grp2 thread-glow-path string-indep-2" />
+          <path d="M 0,322 C -110,322 -36,144 64,195" stroke={THREAD_COLORS[2]} strokeWidth="2.5" strokeLinecap="round" className="edu-path-grp2 thread-glow-path string-indep-3" />
+          <path d="M 0,328 C -115,328 -34,146 66,195" stroke={THREAD_COLORS[3]} strokeWidth="2.6" strokeLinecap="round" className="edu-path-grp2 thread-glow-path string-indep-4" />
+          <path d="M 0,355 C -120,355 -32,148 68,195" stroke={THREAD_COLORS[4]} strokeWidth="2.4" strokeLinecap="round" className="edu-path-grp2 thread-glow-path string-indep-5" />
+          <path d="M 0,385 C -125,385 -30,150 70,195" stroke={THREAD_COLORS[5]} strokeWidth="2.7" strokeLinecap="round" className="edu-path-grp2 thread-glow-path string-indep-6" />
+          <path d="M 0,392 C -130,392 -28,152 72,195" stroke={THREAD_COLORS[6]} strokeWidth="2.3" strokeLinecap="round" className="edu-path-grp2 thread-glow-path string-indep-7" />
+          <path d="M 0,415 C -135,415 -26,154 74,195" stroke={THREAD_COLORS[1]} strokeWidth="2.6" strokeLinecap="round" className="edu-path-grp2 thread-glow-path string-indep-1" />
         </g>
       </svg>
 
@@ -129,13 +121,13 @@ export function EducationThreads({
       >
         <g className={`edu-grp1-container-mobile ${inView ? "animate" : ""}`}>
           {/* 7 threads: wide spread at top (Point 5), sweep right, converge exactly at 1st IT button top-right (x~260, y~118) */}
-          <path d="M 30,-100 C 120,-20 320,30 260,118" stroke="#FACC15" strokeWidth="1.5" strokeLinecap="round" className="edu-path-mob string-indep-1" />
-          <path d="M 80,-100 C 160,-10 330,40 261,119" stroke="#EF4444" strokeWidth="1.7" strokeLinecap="round" className="edu-path-mob string-indep-2" />
-          <path d="M 140,-100 C 200,0 340,50 262,120" stroke="#10B981" strokeWidth="1.4" strokeLinecap="round" className="edu-path-mob string-indep-3" />
-          <path d="M 200,-100 C 240,10 350,60 263,121" stroke="#F97316" strokeWidth="1.6" strokeLinecap="round" className="edu-path-mob string-indep-4" />
-          <path d="M 260,-100 C 280,20 360,70 264,122" stroke="#A855F7" strokeWidth="1.5" strokeLinecap="round" className="edu-path-mob string-indep-5" />
-          <path d="M 310,-100 C 310,30 370,80 265,123" stroke="#06B6D4" strokeWidth="1.8" strokeLinecap="round" className="edu-path-mob string-indep-6" />
-          <path d="M 355,-100 C 340,40 380,90 266,124" stroke="#3B82F6" strokeWidth="1.4" strokeLinecap="round" className="edu-path-mob string-indep-7" />
+          <path d="M 30,-100 C 120,-20 320,30 260,118" stroke="#FACC15" strokeWidth="1.5" strokeLinecap="round" className="edu-path-mob thread-glow-path-sm string-indep-1" />
+          <path d="M 80,-100 C 160,-10 330,40 261,119" stroke="#EF4444" strokeWidth="1.7" strokeLinecap="round" className="edu-path-mob thread-glow-path-sm string-indep-2" />
+          <path d="M 140,-100 C 200,0 340,50 262,120" stroke="#10B981" strokeWidth="1.4" strokeLinecap="round" className="edu-path-mob thread-glow-path-sm string-indep-3" />
+          <path d="M 200,-100 C 240,10 350,60 263,121" stroke="#F97316" strokeWidth="1.6" strokeLinecap="round" className="edu-path-mob thread-glow-path-sm string-indep-4" />
+          <path d="M 260,-100 C 280,20 360,70 264,122" stroke="#A855F7" strokeWidth="1.5" strokeLinecap="round" className="edu-path-mob thread-glow-path-sm string-indep-5" />
+          <path d="M 310,-100 C 310,30 370,80 265,123" stroke="#06B6D4" strokeWidth="1.8" strokeLinecap="round" className="edu-path-mob thread-glow-path-sm string-indep-6" />
+          <path d="M 355,-100 C 340,40 380,90 266,124" stroke="#3B82F6" strokeWidth="1.4" strokeLinecap="round" className="edu-path-mob thread-glow-path-sm string-indep-7" />
         </g>
       </svg>
 
@@ -207,7 +199,6 @@ export function EducationThreads({
           stroke-dasharray: 750;
           stroke-dashoffset: 750;
           opacity: 0;
-          filter: drop-shadow(0 0 4px rgba(255,255,255,0.25)) drop-shadow(0 0 6px currentColor);
           transform-origin: 575px 0px;
         }
 
@@ -215,7 +206,6 @@ export function EducationThreads({
           stroke-dasharray: 850;
           stroke-dashoffset: 850;
           opacity: 0;
-          filter: drop-shadow(0 0 4px rgba(255,255,255,0.25)) drop-shadow(0 0 6px currentColor);
           transform-origin: 0px 340px;
         }
 
@@ -223,14 +213,6 @@ export function EducationThreads({
           stroke-dasharray: 600;
           stroke-dashoffset: 600;
           opacity: 0;
-          filter: drop-shadow(0 0 3px rgba(255,255,255,0.2)) drop-shadow(0 0 5px currentColor);
-        }
-
-        /* ── LIGHT MODE OVERRIDES FOR STRINGS ── */
-        [data-theme="light"] .edu-path,
-        [data-theme="light"] .edu-path-grp2,
-        [data-theme="light"] .edu-path-mob {
-          filter: drop-shadow(0 2px 6px rgba(15, 23, 42, 0.12));
         }
 
         /* ── MOBILE ANIMATION: Replicates desktop Point 8 absorption ── */
@@ -268,14 +250,6 @@ export function EducationThreads({
         .edu-grp1-container-mobile.animate .string-indep-5 { animation: draw-absorb-edu-mob 8s ease-in-out 0.25s forwards; }
         .edu-grp1-container-mobile.animate .string-indep-6 { animation: draw-absorb-edu-mob 8s ease-in-out 0.30s forwards; }
         .edu-grp1-container-mobile.animate .string-indep-7 { animation: draw-absorb-edu-mob 8s ease-in-out 0.35s forwards; }
-
-        @keyframes float-string-up-1 { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-1.2deg); } }
-        @keyframes float-string-down-2 { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(1.4deg); } }
-        @keyframes float-string-up-3 { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-0.9deg); } }
-        @keyframes float-string-down-4 { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(1.1deg); } }
-        @keyframes float-string-up-5 { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-1.5deg); } }
-        @keyframes float-string-down-6 { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(0.8deg); } }
-        @keyframes float-string-up-7 { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-1.1deg); } }
 
         .edu-grp1-container.animate .string-indep-1 { animation: draw-hold-vanish-edu-grp1 9s ease-in-out 0.05s forwards, float-string-up-1 3.4s ease-in-out 1.5s infinite; }
         .edu-grp1-container.animate .string-indep-2 { animation: draw-hold-vanish-edu-grp1 9s ease-in-out 0.08s forwards, float-string-down-2 4.2s ease-in-out 1.6s infinite; }

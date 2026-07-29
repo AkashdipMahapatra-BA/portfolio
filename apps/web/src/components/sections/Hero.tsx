@@ -230,47 +230,59 @@ export function Hero() {
                   lineHeight: 1.4,
                   overflowWrap: "anywhere",
                   wordBreak: "break-word",
+                  position: "relative",
                 }}
               >
-                {/* ▶ replay button — inline so text wraps naturally beside it */}
-                <button
-                  onClick={replay}
-                  title="Replay animation"
-                  style={{
-                    display: "inline",
-                    background: "none",
-                    border: "none",
-                    padding: 0,
-                    marginRight: "0.4rem",
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "inherit",
-                    fontWeight: "inherit",
-                    lineHeight: "inherit",
-                    color: "var(--color-accent)",
-                    cursor: "pointer",
-                    verticalAlign: "baseline",
-                    transition: "transform 0.15s ease, opacity 0.15s ease",
-                  }}
-                  onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.opacity = "0.7")}
-                  onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.opacity = "1")}
-                >
-                  ▶
-                </button>
-                {/* Typed text + cursor — inline, wraps naturally with the ▶ */}
-                <span key={playKey}>
-                  <span ref={typedRef} />
-                  <span
+                {/* Phantom layer: This renders invisibly to force the h1 to take up the full final height across all responsive breakpoints immediately, preventing any layout snapping. */}
+                <div aria-hidden="true" style={{ opacity: 0, pointerEvents: "none", userSelect: "none" }}>
+                  <span style={{ display: "inline-block", marginRight: "0.4rem" }}>▶</span>
+                  {FULL_TEXT}
+                </div>
+
+                {/* Actual typing layer */}
+                <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}>
+                  {/* ▶ replay button — inline so text wraps naturally beside it */}
+                  <button
+                    onClick={replay}
+                    title="Replay animation"
                     style={{
-                      display: "inline-block",
-                      width: "2px",
-                      height: "1.1em",
-                      background: startTyping ? "var(--color-accent)" : "transparent",
-                      marginLeft: "2px",
-                      verticalAlign: "text-bottom",
-                      animation: startTyping ? "blink 1s step-end infinite" : "none",
+                      display: "inline",
+                      background: "none",
+                      border: "none",
+                      padding: 0,
+                      marginRight: "0.4rem",
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "inherit",
+                      fontWeight: "inherit",
+                      lineHeight: "inherit",
+                      color: "var(--color-accent)",
+                      cursor: "pointer",
+                      verticalAlign: "baseline",
+                      transition: "transform 0.15s ease, opacity 0.15s ease",
                     }}
-                  />
-                </span>
+                    onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.opacity = "0.7")}
+                    onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.opacity = "1")}
+                  >
+                    ▶
+                  </button>
+                  {/* Typed text + cursor — inline, wraps naturally with the ▶ */}
+                  <span key={playKey}>
+                    <span ref={typedRef} />
+                    <span
+                      style={{
+                        display: "inline-block",
+                        width: "3px",
+                        height: "1.1em",
+                        background: startTyping ? "var(--color-accent)" : "transparent",
+                        marginLeft: "4px",
+                        verticalAlign: "text-bottom",
+                        transformOrigin: "center",
+                        borderRadius: "1px",
+                        animation: startTyping ? "cursor-blink 1s ease-in-out infinite" : "none",
+                      }}
+                    />
+                  </span>
+                </div>
               </h1>
 
               {/* Subtext */}
@@ -358,9 +370,17 @@ export function Hero() {
         </div>
 
         <style>{`
-          @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50%       { opacity: 0; }
+          @keyframes cursor-blink {
+            0%, 100% { 
+              opacity: 1; 
+              transform: scaleY(1); 
+              box-shadow: 0 0 10px var(--color-accent), 0 0 4px var(--color-accent);
+            }
+            50% { 
+              opacity: 0; 
+              transform: scaleY(0.3); 
+              box-shadow: 0 0 0px transparent;
+            }
           }
         `}</style>
       </section>
