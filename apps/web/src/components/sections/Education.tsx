@@ -534,6 +534,9 @@ const shimmerStyles = `
       flex-direction: column;
       align-items: stretch;
     }
+    .edu-btn-row > *:first-child {
+      margin-bottom: 0.85rem;
+    }
     .edu-btn {
       width: 100% !important;
       justify-content: center;

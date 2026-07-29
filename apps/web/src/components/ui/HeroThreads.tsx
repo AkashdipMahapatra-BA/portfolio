@@ -2,15 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-const THREAD_COLORS = [
-  "#06B6D4", // Cyan
-  "#FACC15", // Bright Yellow
-  "#EF4444", // Crimson Red
-  "#10B981", // Emerald Green
-  "#F97316", // Amber Orange
-  "#A855F7", // Purple
-  "#3B82F6", // Royal Blue
-];
+import { THREAD_COLORS } from "@/lib/theme";
 
 export function HeroThreads({ active }: { active: boolean }) {
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -69,7 +61,7 @@ export function HeroThreads({ active }: { active: boolean }) {
             stroke={THREAD_COLORS[0]}
             strokeWidth="2.5"
             strokeLinecap="round"
-            className="grp1-path string-indep-1"
+            className="grp1-path thread-glow-path string-indep-1"
           />
           {/* Thread 2 - Yellow */}
           <path
@@ -77,7 +69,7 @@ export function HeroThreads({ active }: { active: boolean }) {
             stroke={THREAD_COLORS[1]}
             strokeWidth="3.0"
             strokeLinecap="round"
-            className="grp1-path string-indep-2"
+            className="grp1-path thread-glow-path string-indep-2"
           />
           {/* Thread 3 - Red */}
           <path
@@ -85,7 +77,7 @@ export function HeroThreads({ active }: { active: boolean }) {
             stroke={THREAD_COLORS[2]}
             strokeWidth="2.6"
             strokeLinecap="round"
-            className="grp1-path string-indep-3"
+            className="grp1-path thread-glow-path string-indep-3"
           />
           {/* Thread 4 - Green */}
           <path
@@ -93,7 +85,7 @@ export function HeroThreads({ active }: { active: boolean }) {
             stroke={THREAD_COLORS[3]}
             strokeWidth="2.8"
             strokeLinecap="round"
-            className="grp1-path string-indep-4"
+            className="grp1-path thread-glow-path string-indep-4"
           />
           {/* Thread 5 - Orange */}
           <path
@@ -101,7 +93,7 @@ export function HeroThreads({ active }: { active: boolean }) {
             stroke={THREAD_COLORS[4]}
             strokeWidth="2.4"
             strokeLinecap="round"
-            className="grp1-path string-indep-5"
+            className="grp1-path thread-glow-path string-indep-5"
           />
           {/* Thread 6 - Purple */}
           <path
@@ -109,7 +101,7 @@ export function HeroThreads({ active }: { active: boolean }) {
             stroke={THREAD_COLORS[5]}
             strokeWidth="2.9"
             strokeLinecap="round"
-            className="grp1-path string-indep-6"
+            className="grp1-path thread-glow-path string-indep-6"
           />
           {/* Thread 7 - Blue */}
           <path
@@ -117,7 +109,7 @@ export function HeroThreads({ active }: { active: boolean }) {
             stroke={THREAD_COLORS[6]}
             strokeWidth="2.2"
             strokeLinecap="round"
-            className="grp1-path string-indep-7"
+            className="grp1-path thread-glow-path string-indep-7"
           />
         </g>
 
@@ -137,7 +129,7 @@ export function HeroThreads({ active }: { active: boolean }) {
             stroke={THREAD_COLORS[1]}
             strokeWidth="3.0"
             strokeLinecap="round"
-            className="grp2-path string-indep-2"
+            className="grp2-path thread-glow-path string-indep-2"
           />
           {/* Thread 3 - Red */}
           <path
@@ -145,7 +137,7 @@ export function HeroThreads({ active }: { active: boolean }) {
             stroke={THREAD_COLORS[2]}
             strokeWidth="2.6"
             strokeLinecap="round"
-            className="grp2-path string-indep-3"
+            className="grp2-path thread-glow-path string-indep-3"
           />
           {/* Thread 4 - Green */}
           <path
@@ -153,7 +145,7 @@ export function HeroThreads({ active }: { active: boolean }) {
             stroke={THREAD_COLORS[3]}
             strokeWidth="2.8"
             strokeLinecap="round"
-            className="grp2-path string-indep-4"
+            className="grp2-path thread-glow-path string-indep-4"
           />
           {/* Thread 5 - Orange */}
           <path
@@ -161,7 +153,7 @@ export function HeroThreads({ active }: { active: boolean }) {
             stroke={THREAD_COLORS[4]}
             strokeWidth="2.4"
             strokeLinecap="round"
-            className="grp2-path string-indep-5"
+            className="grp2-path thread-glow-path string-indep-5"
           />
           {/* Thread 6 - Purple */}
           <path
@@ -169,10 +161,10 @@ export function HeroThreads({ active }: { active: boolean }) {
             stroke={THREAD_COLORS[5]}
             strokeWidth="2.9"
             strokeLinecap="round"
-            className="grp2-path string-indep-6"
+            className="grp2-path thread-glow-path string-indep-6"
           />
           {/* Thread 7 - Blue */}
-          <path d="M 720,660 C 860,735 980,815 1180,892" stroke={THREAD_COLORS[6]} strokeWidth="2.2" strokeLinecap="round" className="grp2-path string-indep-7" />
+          <path d="M 720,660 C 860,735 980,815 1180,892" stroke={THREAD_COLORS[6]} strokeWidth="2.2" strokeLinecap="round" className="grp2-path thread-glow-path string-indep-7" />
         </g>
       </svg>
 
@@ -193,23 +185,23 @@ export function HeroThreads({ active }: { active: boolean }) {
       >
         {/* Segment 1 (Point 1 -> Point 2): Tight 1cm origin at top screen edge (y=0), attaching to top border of terminal card (y=210) */}
         <g className="hero-grp1-container">
-          <path d="M 194,0 C 150,70 140,140 188,210" stroke={THREAD_COLORS[3]} strokeWidth="1.5" strokeLinecap="round" className="grp1-path string-indep-1" />
-          <path d="M 197,0 C 170,70 180,140 193,210" stroke={THREAD_COLORS[5]} strokeWidth="1.8" strokeLinecap="round" className="grp1-path string-indep-2" />
-          <path d="M 200,0 C 190,70 210,140 198,210" stroke={THREAD_COLORS[2]} strokeWidth="1.6" strokeLinecap="round" className="grp1-path string-indep-3" />
-          <path d="M 203,0 C 220,70 195,140 203,210" stroke={THREAD_COLORS[1]} strokeWidth="1.7" strokeLinecap="round" className="grp1-path string-indep-4" />
-          <path d="M 206,0 C 235,70 240,140 208,210" stroke={THREAD_COLORS[3]} strokeWidth="1.5" strokeLinecap="round" className="grp1-path string-indep-5" />
-          <path d="M 209,0 C 250,70 260,140 212,210" stroke={THREAD_COLORS[0]} strokeWidth="1.6" strokeLinecap="round" className="grp1-path string-indep-6" />
+          <path d="M 194,0 C 150,70 140,140 188,210" stroke={THREAD_COLORS[3]} strokeWidth="1.5" strokeLinecap="round" className="grp1-path thread-glow-path string-indep-1" />
+          <path d="M 197,0 C 170,70 180,140 193,210" stroke={THREAD_COLORS[5]} strokeWidth="1.8" strokeLinecap="round" className="grp1-path thread-glow-path string-indep-2" />
+          <path d="M 200,0 C 190,70 210,140 198,210" stroke={THREAD_COLORS[2]} strokeWidth="1.6" strokeLinecap="round" className="grp1-path thread-glow-path string-indep-3" />
+          <path d="M 203,0 C 220,70 195,140 203,210" stroke={THREAD_COLORS[1]} strokeWidth="1.7" strokeLinecap="round" className="grp1-path thread-glow-path string-indep-4" />
+          <path d="M 206,0 C 235,70 240,140 208,210" stroke={THREAD_COLORS[3]} strokeWidth="1.5" strokeLinecap="round" className="grp1-path thread-glow-path string-indep-5" />
+          <path d="M 209,0 C 250,70 260,140 212,210" stroke={THREAD_COLORS[0]} strokeWidth="1.6" strokeLinecap="round" className="grp1-path thread-glow-path string-indep-6" />
         </g>
 
         {/* Segment 2 (Point 3 -> Point 4): Starts INSIDE bottom border of terminal card (y=560) to guarantee 100% attachment with zero gap! */}
         <g className="hero-grp2-container">
-          <path d="M 188,560 C 140,640 80,720 60,800" stroke={THREAD_COLORS[5]} strokeWidth="1.5" strokeLinecap="round" className="grp2-path string-indep-1" />
-          <path d="M 192,560 C 160,640 120,720 100,800" stroke={THREAD_COLORS[0]} strokeWidth="1.7" strokeLinecap="round" className="grp2-path string-indep-2" />
-          <path d="M 196,560 C 180,640 150,720 140,800" stroke={THREAD_COLORS[2]} strokeWidth="1.6" strokeLinecap="round" className="grp2-path string-indep-3" />
-          <path d="M 200,560 C 200,640 185,720 180,800" stroke={THREAD_COLORS[3]} strokeWidth="1.8" strokeLinecap="round" className="grp2-path string-indep-4" />
-          <path d="M 204,560 C 220,640 225,720 230,800" stroke={THREAD_COLORS[1]} strokeWidth="1.6" strokeLinecap="round" className="grp2-path string-indep-5" />
-          <path d="M 208,560 C 245,640 270,720 285,800" stroke={THREAD_COLORS[2]} strokeWidth="1.5" strokeLinecap="round" className="grp2-path string-indep-6" />
-          <path d="M 212,560 C 270,640 320,720 350,800" stroke={THREAD_COLORS[6]} strokeWidth="1.6" strokeLinecap="round" className="grp2-path string-indep-7" />
+          <path d="M 188,560 C 140,640 80,720 60,800" stroke={THREAD_COLORS[5]} strokeWidth="1.5" strokeLinecap="round" className="grp2-path thread-glow-path string-indep-1" />
+          <path d="M 192,560 C 160,640 120,720 100,800" stroke={THREAD_COLORS[0]} strokeWidth="1.7" strokeLinecap="round" className="grp2-path thread-glow-path string-indep-2" />
+          <path d="M 196,560 C 180,640 150,720 140,800" stroke={THREAD_COLORS[2]} strokeWidth="1.6" strokeLinecap="round" className="grp2-path thread-glow-path string-indep-3" />
+          <path d="M 200,560 C 200,640 185,720 180,800" stroke={THREAD_COLORS[3]} strokeWidth="1.8" strokeLinecap="round" className="grp2-path thread-glow-path string-indep-4" />
+          <path d="M 204,560 C 220,640 225,720 230,800" stroke={THREAD_COLORS[1]} strokeWidth="1.6" strokeLinecap="round" className="grp2-path thread-glow-path string-indep-5" />
+          <path d="M 208,560 C 245,640 270,720 285,800" stroke={THREAD_COLORS[2]} strokeWidth="1.5" strokeLinecap="round" className="grp2-path thread-glow-path string-indep-6" />
+          <path d="M 212,560 C 270,640 320,720 350,800" stroke={THREAD_COLORS[6]} strokeWidth="1.6" strokeLinecap="round" className="grp2-path thread-glow-path string-indep-7" />
         </g>
       </svg>
 
@@ -242,7 +234,6 @@ export function HeroThreads({ active }: { active: boolean }) {
           stroke-dasharray: 650;
           stroke-dashoffset: 650;
           opacity: 0;
-          filter: drop-shadow(0 0 4px rgba(255,255,255,0.25)) drop-shadow(0 0 6px currentColor);
           transform-origin: 0px 200px;
         }
 
@@ -250,23 +241,8 @@ export function HeroThreads({ active }: { active: boolean }) {
           stroke-dasharray: 750;
           stroke-dashoffset: 750;
           opacity: 0;
-          filter: drop-shadow(0 0 4px rgba(255,255,255,0.25)) drop-shadow(0 0 6px currentColor);
           transform-origin: 700px 660px;
         }
-
-        /* ── LIGHT MODE OVERRIDES FOR STRINGS ── */
-        [data-theme="light"] .grp1-path,
-        [data-theme="light"] .grp2-path {
-          filter: drop-shadow(0 2px 6px rgba(15, 23, 42, 0.12));
-        }
-
-        @keyframes float-string-up-1 { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-1.2deg); } }
-        @keyframes float-string-down-2 { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(1.4deg); } }
-        @keyframes float-string-up-3 { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-0.9deg); } }
-        @keyframes float-string-down-4 { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(1.1deg); } }
-        @keyframes float-string-up-5 { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-1.5deg); } }
-        @keyframes float-string-down-6 { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(0.8deg); } }
-        @keyframes float-string-up-7 { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-1.1deg); } }
 
         .hero-grp1-container .string-indep-1 { animation: draw-hold-vanish-grp1 9s ease-in-out 0.6s forwards, float-string-up-1 3.4s ease-in-out 2.0s infinite; }
         .hero-grp1-container .string-indep-2 { animation: draw-hold-vanish-grp1 9s ease-in-out 0.7s forwards, float-string-down-2 4.2s ease-in-out 2.2s infinite; }
