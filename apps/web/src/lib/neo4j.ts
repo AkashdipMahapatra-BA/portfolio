@@ -48,8 +48,11 @@ export async function queryGraph(
 
   const session = activeDriver.session();
   try {
-    const result = await session.run(cypher, params);
-    return result.records.map((record) => record.toObject());
+    const records = await session.executeRead(async (tx) => {
+      const result = await tx.run(cypher, params);
+      return result.records.map((record) => record.toObject());
+    });
+    return records;
   } catch (err) {
     console.warn("Neo4j query execution failed (Falling back to static prompt):", err);
     return null;

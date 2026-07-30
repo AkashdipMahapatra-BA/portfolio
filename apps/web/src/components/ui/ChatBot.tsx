@@ -15,6 +15,7 @@ const INITIAL_SUGGESTIONS = [
   "🛠️ What is Akashdip's core tech stack?",
   "💼 Tell me about his work experience",
   "✉️ How can I contact Akashdip?",
+  "🤖 How this Chatbot works",
 ];
 
 const INITIAL_WELCOME: Message = {
@@ -99,14 +100,41 @@ export function ChatBot() {
     setMessages([INITIAL_WELCOME]);
   };
 
-  // Simple Markdown Renderer helper for formatting responses safely
+  // Full Markdown Renderer helper for formatting code blocks, diagrams & headers safely
   const formatMarkdown = (text: string) => {
-    // Bold text (**word**)
-    let formatted = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-    // Inline code (`code`)
-    formatted = formatted.replace(/`(.*?)`/g, "<code class='chat-code'>$1</code>");
-    // Newlines to line breaks
-    formatted = formatted.replace(/\n/g, "<br/>");
+    let formatted = text;
+
+    // 1. Parse triple backtick code blocks (```text ... ```)
+    formatted = formatted.replace(/```(?:text|json|bash|cypher)?\n?([\s\S]*?)```/g, (_match, codeContent) => {
+      const escapedCode = codeContent
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+      return `<pre class="chat-code-block">${escapedCode.trim()}</pre>`;
+    });
+
+    // 2. Horizontal rules
+    formatted = formatted.replace(/^---$/gm, "<hr class='chat-hr' />");
+
+    // 3. Headers (### Header)
+    formatted = formatted.replace(/### (.*?)(?=\n|$)/g, "<h4 class='chat-h4'>$1</h4>");
+    formatted = formatted.replace(/## (.*?)(?=\n|$)/g, "<h3 class='chat-h3'>$1</h3>");
+
+    // 4. Bold text (**word**)
+    formatted = formatted.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+
+    // 5. Single backtick inline code (`code`)
+    formatted = formatted.replace(/`([^`\n]+)`/g, "<code class='chat-code'>$1</code>");
+
+    // 6. Convert remaining newlines (outside <pre>) to <br/>
+    const parts = formatted.split(/(<pre[\s\S]*?<\/pre>)/g);
+    formatted = parts
+      .map((part) => {
+        if (part.startsWith("<pre")) return part;
+        return part.replace(/\n/g, "<br/>");
+      })
+      .join("");
+
     return { __html: formatted };
   };
 
@@ -279,6 +307,8 @@ export function ChatBot() {
               flex: 1,
               padding: "1rem",
               overflowY: "auto",
+              overflowX: "hidden",
+              width: "100%",
               display: "flex",
               flexDirection: "column",
               gap: "0.85rem",
@@ -292,6 +322,7 @@ export function ChatBot() {
                   flexDirection: "column",
                   alignItems: msg.role === "user" ? "flex-end" : "flex-start",
                   gap: "0.25rem",
+                  width: "100%",
                 }}
               >
                 <div
@@ -300,7 +331,8 @@ export function ChatBot() {
                     alignItems: "flex-start",
                     gap: "0.5rem",
                     flexDirection: msg.role === "user" ? "row-reverse" : "row",
-                    maxWidth: "88%",
+                    maxWidth: "92%",
+                    minWidth: 0,
                   }}
                 >
                   <div
@@ -409,33 +441,61 @@ export function ChatBot() {
                 background: "color-mix(in srgb, var(--color-bg) 60%, transparent)",
               }}
             >
-              {INITIAL_SUGGESTIONS.map((sug, i) => (
-                <button
-                  key={i}
-                  onClick={() => handleSend(sug)}
-                  style={{
-                    fontSize: "0.68rem",
-                    padding: "0.3rem 0.6rem",
-                    borderRadius: "0.5rem",
-                    background: "color-mix(in srgb, var(--color-border) 50%, transparent)",
-                    border: "1px solid var(--color-border)",
-                    color: "var(--color-muted)",
-                    cursor: "pointer",
-                    textAlign: "left",
-                    transition: "all 0.15s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = "var(--color-accent)";
-                    e.currentTarget.style.color = "var(--color-accent)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = "var(--color-border)";
-                    e.currentTarget.style.color = "var(--color-muted)";
-                  }}
-                >
-                  {sug}
-                </button>
-              ))}
+              {INITIAL_SUGGESTIONS.map((sug, i) => {
+                const isSpecial = sug.includes("How this Chatbot works");
+                return (
+                  <button
+                    key={i}
+                    onClick={() => handleSend(sug)}
+                    className={isSpecial ? "chat-sug-btn-special" : "chat-sug-btn-normal"}
+                    style={{
+                      position: "relative",
+                      overflow: "hidden",
+                      fontSize: "0.68rem",
+                      padding: "0.3rem 0.6rem",
+                      borderRadius: "0.5rem",
+                      background: isSpecial
+                        ? "color-mix(in srgb, var(--color-accent) 20%, transparent)"
+                        : "color-mix(in srgb, var(--color-border) 50%, transparent)",
+                      border: isSpecial
+                        ? "1px solid color-mix(in srgb, var(--color-accent) 60%, transparent)"
+                        : "1px solid var(--color-border)",
+                      color: isSpecial ? "var(--color-accent)" : "var(--color-muted)",
+                      fontWeight: isSpecial ? 600 : 400,
+                      cursor: "pointer",
+                      textAlign: "left",
+                      width: "auto",
+                      boxShadow: isSpecial ? "0 2px 10px color-mix(in srgb, var(--color-accent) 25%, transparent)" : "none",
+                      transition: "all 0.2s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = "var(--color-accent)";
+                      e.currentTarget.style.color = "var(--color-accent)";
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isSpecial) {
+                        e.currentTarget.style.borderColor = "var(--color-border)";
+                        e.currentTarget.style.color = "var(--color-muted)";
+                      }
+                    }}
+                  >
+                    {/* ONLY special 'How this Chatbot works' button gets the Dual-Sweep Shimmer */}
+                    {isSpecial && (
+                      <span
+                        className="shimmer-layer-chat"
+                        style={{
+                          position: "absolute",
+                          inset: 0,
+                          pointerEvents: "none",
+                          background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%)",
+                          animation: "shimmer-btn-chat 4.5s ease-in-out infinite",
+                        }}
+                      />
+                    )}
+                    <span style={{ position: "relative", zIndex: 1 }}>{sug}</span>
+                  </button>
+                );
+              })}
             </div>
           )}
 
@@ -458,7 +518,7 @@ export function ChatBot() {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about Akashdip's skills..."
+              placeholder="Ask about Akashdip's skills or chatbot architecture..."
               disabled={isLoading}
               style={{
                 flex: 1,
@@ -495,7 +555,7 @@ export function ChatBot() {
         </div>
       )}
 
-      {/* Global CSS keyframes for ChatBot animation & typing pulse */}
+      {/* Global CSS keyframes for ChatBot animation, dual-sweep shimmer & markdown formatting */}
       <style jsx global>{`
         @keyframes chatFadeIn {
           from {
@@ -506,6 +566,18 @@ export function ChatBot() {
             opacity: 1;
             transform: translateY(0) scale(1);
           }
+        }
+        @keyframes shimmer-btn-chat {
+          0%     { transform: translateX(-150%) skewX(-20deg); opacity: 1; }
+          20%    { transform: translateX(150%)  skewX(-20deg); opacity: 1; }
+          20.01% { transform: translateX(-150%) skewX(-20deg); opacity: 0; }
+          23%    { transform: translateX(-150%) skewX(-20deg); opacity: 0; }
+          23.01% { transform: translateX(-150%) skewX(-20deg); opacity: 1; }
+          43%    { transform: translateX(150%)  skewX(-20deg); opacity: 1; }
+          43.01% { transform: translateX(150%)  skewX(-20deg); opacity: 1; }
+          63%    { transform: translateX(-150%) skewX(-20deg); opacity: 1; }
+          63.01% { transform: translateX(-150%) skewX(-20deg); opacity: 0; }
+          100%   { opacity: 0; transform: translateX(-150%) skewX(-20deg); }
         }
         .dot-pulse {
           width: 5px;
@@ -532,6 +604,39 @@ export function ChatBot() {
           padding: 1px 4px;
           border-radius: 3px;
           color: var(--color-accent);
+        }
+        .chat-code-block {
+          font-family: var(--font-mono);
+          font-size: 0.68rem;
+          line-height: 1.45;
+          background: color-mix(in srgb, #000 85%, var(--color-bg));
+          border: 1px solid color-mix(in srgb, var(--color-accent) 40%, transparent);
+          border-radius: 0.5rem;
+          padding: 0.65rem 0.75rem;
+          margin: 0.6rem 0;
+          color: var(--color-accent);
+          box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.5);
+          white-space: pre-wrap;
+          word-break: break-word;
+          overflow-x: hidden;
+          max-width: 100%;
+        }
+        .chat-hr {
+          margin: 0.6rem 0;
+          border: none;
+          border-top: 1px dashed var(--color-border);
+        }
+        .chat-h4 {
+          font-size: 0.82rem;
+          font-weight: 700;
+          margin: 0.5rem 0 0.25rem 0;
+          color: var(--color-accent);
+        }
+        .chat-h3 {
+          font-size: 0.88rem;
+          font-weight: 700;
+          margin: 0.6rem 0 0.3rem 0;
+          color: var(--color-text);
         }
       `}</style>
     </aside>

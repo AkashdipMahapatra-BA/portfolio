@@ -271,11 +271,17 @@ MERGE (a2:Award {title: 'NASA Open Science 101 Certification'})
 SET a2.issuer = 'NASA'
 MERGE (c)-[:EARNED]->(a2)
 
-MERGE (pub:Publication {title: 'Electrodeposited Nickel Coating Optimization'})
+MERGE (pub:Publication {title: 'Modeling and Optimization of Surface Roughness of Electrodeposited Nickel Coating Using Taguchi and Bonobo Optimizer'})
 SET pub.conference = 'INCOM 2026',
     pub.algorithms = 'Taguchi & Bonobo Optimizer',
     pub.domain = 'Surface Engineering & Metallurgical Optimization'
 MERGE (c)-[:PUBLISHED]->(pub)
+`;
+
+const INDEX_CYPHER = `
+CREATE FULLTEXT INDEX portfolioFullText IF NOT EXISTS
+FOR (n:Candidate|Project|Skill|Certification|Playlist|Video|WebsiteArchive|Hobby|Award|Publication)
+ON EACH [n.name, n.title, n.vendor, n.summary, n.tech, n.category, n.details, n.favorites]
 `;
 
 async function seed() {
@@ -283,7 +289,11 @@ async function seed() {
   const session = driver.session();
   try {
     await session.run(SEED_CYPHER);
-    console.log("✅ Granular Neo4j Knowledge Graph seeded successfully with individual certification, video, playlist, and archive nodes!");
+    console.log("✅ Granular Neo4j Knowledge Graph nodes seeded successfully!");
+
+    console.log("⚡ Creating Neo4j Full-Text Search Index (portfolioFullText)...");
+    await session.run(INDEX_CYPHER);
+    console.log("✅ Neo4j Full-Text Search Index created successfully!");
   } catch (err) {
     console.error("❌ Seeding failed:", err);
   } finally {
