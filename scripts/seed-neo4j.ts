@@ -87,7 +87,10 @@ UNWIND [
   {name: 'WebGL', category: '3D WebGL'},
   {name: 'MySQL', category: 'Database'},
   {name: 'BigQuery', category: 'Data Warehouse'},
-  {name: 'OpenTofu', category: 'IaC'}
+  {name: 'OpenTofu', category: 'IaC'},
+  {name: 'Salesforce', category: 'Enterprise Systems'},
+  {name: 'CI/CD Pipelines', category: 'DevOps'},
+  {name: 'Enterprise Agentic AI', category: 'AI & Automation'}
 ] AS sData
 MERGE (s:Skill {name: sData.name})
 SET s.category = sData.category
@@ -97,6 +100,19 @@ MERGE (c)-[:HAS_SKILL]->(s)
 WITH c
 MATCH (s:Skill {name: 'SolidWorks'}), (p:Project {id: 'p6'})
 MERGE (s)-[:BRIDGED_TO]->(p)
+
+// 3b. Create Hobbies & Personal Interests Nodes
+UNWIND [
+  {name: 'Physics & Mathematics', category: 'Academics & Science', details: 'Deep, lifelong interest in theoretical physics and mathematical analysis'},
+  {name: 'Jump Rope Skipping', category: 'Fitness', details: 'Regular daily physical fitness and jump rope routines'},
+  {name: 'Anime', category: 'Entertainment & Culture', favorites: 'Dragon Ball, Hunter x Hunter, Spy x Family'},
+  {name: 'Sci-Fi & Deep-Storyline Movies', category: 'Entertainment', favorites: 'Interstellar, Vanilla Sky, Meet Joe Black'}
+] AS hData
+MERGE (h:Hobby {name: hData.name})
+SET h.category = hData.category,
+    h.details = hData.details,
+    h.favorites = hData.favorites
+MERGE (c)-[:ENJOYS]->(h)
 
 // 4. Create Granular Certification & Badge Nodes (88+ Credly & Vendor Badges)
 UNWIND [
