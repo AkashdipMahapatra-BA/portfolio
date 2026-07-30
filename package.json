@@ -12,6 +12,7 @@
   },
   "packageManager": "npm@11.17.0",
   "devDependencies": {
+    "dotenv": "^17.4.2",
     "turbo": "^2.5.4",
     "typescript": "^5.8.3"
   },
@@ -20,5 +21,8 @@
     "esbuild@0.18.20": true,
     "esbuild@0.28.1": true,
     "sharp@0.34.5": true
+  },
+  "dependencies": {
+    "neo4j-driver": "^6.2.0"
   }
 }

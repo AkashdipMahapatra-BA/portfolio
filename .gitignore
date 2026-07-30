@@ -5,6 +5,8 @@ node_modules/
 .env
 .env.local
 .env.*.local
+Neo4j-*.txt
+*.txt.secret
 
 # Next.js
 apps/web/.next/
