@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Navbar } from "@/components/layout/Navbar";
 import { ChatBot } from "@/components/ui/ChatBot";
@@ -65,7 +66,7 @@ export const metadata: Metadata = {
     siteName: "Akashdip Mahapatra Portfolio",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/api/og",
         width: 1200,
         height: 630,
         alt: "Akashdip Mahapatra - Data Engineer & Cloud Automation Specialist",
@@ -76,7 +77,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Akashdip Mahapatra | Data Engineer & Cloud Automation Specialist",
     description: "Portfolio of Akashdip Mahapatra — Specializing in Data Engineering, Infrastructure Automation, DevOps, Salesforce, AWS, and Python.",
-    images: ["/og-image.jpg"],
+    images: ["/api/og"],
   },
   robots: {
     index: true,
@@ -114,6 +115,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </TRPCProvider>
         </ThemeProvider>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
