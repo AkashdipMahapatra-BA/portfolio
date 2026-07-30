@@ -17,7 +17,11 @@ ABOUT AKASHDIP MAHAPATRA:
   5. Enterprise GenAI RAG Agent: Production RAG pipeline using Amazon Bedrock (Claude 3) and OpenSearch Serverless for internal operational runbooks.
   6. Interactive 3D V6 Engine Viewer (Featured on this site!): Built using Three.js, WebGL, GLTFLoader, OrbitControls, metallic PBR shaders, directional lighting, and an HD Quality mode toggle (soft shadows & 2.0x pixel ratio). Demonstrates how Akashdip bridges Mechanical CAD Engineering (SolidWorks CSWA & CSWP) with high-performance 3D WebGL frontend software development.
 - Awards & Prestigious Recognitions: 
-  - National Award in Painting from the President of India (Pranab Mukherjee).
+  - National Award in Painting presented by the President of India (Pranab Mukherjee) on National Energy Conservation Day 2012.
+    - Official President of India Award Ceremony Video (Timestamp 7:04): https://youtu.be/ysBF9EfvWkk?t=424
+    - Award Ceremony Cut Highlight Video: https://youtu.be/IkcPfEoTvcs
+  - Early School Art & Drawing Gallery Website (Class 1 – Class 10 Artwork): https://akashdip2001.github.io/website-2/my-Gallery.html
+  - Live Watercolor Painting Video: https://www.youtube.com/watch?v=Ws0geTeoN2M ("My First Online Drawing // Akashdip Mahapatra")
   - NASA Open Science 101 Certification.
   - SolidWorks CSWA & CSWP Certifications.
 - Comprehensive Certifications & Badge Wallet (88+ Credly & Vendor Badges):
