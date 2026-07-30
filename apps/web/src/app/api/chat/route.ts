@@ -138,6 +138,12 @@ export async function POST(req: Request) {
             RETURN labels(n)[0] AS nodeType, properties(n) AS details
             LIMIT 30
           `;
+        } else if (lowerMsg.includes("hobby") || lowerMsg.includes("hobbies") || lowerMsg.includes("anime") || lowerMsg.includes("movie") || lowerMsg.includes("fitness") || lowerMsg.includes("rope") || lowerMsg.includes("physics")) {
+          cypher = `
+            MATCH (c:Candidate {email: 'akashdipmahapatra.official@gmail.com'})-[:ENJOYS]->(n:Hobby)
+            RETURN 'Hobby' AS nodeType, properties(n) AS details
+            LIMIT 10
+          `;
         }
 
         const graphRecords = await queryGraph(cypher, { keywords: terms });
