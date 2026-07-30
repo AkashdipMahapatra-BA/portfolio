@@ -271,7 +271,7 @@ MERGE (a2:Award {title: 'NASA Open Science 101 Certification'})
 SET a2.issuer = 'NASA'
 MERGE (c)-[:EARNED]->(a2)
 
-MERGE (pub:Publication {title: 'Electrodeposited Nickel Coating Optimization'})
+MERGE (pub:Publication {title: 'Modeling and Optimization of Surface Roughness of Electrodeposited Nickel Coating Using Taguchi and Bonobo Optimizer'})
 SET pub.conference = 'INCOM 2026',
     pub.algorithms = 'Taguchi & Bonobo Optimizer',
     pub.domain = 'Surface Engineering & Metallurgical Optimization'
