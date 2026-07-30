@@ -6,8 +6,33 @@ import { OtherDomains } from "@/components/sections/OtherDomains";
 import { Contact } from "@/components/sections/Contact";
 
 export default function Home() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Akashdip Mahapatra",
+    "url": "https://akashdipmahapatra.in",
+    "jobTitle": "Data Engineer & Cloud Automation Specialist",
+    "sameAs": [
+      "https://github.com/AkashdipMahapatra-BA"
+    ],
+    "knowsAbout": [
+      "Data Engineering",
+      "Cloud Automation",
+      "Python",
+      "DevOps",
+      "AWS",
+      "Docker",
+      "Kubernetes",
+      "Salesforce"
+    ]
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Hero />
       <Divider />
       <ExperienceSkills />

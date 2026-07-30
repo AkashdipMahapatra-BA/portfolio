@@ -30,8 +30,47 @@ const jetbrainsMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Akashdip | DevOps & Data Engineer",
-  description: "Portfolio of Akashdip — DevOps, Data Engineering, AWS, Python, Terraform.",
+  title: "Akashdip Mahapatra | Data Engineer & Cloud Automation Specialist",
+  description: "Portfolio of Akashdip Mahapatra — Specializing in Data Engineering, Infrastructure Automation, DevOps, Salesforce, AWS, Python, and orchestrating Enterprise Agentic AI.",
+  keywords: [
+    "Akashdip Mahapatra",
+    "Data Engineer",
+    "Cloud Automation",
+    "DevOps",
+    "Salesforce",
+    "AWS",
+    "Python",
+    "Terraform",
+    "Agentic AI",
+    "Infrastructure Automation",
+    "Portfolio",
+    "Software Engineer"
+  ],
+  authors: [{ name: "Akashdip Mahapatra" }],
+  creator: "Akashdip Mahapatra",
+  openGraph: {
+    type: "website",
+    locale: "en_GB",
+    title: "Akashdip Mahapatra | Data Engineer & Cloud Automation Specialist",
+    description: "Portfolio of Akashdip Mahapatra — Specializing in Data Engineering, Infrastructure Automation, DevOps, Salesforce, AWS, and Python.",
+    siteName: "Akashdip Mahapatra Portfolio",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Akashdip Mahapatra | Data Engineer & Cloud Automation Specialist",
+    description: "Portfolio of Akashdip Mahapatra — Specializing in Data Engineering, Infrastructure Automation, DevOps, Salesforce, AWS, and Python.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

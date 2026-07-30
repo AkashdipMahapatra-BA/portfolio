@@ -1,3 +1,14 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "College Projects Archive | Akashdip Mahapatra",
+  description: "Archive of experimental hardware, IoT, and low-level networking projects built by Akashdip Mahapatra during his B.Tech in Mechanical Engineering.",
+  openGraph: {
+    title: "College Projects Archive | Akashdip Mahapatra",
+    description: "Archive of experimental hardware, IoT, and low-level networking projects.",
+  },
+};
+
 export default function CollegeProjectsLayout({
   children,
 }: {

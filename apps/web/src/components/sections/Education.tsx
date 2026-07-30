@@ -210,7 +210,7 @@ const shimmerStyles = `
     background: linear-gradient(105deg, transparent 35%, rgba(255, 200, 200, 0.5) 50%, transparent 65%);
   }
 
-  @media (max-width: 640px) {
+  @media (max-width: 640px), (pointer: coarse) and (orientation: portrait) {
     .edu-btn-agentic-glow {
       max-width: 100%;
       width: fit-content;
@@ -528,7 +528,7 @@ const shimmerStyles = `
     opacity: 1 !important;
   }
 
-  @media (max-width: 640px) {
+  @media (max-width: 640px), (pointer: coarse) and (orientation: portrait) {
     .edu-btn-row,
     .pub-btn-row {
       flex-direction: column;

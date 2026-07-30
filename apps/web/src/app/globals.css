@@ -281,7 +281,7 @@ body {
 }
 
 /* Mobile responsive override: 0.70 opacity on screens 768px and under */
-@media (max-width: 768px) {
+@media (max-width: 768px), (pointer: coarse) and (orientation: portrait) {
   [data-theme="dark"] .hero-ribbon-wrapper {
     background: rgba(245, 243, 239, 0.70);
   }
