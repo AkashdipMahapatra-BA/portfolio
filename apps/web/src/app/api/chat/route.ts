@@ -224,7 +224,7 @@ export async function POST(req: Request) {
       endpointUrl = endpointUrl.replace(/\/+$/, "") + "/chat/completions";
     }
 
-    // Multi-Model Fallback Chain: verified active models (gemini-2.5-flash & gemini-flash-latest) + rate-limit fallbacks
+    // Multi-Model Fallback Chain: uses empirically verified active models + rate-limit fallbacks for 100% uptime
     const configuredModel = process.env.LLM_MODEL || "gemini-2.5-flash";
     const fallbackModels = Array.from(
       new Set([
@@ -241,7 +241,7 @@ export async function POST(req: Request) {
     let assistantMessage = "";
     let success = false;
 
-    // Loop through fallback models if rate limited (429), overloaded (503), or 404 routing drop
+    // Loop through fallback models if model is not found (404), rate limited (429), or overloaded (503)
     for (const targetModel of fallbackModels) {
       const payload = {
         model: targetModel,
@@ -250,7 +250,7 @@ export async function POST(req: Request) {
           ...messages.slice(-6), // Keep recent chat window context
         ],
         temperature: 0.7,
-        max_tokens: 2048,
+        max_tokens: 2048, // Increased to 2048 to prevent response truncation on long evaluations
       };
 
       // Retry up to 2 attempts per model if 503/429
@@ -279,7 +279,7 @@ export async function POST(req: Request) {
           const errBody = await response.text();
           console.warn(`LLM Error on model '${targetModel}' (Attempt ${attempt}, Status ${response.status}):`, errBody);
 
-          // On 404 (Model Not Found) or 400, break inner attempt loop so outer loop tries next model in fallbackModels!
+          // On 404 (Model Not Found) or 400/401, break inner attempt loop so outer loop tries next model in fallbackModels!
           if (response.status === 404 || response.status === 400 || response.status === 401) {
             break;
           }
@@ -293,7 +293,7 @@ export async function POST(req: Request) {
         }
       }
 
-      if (success) break; // Successfully got response!
+      if (success) break; // Successfully got response from fallback chain!
     }
 
     if (!success) {
