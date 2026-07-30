@@ -135,7 +135,7 @@ export function EducationThreads({
         .edu-threads-desktop { display: block; }
         .edu-threads-mobile { display: none; }
 
-        @media (max-width: 640px) {
+        @media (max-width: 640px), (pointer: coarse) and (orientation: portrait) {
           .edu-threads-desktop { display: none; }
           .edu-threads-mobile { display: block; }
         }

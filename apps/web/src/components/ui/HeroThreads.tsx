@@ -209,7 +209,7 @@ export function HeroThreads({ active }: { active: boolean }) {
         .hero-threads-desktop { display: block; }
         .hero-threads-mobile { display: none; }
 
-        @media (max-width: 768px) {
+        @media (max-width: 768px), (pointer: coarse) and (orientation: portrait) {
           .hero-threads-desktop { display: none; }
           .hero-threads-mobile { display: block; }
         }
@@ -281,7 +281,7 @@ export function HeroThreads({ active }: { active: boolean }) {
           animation: glass-reflection-bottom 5s ease-in-out 4.2s both;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 768px), (pointer: coarse) and (orientation: portrait) {
           .terminal-glass-edge-top-mobile {
             display: block; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 140px; height: 35px; pointer-events: none; z-index: 12; opacity: 0; border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem;
             background: radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.45) 0%, rgba(250, 204, 21, 0.35) 30%, rgba(239, 68, 68, 0.3) 60%, rgba(168, 85, 247, 0.25) 85%, transparent 100%);
