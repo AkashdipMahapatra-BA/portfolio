@@ -307,6 +307,8 @@ export function ChatBot() {
               flex: 1,
               padding: "1rem",
               overflowY: "auto",
+              overflowX: "hidden",
+              width: "100%",
               display: "flex",
               flexDirection: "column",
               gap: "0.85rem",
@@ -320,6 +322,7 @@ export function ChatBot() {
                   flexDirection: "column",
                   alignItems: msg.role === "user" ? "flex-end" : "flex-start",
                   gap: "0.25rem",
+                  width: "100%",
                 }}
               >
                 <div
@@ -328,7 +331,8 @@ export function ChatBot() {
                     alignItems: "flex-start",
                     gap: "0.5rem",
                     flexDirection: msg.role === "user" ? "row-reverse" : "row",
-                    maxWidth: "88%",
+                    maxWidth: "92%",
+                    minWidth: 0,
                   }}
                 >
                   <div
@@ -448,7 +452,7 @@ export function ChatBot() {
                       position: "relative",
                       overflow: "hidden",
                       fontSize: "0.68rem",
-                      padding: isSpecial ? "0.35rem 0.7rem" : "0.3rem 0.6rem",
+                      padding: "0.3rem 0.6rem",
                       borderRadius: "0.5rem",
                       background: isSpecial
                         ? "color-mix(in srgb, var(--color-accent) 20%, transparent)"
@@ -460,7 +464,7 @@ export function ChatBot() {
                       fontWeight: isSpecial ? 600 : 400,
                       cursor: "pointer",
                       textAlign: "left",
-                      width: isSpecial ? "100%" : "auto",
+                      width: "auto",
                       boxShadow: isSpecial ? "0 2px 10px color-mix(in srgb, var(--color-accent) 25%, transparent)" : "none",
                       transition: "all 0.2s ease",
                     }}
@@ -603,17 +607,19 @@ export function ChatBot() {
         }
         .chat-code-block {
           font-family: var(--font-mono);
-          font-size: 0.7rem;
+          font-size: 0.68rem;
           line-height: 1.45;
           background: color-mix(in srgb, #000 85%, var(--color-bg));
           border: 1px solid color-mix(in srgb, var(--color-accent) 40%, transparent);
           border-radius: 0.5rem;
-          padding: 0.75rem;
+          padding: 0.65rem 0.75rem;
           margin: 0.6rem 0;
-          overflow-x: auto;
           color: var(--color-accent);
           box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.5);
-          white-space: pre;
+          white-space: pre-wrap;
+          word-break: break-word;
+          overflow-x: hidden;
+          max-width: 100%;
         }
         .chat-hr {
           margin: 0.6rem 0;
