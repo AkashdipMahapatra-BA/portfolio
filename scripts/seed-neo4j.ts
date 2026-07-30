@@ -87,7 +87,12 @@ UNWIND [
   {name: 'WebGL', category: '3D WebGL'},
   {name: 'MySQL', category: 'Database'},
   {name: 'BigQuery', category: 'Data Warehouse'},
-  {name: 'OpenTofu', category: 'IaC'}
+  {name: 'OpenTofu', category: 'IaC'},
+  {name: 'Salesforce', category: 'Enterprise Systems'},
+  {name: 'CI/CD Pipelines', category: 'DevOps'},
+  {name: 'Data Engineering Pipelines', category: 'Data Engineering'},
+  {name: 'Infrastructure Automation', category: 'DevOps'},
+  {name: 'Enterprise Agentic AI', category: 'AI & Automation'}
 ] AS sData
 MERGE (s:Skill {name: sData.name})
 SET s.category = sData.category
@@ -97,6 +102,19 @@ MERGE (c)-[:HAS_SKILL]->(s)
 WITH c
 MATCH (s:Skill {name: 'SolidWorks'}), (p:Project {id: 'p6'})
 MERGE (s)-[:BRIDGED_TO]->(p)
+
+// 3b. Create Hobbies & Personal Interests Nodes
+UNWIND [
+  {name: 'Physics & Mathematics', category: 'Academics & Science', details: 'Deep, lifelong interest in theoretical physics and mathematical analysis'},
+  {name: 'Jump Rope Skipping', category: 'Fitness', details: 'Regular daily physical fitness and jump rope routines'},
+  {name: 'Anime', category: 'Entertainment & Culture', favorites: 'Dragon Ball, Hunter x Hunter, Spy x Family'},
+  {name: 'Sci-Fi & Deep-Storyline Movies', category: 'Entertainment', favorites: 'Interstellar, Vanilla Sky, Meet Joe Black'}
+] AS hData
+MERGE (h:Hobby {name: hData.name})
+SET h.category = hData.category,
+    h.details = hData.details,
+    h.favorites = hData.favorites
+MERGE (c)-[:ENJOYS]->(h)
 
 // 4. Create Granular Certification & Badge Nodes (88+ Credly & Vendor Badges)
 UNWIND [
@@ -119,6 +137,10 @@ UNWIND [
   {name: 'BigQuery ML Skill Badge', vendor: 'Google Cloud (GCP)', category: 'Data & AI'},
   {name: 'BigQuery Data Warehouse Skill Badge', vendor: 'Google Cloud (GCP)', category: 'Data'},
   {name: 'Secure Cloud Networking Skill Badge', vendor: 'Google Cloud (GCP)', category: 'Networking'},
+  {name: 'Load Balancing & Networking Skill Badge', vendor: 'Google Cloud (GCP)', category: 'Networking'},
+  {name: 'App Development Environment Skill Badge', vendor: 'Google Cloud (GCP)', category: 'AppDev'},
+  {name: 'AppSheet & App Engine Skill Badge', vendor: 'Google Cloud (GCP)', category: 'AppDev'},
+  {name: 'Cloud Security Skill Badge', vendor: 'Google Cloud (GCP)', category: 'Security'},
   {name: 'Deploying Kubernetes Applications Skill Badge', vendor: 'Google Cloud (GCP)', category: 'DevOps'},
   {name: 'Akamai Cloud Computing Foundations Certification', vendor: 'Akamai', category: 'Cloud'},
 
@@ -137,6 +159,9 @@ UNWIND [
   {name: 'LFEL1007: Supply Chain Security (SBOMs)', vendor: 'The Linux Foundation', category: 'Security'},
   {name: 'LFC108: Cybersecurity Essentials', vendor: 'The Linux Foundation', category: 'Security'},
   {name: 'LFS162: Intro to DevOps & SRE', vendor: 'The Linux Foundation', category: 'DevOps'},
+  {name: 'LFS151: Cloud Infrastructure', vendor: 'The Linux Foundation', category: 'Cloud'},
+  {name: 'LFEL1011: OpenAPI Fundamentals', vendor: 'The Linux Foundation', category: 'APIs'},
+  {name: 'LFC112: Developer Documentation', vendor: 'The Linux Foundation', category: 'Docs'},
   {name: 'SKF100: OWASP Top 10 Security', vendor: 'The Linux Foundation', category: 'Security'},
   {name: 'LFEL1002: Rust Programming', vendor: 'The Linux Foundation', category: 'Languages'},
 
@@ -144,6 +169,9 @@ UNWIND [
   {name: 'Azure Network Engineer Associate', vendor: 'Microsoft Azure', category: 'Networking'},
   {name: 'Azure AI Fundamentals', vendor: 'Microsoft Azure', category: 'AI/ML'},
   {name: 'Microsoft Copilot for Security', vendor: 'Microsoft Azure', category: 'Security'},
+  {name: 'Azure Compute & Networking', vendor: 'Microsoft Azure', category: 'Networking'},
+  {name: 'Azure Core Architecture', vendor: 'Microsoft Azure', category: 'Cloud'},
+  {name: 'Generative AI & ML Fundamentals (Azure)', vendor: 'Microsoft Azure', category: 'AI/ML'},
 
   // Databases & Oracle
   {name: 'Oracle Certified Professional (OCP) MySQL 8.0 DBA', vendor: 'Oracle', category: 'Database'},
@@ -157,13 +185,21 @@ UNWIND [
   {name: 'SolidWorks CSWP (Certified SOLIDWORKS Professional)', vendor: 'Dassault Systèmes', category: 'CAD'},
   {name: 'Certified SOLIDWORKS xDesign Associate', vendor: 'Dassault Systèmes', category: 'CAD'},
   {name: 'Certified SOLIDWORKS xMold Associate', vendor: 'Dassault Systèmes', category: 'CAD'},
+  {name: '3DEXPERIENCE 3DSwymer', vendor: 'Dassault Systèmes', category: 'CAD'},
+  {name: 'DraftSight 2D Design & Drafting', vendor: 'Dassault Systèmes', category: 'CAD'},
 
   // Security, IoT & Networking
   {name: 'Cisco Intro to Cybersecurity', vendor: 'Cisco', category: 'Security'},
   {name: 'Cisco Python Essentials 1 & 2', vendor: 'Cisco', category: 'Languages'},
   {name: 'IBM Cybersecurity Fundamentals', vendor: 'IBM', category: 'Security'},
   {name: 'Postman API Fundamentals Student Expert', vendor: 'Postman', category: 'APIs'},
-  {name: 'Pendo AI for Product Management', vendor: 'Pendo', category: 'Product AI'}
+  {name: 'Pendo AI for Product Management', vendor: 'Pendo', category: 'Product AI'},
+  {name: 'Chainguard AI/ML Guardian', vendor: 'Chainguard', category: 'Security & AI'},
+  {name: 'Chainguard Vulnslayer & Container Crusader', vendor: 'Chainguard', category: 'Security'},
+  {name: 'Packet Analysis (Nmap / Wireshark Specialist)', vendor: 'Networking', category: 'Security'},
+  {name: 'Google Play Academy Store Listing', vendor: 'Google Play Academy', category: 'Mobile & Product'},
+  {name: 'Oracle Cloud Success Navigator', vendor: 'Oracle', category: 'Cloud Process'},
+  {name: 'Oracle Fusion Cloud CX/ERP/HCM/SCM Process Essentials', vendor: 'Oracle', category: 'Enterprise Cloud'}
 ] AS certData
 MERGE (cert:Certification {name: certData.name})
 SET cert.vendor = certData.vendor,
