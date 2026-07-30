@@ -88,13 +88,15 @@ export function Projects() {
       gsap.to(track, {
         x: getScrollAmount,
         ease: "none",
+        force3D: true,
         scrollTrigger: {
           trigger: section,
           start: "top top",
           end: () => `+=${track.scrollWidth}`,
-          scrub: 1,
+          scrub: 0.15,
           pin: true,
           anticipatePin: 1,
+          fastScrollEnd: true,
           invalidateOnRefresh: true,
         },
       });
@@ -111,7 +113,7 @@ export function Projects() {
         overflow: "hidden",
         background: "var(--color-bg)",
         position: "relative",
-        height: "100vh",
+        height: "100dvh",
         display: "flex",
         flexDirection: "column",
         justifyContent: "flex-start",
@@ -158,6 +160,7 @@ export function Projects() {
           alignItems: "stretch",
           flex: 1,
           minHeight: 0,
+          willChange: "transform",
         }}
       >
         {PROJECTS.map((project) => (
