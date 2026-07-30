@@ -83,7 +83,6 @@ export async function POST(req: Request) {
     const baseUrl =
       process.env.LLM_BASE_URL ||
       "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
-    const model = process.env.LLM_MODEL || "gemini-2.5-flash";
 
     // Format target URL (ensure `/chat/completions` suffix if baseUrl is a domain root)
     let endpointUrl = baseUrl;
@@ -94,53 +93,76 @@ export async function POST(req: Request) {
       endpointUrl = endpointUrl.replace(/\/+$/, "") + "/chat/completions";
     }
 
-    // Build payload using standard OpenAI chat completion specification
-    const payload = {
-      model: model,
-      messages: [
-        { role: "system", content: KNOWLEDGE_BASE_SYSTEM_PROMPT },
-        ...messages.slice(-6), // Keep recent chat window context
-      ],
-      temperature: 0.7,
-      max_tokens: 700,
-    };
+    // Multi-Model Fallback Chain: triples free quota capacity (45 RPM / 4,500 RPD)
+    const configuredModel = process.env.LLM_MODEL || "gemini-2.5-flash";
+    const fallbackModels = Array.from(
+      new Set([configuredModel, "gemini-2.5-flash", "gemini-1.5-flash", "gemini-1.5-flash-8b"])
+    );
 
-    // Retry mechanism for transient 503 (Server Overloaded) or 429 errors
-    let response: Response | null = null;
-    let attempts = 0;
-    const maxAttempts = 3;
+    let lastStatus = 500;
+    let assistantMessage = "";
+    let success = false;
 
-    while (attempts < maxAttempts) {
-      attempts++;
-      response = await fetch(endpointUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify(payload),
-      });
+    // Loop through fallback models if rate limited (429) or overloaded (503)
+    for (const targetModel of fallbackModels) {
+      const payload = {
+        model: targetModel,
+        messages: [
+          { role: "system", content: KNOWLEDGE_BASE_SYSTEM_PROMPT },
+          ...messages.slice(-6), // Keep recent chat window context
+        ],
+        temperature: 0.7,
+        max_tokens: 700,
+      };
 
-      if (response.ok || (response.status !== 503 && response.status !== 429)) {
-        break;
+      // Retry up to 2 attempts per model if 503/429
+      for (let attempt = 1; attempt <= 2; attempt++) {
+        try {
+          const response = await fetch(endpointUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${apiKey}`,
+            },
+            body: JSON.stringify(payload),
+          });
+
+          lastStatus = response.status;
+
+          if (response.ok) {
+            const data = await response.json();
+            assistantMessage =
+              data.choices?.[0]?.message?.content ||
+              "I received your message! How else can I assist you with Akashdip's portfolio?";
+            success = true;
+            break;
+          }
+
+          if (response.status !== 503 && response.status !== 429) {
+            // Non-retriable error (e.g. 401 Unauthorized), break model loop
+            const errBody = await response.text();
+            console.error(`LLM Error on model ${targetModel}:`, response.status, errBody);
+            break;
+          }
+
+          // If 503 or 429, wait 500ms before retrying same model or trying next model
+          if (attempt === 1) {
+            await new Promise((res) => setTimeout(res, 500));
+          }
+        } catch (fetchErr) {
+          console.error(`Fetch exception on model ${targetModel}:`, fetchErr);
+        }
       }
 
-      // If status 503 or 429, wait 600ms before retrying
-      if (attempts < maxAttempts) {
-        await new Promise((res) => setTimeout(res, 600));
-      }
+      if (success) break; // Successfully got response from model!
     }
 
-    if (!response || !response.ok) {
-      const status = response ? response.status : 500;
-      const errorText = response ? await response.text() : "Network error";
-      console.error("LLM API Error:", status, errorText);
-
-      let userFacingError = `I'm having a slight trouble connecting to the AI service right now (Status ${status}). Please try again in a few seconds!`;
-      if (status === 503) {
-        userFacingError = `Google Gemini AI is currently experiencing temporary high server demand (Status 503). Please click send again in a moment!`;
-      } else if (status === 401 || status === 403) {
-        userFacingError = `Authentication issue with the API key (Status ${status}). Please verify your \`GEMINI_API_KEY\` in your Vercel or \`.env\` settings.`;
+    if (!success) {
+      let userFacingError = `I'm having a slight trouble connecting to the AI service right now (Status ${lastStatus}). Please try again in a few seconds!`;
+      if (lastStatus === 503 || lastStatus === 429) {
+        userFacingError = `Google Gemini AI is currently under high traffic across free models. Please try sending your message again in a moment!`;
+      } else if (lastStatus === 401 || lastStatus === 403) {
+        userFacingError = `Authentication issue with the API key (Status ${lastStatus}). Please verify your \`GEMINI_API_KEY\` in your Vercel environment settings.`;
       }
 
       return NextResponse.json({
@@ -148,11 +170,6 @@ export async function POST(req: Request) {
         content: userFacingError,
       });
     }
-
-    const data = await response.json();
-    const assistantMessage =
-      data.choices?.[0]?.message?.content ||
-      "I received your message! How else can I assist you with Akashdip's portfolio?";
 
     return NextResponse.json({
       role: "assistant",
