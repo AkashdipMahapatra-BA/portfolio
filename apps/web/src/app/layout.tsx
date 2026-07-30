@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Analytics } from "@vercel/analytics/next";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Navbar } from "@/components/layout/Navbar";
 import { ChatBot } from "@/components/ui/ChatBot";
@@ -112,6 +113,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <ChatBot />
           </TRPCProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
