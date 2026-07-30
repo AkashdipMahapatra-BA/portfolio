@@ -100,11 +100,17 @@ export function ChatBot() {
     setMessages([INITIAL_WELCOME]);
   };
 
-  // Full Markdown Renderer helper for formatting code blocks, diagrams & headers safely
+  // Full Markdown Renderer helper for formatting code blocks, diagrams, links & headers safely
   const formatMarkdown = (text: string) => {
     let formatted = text;
 
-    // 1. Parse triple backtick code blocks (```text ... ```)
+    // 1. Parse markdown links: [Text](URL)
+    formatted = formatted.replace(
+      /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
+      "<a href='$2' target='_blank' rel='noopener noreferrer' class='chat-link'>$1</a>"
+    );
+
+    // 2. Parse triple backtick code blocks (```text ... ```)
     formatted = formatted.replace(/```(?:text|json|bash|cypher)?\n?([\s\S]*?)```/g, (_match, codeContent) => {
       const escapedCode = codeContent
         .replace(/&/g, "&amp;")
@@ -113,20 +119,20 @@ export function ChatBot() {
       return `<pre class="chat-code-block">${escapedCode.trim()}</pre>`;
     });
 
-    // 2. Horizontal rules
+    // 3. Horizontal rules
     formatted = formatted.replace(/^---$/gm, "<hr class='chat-hr' />");
 
-    // 3. Headers (### Header)
+    // 4. Headers (### Header)
     formatted = formatted.replace(/### (.*?)(?=\n|$)/g, "<h4 class='chat-h4'>$1</h4>");
     formatted = formatted.replace(/## (.*?)(?=\n|$)/g, "<h3 class='chat-h3'>$1</h3>");
 
-    // 4. Bold text (**word**)
+    // 5. Bold text (**word**)
     formatted = formatted.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
 
-    // 5. Single backtick inline code (`code`)
+    // 6. Single backtick inline code (`code`)
     formatted = formatted.replace(/`([^`\n]+)`/g, "<code class='chat-code'>$1</code>");
 
-    // 6. Convert remaining newlines (outside <pre>) to <br/>
+    // 7. Convert remaining newlines (outside <pre>) to <br/>
     const parts = formatted.split(/(<pre[\s\S]*?<\/pre>)/g);
     formatted = parts
       .map((part) => {
@@ -637,6 +643,17 @@ export function ChatBot() {
           font-weight: 700;
           margin: 0.6rem 0 0.3rem 0;
           color: var(--color-text);
+        }
+        .chat-link {
+          color: var(--color-accent);
+          text-decoration: underline;
+          text-underline-offset: 2px;
+          font-weight: 500;
+          word-break: break-all;
+          transition: opacity 0.15s ease;
+        }
+        .chat-link:hover {
+          opacity: 0.8;
         }
       `}</style>
     </aside>
