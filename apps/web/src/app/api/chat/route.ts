@@ -15,6 +15,7 @@ ABOUT AKASHDIP MAHAPATRA:
   3. Automated Vulnerability Remediation Pipeline: AWS Inspector + Lambda + Terraform auto-patching EC2 AMIs and raising IaC PRs, reducing vulnerability fixes from 1 day manual to 30 min automated.
   4. S3 Parallel Data-Dump Engine: Multi-threaded Python export engine using concurrent.futures and S3 Transfer Acceleration, reducing export time by 93% (30 min down to 2 min).
   5. Enterprise GenAI RAG Agent: Production RAG pipeline using Amazon Bedrock (Claude 3) and OpenSearch Serverless for internal operational runbooks.
+  6. Interactive 3D V6 Engine Viewer (Featured on this site!): Built using Three.js, WebGL, GLTFLoader, OrbitControls, metallic PBR shaders, directional lighting, and an HD Quality mode toggle (soft shadows & 2.0x pixel ratio). Demonstrates how Akashdip bridges Mechanical CAD Engineering (SolidWorks CSWA & CSWP) with high-performance 3D WebGL frontend software development.
 - Awards & Prestigious Recognitions: 
   - National Award in Painting from the President of India (Pranab Mukherjee).
   - NASA Open Science 101 Certification.
