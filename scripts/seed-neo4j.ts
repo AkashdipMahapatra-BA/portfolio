@@ -242,12 +242,22 @@ SET pub.conference = 'INCOM 2026',
 MERGE (c)-[:PUBLISHED]->(pub)
 `;
 
+const INDEX_CYPHER = `
+CREATE FULLTEXT INDEX portfolioFullText IF NOT EXISTS
+FOR (n:Candidate|Project|Skill|Certification|Playlist|Video|WebsiteArchive|Hobby|Award|Publication)
+ON EACH [n.name, n.title, n.vendor, n.summary, n.tech, n.category, n.details, n.favorites]
+`;
+
 async function seed() {
   console.log("🌱 Starting Granular Neo4j Knowledge Graph Seeding for Akashdip Mahapatra...");
   const session = driver.session();
   try {
     await session.run(SEED_CYPHER);
-    console.log("✅ Granular Neo4j Knowledge Graph seeded successfully with individual certification, video, playlist, and archive nodes!");
+    console.log("✅ Granular Neo4j Knowledge Graph nodes seeded successfully!");
+
+    console.log("⚡ Creating Neo4j Full-Text Search Index (portfolioFullText)...");
+    await session.run(INDEX_CYPHER);
+    console.log("✅ Neo4j Full-Text Search Index created successfully!");
   } catch (err) {
     console.error("❌ Seeding failed:", err);
   } finally {
