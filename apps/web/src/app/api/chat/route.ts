@@ -105,33 +105,52 @@ export async function POST(req: Request) {
     if (isNeo4jConfigured()) {
       try {
         const lastUserMessage = messages[messages.length - 1]?.content || "";
-        const terms = lastUserMessage
-          .toLowerCase()
+        const lowerMsg = lastUserMessage.toLowerCase();
+        const terms = lowerMsg
           .replace(/[^\w\s]/g, "")
           .split(/\s+/)
           .filter((w) => w.length > 2);
 
-        if (terms.length > 0) {
-          const cypher = `
-            MATCH (c:Candidate {email: 'akashdipmahapatra.official@gmail.com'})
-            OPTIONAL MATCH (c)-[r]->(n)
-            WHERE any(term IN $keywords WHERE toLower(coalesce(n.name, '')) CONTAINS term OR toLower(coalesce(n.title, '')) CONTAINS term OR toLower(coalesce(n.tech, '')) CONTAINS term OR toLower(labels(n)[0]) CONTAINS term)
-            RETURN labels(n)[0] AS nodeType, properties(n) AS details
-            LIMIT 15
+        let cypher = `
+          MATCH (c:Candidate {email: 'akashdipmahapatra.official@gmail.com'})
+          OPTIONAL MATCH (c)-[r]->(n)
+          WHERE any(term IN $keywords WHERE toLower(coalesce(n.name, '')) CONTAINS term 
+             OR toLower(coalesce(n.title, '')) CONTAINS term 
+             OR toLower(coalesce(n.vendor, '')) CONTAINS term 
+             OR toLower(coalesce(n.category, '')) CONTAINS term 
+             OR toLower(coalesce(n.tech, '')) CONTAINS term 
+             OR toLower(coalesce(n.type, '')) CONTAINS term 
+             OR toLower(labels(n)[0]) CONTAINS term)
+          RETURN labels(n)[0] AS nodeType, properties(n) AS details
+          LIMIT 35
+        `;
+
+        // Direct Cypher intent routing for Certifications / Badges
+        if (lowerMsg.includes("badge") || lowerMsg.includes("certif") || lowerMsg.includes("credly")) {
+          cypher = `
+            MATCH (c:Candidate {email: 'akashdipmahapatra.official@gmail.com'})-[:EARNED]->(n:Certification)
+            RETURN 'Certification' AS nodeType, properties(n) AS details
+            LIMIT 30
           `;
+        } else if (lowerMsg.includes("youtube") || lowerMsg.includes("playlist") || lowerMsg.includes("video") || lowerMsg.includes("gallery") || lowerMsg.includes("award")) {
+          cypher = `
+            MATCH (c:Candidate {email: 'akashdipmahapatra.official@gmail.com'})-[r:PUBLISHED_PLAYLIST|PUBLISHED_VIDEO|HOSTS_ARCHIVE|WON]->(n)
+            RETURN labels(n)[0] AS nodeType, properties(n) AS details
+            LIMIT 30
+          `;
+        }
 
-          const graphRecords = await queryGraph(cypher, { keywords: terms });
+        const graphRecords = await queryGraph(cypher, { keywords: terms });
 
-          if (graphRecords && graphRecords.length > 0) {
-            const formattedNodes = graphRecords
-              .map(
-                (rec) =>
-                  `- [${rec.nodeType || "Entity"}] ${JSON.stringify(rec.details)}`
-              )
-              .join("\n");
+        if (graphRecords && graphRecords.length > 0) {
+          const formattedNodes = graphRecords
+            .map(
+              (rec) =>
+                `- [${rec.nodeType || "Entity"}] ${JSON.stringify(rec.details)}`
+            )
+            .join("\n");
 
-            dynamicGraphPrompt += `\n\nNEO4J GRAPHRAG RETRIEVED SUBGRAPH NODES (REAL-TIME KNOWLEDGE GRAPH):\n${formattedNodes}\nUse these exact graph nodes to enrich your response!`;
-          }
+          dynamicGraphPrompt += `\n\nNEO4J GRAPHRAG RETRIEVED SUBGRAPH NODES (REAL-TIME KNOWLEDGE GRAPH):\n${formattedNodes}\nUse these exact granular graph nodes (certifications, playlists, videos, archives, projects) to provide precise details in your response!`;
         }
       } catch (graphErr) {
         console.warn("Neo4j GraphRAG retrieval fallback to static prompt:", graphErr);
