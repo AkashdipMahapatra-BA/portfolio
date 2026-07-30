@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Navbar } from "@/components/layout/Navbar";
+import { ChatBot } from "@/components/ui/ChatBot";
 import { TRPCProvider } from "@/lib/trpc-client";
 import "./globals.css";
 
@@ -108,9 +109,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <main style={{ paddingTop: "3.5rem" }}>
               {children}
             </main>
+            <ChatBot />
           </TRPCProvider>
         </ThemeProvider>
       </body>
     </html>
   );
 }
+
