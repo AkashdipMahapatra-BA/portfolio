@@ -29,7 +29,10 @@ const jetbrainsMono = localFont({
   display: "swap",
 });
 
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://akashdipmahapatra.in';
+
 export const metadata: Metadata = {
+  metadataBase: new URL(baseUrl),
   title: "Akashdip Mahapatra | Data Engineer & Cloud Automation Specialist",
   description: "Portfolio of Akashdip Mahapatra — Specializing in Data Engineering, Infrastructure Automation, DevOps, Salesforce, AWS, Python, and orchestrating Enterprise Agentic AI.",
   keywords: [
@@ -48,17 +51,30 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Akashdip Mahapatra" }],
   creator: "Akashdip Mahapatra",
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     type: "website",
     locale: "en_GB",
+    url: "/",
     title: "Akashdip Mahapatra | Data Engineer & Cloud Automation Specialist",
     description: "Portfolio of Akashdip Mahapatra — Specializing in Data Engineering, Infrastructure Automation, DevOps, Salesforce, AWS, and Python.",
     siteName: "Akashdip Mahapatra Portfolio",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Akashdip Mahapatra - Data Engineer & Cloud Automation Specialist",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Akashdip Mahapatra | Data Engineer & Cloud Automation Specialist",
     description: "Portfolio of Akashdip Mahapatra — Specializing in Data Engineering, Infrastructure Automation, DevOps, Salesforce, AWS, and Python.",
+    images: ["/og-image.jpg"],
   },
   robots: {
     index: true,
