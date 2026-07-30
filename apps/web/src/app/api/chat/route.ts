@@ -224,13 +224,13 @@ export async function POST(req: Request) {
       endpointUrl = endpointUrl.replace(/\/+$/, "") + "/chat/completions";
     }
 
-    // Multi-Model Fallback Chain: triples free quota capacity (45 RPM / 4,500 RPD) & guards against 404 drops
-    const configuredModel = process.env.LLM_MODEL || "gemini-2.5-flash";
+    // Multi-Model Fallback Chain: triples free quota capacity (45 RPM / 4,500 RPD) & guards against invalid model names or 404 route drops
+    const configuredModel = process.env.LLM_MODEL || "gemini-1.5-flash";
     const fallbackModels = Array.from(
       new Set([
         configuredModel, 
-        "gemini-2.5-flash", 
         "gemini-1.5-flash", 
+        "gemini-2.0-flash", 
         "gemini-1.5-pro", 
         "gemini-1.5-flash-8b"
       ])
@@ -240,7 +240,7 @@ export async function POST(req: Request) {
     let assistantMessage = "";
     let success = false;
 
-    // Loop through fallback models if rate limited (429), overloaded (503), or 404 routing drop
+    // Loop through fallback models if model is not found (404), rate limited (429), or overloaded (503)
     for (const targetModel of fallbackModels) {
       const payload = {
         model: targetModel,
@@ -249,7 +249,7 @@ export async function POST(req: Request) {
           ...messages.slice(-6), // Keep recent chat window context
         ],
         temperature: 0.7,
-        max_tokens: 2048, // Bumped to 2048 to prevent response truncation on long evaluations
+        max_tokens: 2048, // Increased to 2048 to prevent response truncation on long evaluations
       };
 
       // Retry up to 2 attempts per model if 503/429
@@ -276,9 +276,9 @@ export async function POST(req: Request) {
           }
 
           const errBody = await response.text();
-          console.warn(`LLM Error on model ${targetModel} (Attempt ${attempt}, Status ${response.status}):`, errBody);
+          console.warn(`LLM Error on model '${targetModel}' (Attempt ${attempt}, Status ${response.status}):`, errBody);
 
-          // On 404 (Model Not Found / Route drop) or 400, break attempt loop to try next model
+          // On 404 (Model Not Found), 400, or 401, break THIS model's attempt loop so outer loop tries next fallback model!
           if (response.status === 404 || response.status === 400 || response.status === 401) {
             break;
           }
@@ -288,11 +288,11 @@ export async function POST(req: Request) {
             await new Promise((resolve) => setTimeout(resolve, 500));
           }
         } catch (fetchErr) {
-          console.warn(`Fetch error for model ${targetModel}:`, fetchErr);
+          console.warn(`Fetch exception on model '${targetModel}':`, fetchErr);
         }
       }
 
-      if (success) break; // Successfully got response from model!
+      if (success) break; // Successfully got response from fallback chain!
     }
 
     if (!success) {
