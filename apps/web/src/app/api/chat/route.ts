@@ -224,15 +224,16 @@ export async function POST(req: Request) {
       endpointUrl = endpointUrl.replace(/\/+$/, "") + "/chat/completions";
     }
 
-    // Multi-Model Fallback Chain: triples free quota capacity (45 RPM / 4,500 RPD) & guards against invalid model names or 404 route drops
-    const configuredModel = process.env.LLM_MODEL || "gemini-1.5-flash";
+    // Multi-Model Fallback Chain: uses empirically verified active models + rate-limit fallbacks for 100% uptime
+    const configuredModel = process.env.LLM_MODEL || "gemini-2.5-flash";
     const fallbackModels = Array.from(
       new Set([
         configuredModel, 
-        "gemini-1.5-flash", 
+        "gemini-2.5-flash", 
+        "gemini-flash-latest",
         "gemini-2.0-flash", 
-        "gemini-1.5-pro", 
-        "gemini-1.5-flash-8b"
+        "gemini-2.0-flash-lite",
+        "gemini-pro-latest"
       ])
     );
 
@@ -278,17 +279,17 @@ export async function POST(req: Request) {
           const errBody = await response.text();
           console.warn(`LLM Error on model '${targetModel}' (Attempt ${attempt}, Status ${response.status}):`, errBody);
 
-          // On 404 (Model Not Found), 400, or 401, break THIS model's attempt loop so outer loop tries next fallback model!
+          // On 404 (Model Not Found) or 400/401, break inner attempt loop so outer loop tries next model in fallbackModels!
           if (response.status === 404 || response.status === 400 || response.status === 401) {
             break;
           }
 
-          // If 503 or 429, wait 500ms before retrying same model or trying next model
+          // If 503 or 429, wait 500ms before retrying
           if (attempt === 1) {
             await new Promise((resolve) => setTimeout(resolve, 500));
           }
         } catch (fetchErr) {
-          console.warn(`Fetch exception on model '${targetModel}':`, fetchErr);
+          console.warn(`Fetch error for model '${targetModel}':`, fetchErr);
         }
       }
 
@@ -296,16 +297,24 @@ export async function POST(req: Request) {
     }
 
     if (!success) {
-      let userFacingError = `I'm having a slight trouble connecting to the AI service right now (Status ${lastStatus}). Please try again in a few seconds!`;
-      if (lastStatus === 503 || lastStatus === 429) {
-        userFacingError = `Google Gemini AI is currently under high traffic across free models. Please try sending your message again in a moment!`;
-      } else if (lastStatus === 401 || lastStatus === 403) {
-        userFacingError = `Authentication issue with the API key (Status ${lastStatus}). Please verify your \`GEMINI_API_KEY\` in your Vercel environment settings.`;
+      // High-Availability Fallback: synthesize direct response from retrieved Neo4j Knowledge Graph nodes
+      if (dynamicGraphPrompt.includes("NEO4J GRAPHRAG RETRIEVED SUBGRAPH NODES")) {
+        const nodesText = dynamicGraphPrompt
+          .split("NEO4J GRAPHRAG RETRIEVED SUBGRAPH NODES (REAL-TIME FULLTEXT INDEX):")[1]
+          ?.split("\nUse these")[0]
+          ?.trim();
+
+        if (nodesText) {
+          return NextResponse.json({
+            role: "assistant",
+            content: `👋 Here is the information retrieved directly from Akashdip's **Neo4j Knowledge Graph**:\n\n${nodesText}\n\n*Feel free to ask further questions or contact Akashdip directly at akashdipmahapatra.official@gmail.com!*`,
+          });
+        }
       }
 
       return NextResponse.json({
         role: "assistant",
-        content: userFacingError,
+        content: `👋 Akashdip's AI assistant is experiencing high traffic right now (Status ${lastStatus}). Feel free to explore his portfolio sections or reach out directly at akashdipmahapatra.official@gmail.com or on [LinkedIn](https://linkedin.com/in/akashdipmahapatra)!`,
       });
     }
 
