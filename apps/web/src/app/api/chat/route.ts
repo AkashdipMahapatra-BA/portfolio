@@ -99,6 +99,22 @@ export async function POST(req: Request) {
       });
     }
 
+    const lastUserMsg = messages[messages.length - 1]?.content || "";
+    const lowerUserMsg = lastUserMsg.toLowerCase();
+
+    // --- Direct Intent Handler: Chatbot Architecture Explanation ---
+    if (
+      lowerUserMsg.includes("how this chatbot works") ||
+      lowerUserMsg.includes("how does this chatbot work") ||
+      lowerUserMsg.includes("chatbot architecture") ||
+      lowerUserMsg.includes("how the bot works")
+    ) {
+      return NextResponse.json({
+        role: "assistant",
+        content: `🤖 **Akashdip AI — Architecture & GraphRAG System Overview**\n\nThis chatbot is an **Enterprise Hybrid GraphRAG System** engineered to demonstrate production AI capabilities using a live **Neo4j Knowledge Graph** and **Google Gemini LLM**.\n\n---\n\n### 🛠️ Core Technology Stack\n* **Frontend UI**: Next.js 15 App Router + React + Dual-Sweep Shimmer CSS Buttons + Three.js WebGL.\n* **Knowledge Graph**: **Neo4j AuraDB** with sub-10ms Lucene Full-Text Search Indexing (\`portfolioFullText\`).\n* **Protocol & API**: OpenAI Chat Completions REST Specification.\n* **LLM Engine**: Multi-Model Fallback Chain (\`gemini-2.5-flash\` ➔ \`gemini-1.5-flash\` ➔ \`gemini-1.5-flash-8b\`) yielding **45 RPM / 4,500 RPD free throughput**.\n\n---\n\n### 📐 High-Level Architecture Diagram\n\`\`\`text\n [ User Question ]\n         │\n         ▼ (Stop-word filtering & Lucene search <10ms)\n [ Neo4j AuraDB Knowledge Graph ]\n         │\n         ▼ (Real-time Subgraph Node Injection)\n [ Dynamic System Prompt + Guardrails ]\n         │\n         ▼ (OpenAI Spec REST Payload)\n [ Multi-Model Gemini Fallback Chain ]\n         │\n         ▼\n [ Ultra-Fast Response Delivered ]\n\`\`\`\n\nFeel free to test it by asking about **AWS projects**, **certifications**, **YouTube playlists**, or **Presidential awards**!`,
+      });
+    }
+
     // --- Dynamic GraphRAG Subgraph Retrieval Step (Ultra-Fast Indexed Lucene Search) ---
     let dynamicGraphPrompt = KNOWLEDGE_BASE_SYSTEM_PROMPT;
 

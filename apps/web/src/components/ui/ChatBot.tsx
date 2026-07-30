@@ -11,6 +11,7 @@ interface Message {
 }
 
 const INITIAL_SUGGESTIONS = [
+  "🤖 How this Chatbot works",
   "⚡ What AWS projects has he built?",
   "🛠️ What is Akashdip's core tech stack?",
   "💼 Tell me about his work experience",
@@ -413,27 +414,47 @@ export function ChatBot() {
                 <button
                   key={i}
                   onClick={() => handleSend(sug)}
+                  className="chat-sug-btn"
                   style={{
+                    position: "relative",
+                    overflow: "hidden",
                     fontSize: "0.68rem",
-                    padding: "0.3rem 0.6rem",
+                    padding: "0.35rem 0.65rem",
                     borderRadius: "0.5rem",
-                    background: "color-mix(in srgb, var(--color-border) 50%, transparent)",
-                    border: "1px solid var(--color-border)",
-                    color: "var(--color-muted)",
+                    background: i === 0 
+                      ? "color-mix(in srgb, var(--color-accent) 18%, transparent)" 
+                      : "color-mix(in srgb, var(--color-border) 50%, transparent)",
+                    border: i === 0 
+                      ? "1px solid color-mix(in srgb, var(--color-accent) 50%, transparent)" 
+                      : "1px solid var(--color-border)",
+                    color: i === 0 ? "var(--color-accent)" : "var(--color-muted)",
+                    fontWeight: i === 0 ? 600 : 400,
                     cursor: "pointer",
                     textAlign: "left",
-                    transition: "all 0.15s ease",
+                    transition: "all 0.2s ease",
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.borderColor = "var(--color-accent)";
                     e.currentTarget.style.color = "var(--color-accent)";
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = "var(--color-border)";
-                    e.currentTarget.style.color = "var(--color-muted)";
+                    if (i !== 0) {
+                      e.currentTarget.style.borderColor = "var(--color-border)";
+                      e.currentTarget.style.color = "var(--color-muted)";
+                    }
                   }}
                 >
-                  {sug}
+                  <span
+                    className="shimmer-layer-chat"
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      pointerEvents: "none",
+                      background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%)",
+                      animation: `shimmer-btn-chat 5s ease-in-out ${i * 0.5}s infinite`,
+                    }}
+                  />
+                  <span style={{ position: "relative", zIndex: 1 }}>{sug}</span>
                 </button>
               ))}
             </div>
@@ -458,7 +479,7 @@ export function ChatBot() {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about Akashdip's skills..."
+              placeholder="Ask about Akashdip's skills or chatbot architecture..."
               disabled={isLoading}
               style={{
                 flex: 1,
@@ -495,7 +516,7 @@ export function ChatBot() {
         </div>
       )}
 
-      {/* Global CSS keyframes for ChatBot animation & typing pulse */}
+      {/* Global CSS keyframes for ChatBot animation, dual-sweep shimmer & typing pulse */}
       <style jsx global>{`
         @keyframes chatFadeIn {
           from {
@@ -506,6 +527,18 @@ export function ChatBot() {
             opacity: 1;
             transform: translateY(0) scale(1);
           }
+        }
+        @keyframes shimmer-btn-chat {
+          0%     { transform: translateX(-150%) skewX(-20deg); opacity: 1; }
+          20%    { transform: translateX(150%)  skewX(-20deg); opacity: 1; }
+          20.01% { transform: translateX(-150%) skewX(-20deg); opacity: 0; }
+          23%    { transform: translateX(-150%) skewX(-20deg); opacity: 0; }
+          23.01% { transform: translateX(-150%) skewX(-20deg); opacity: 1; }
+          43%    { transform: translateX(150%)  skewX(-20deg); opacity: 1; }
+          43.01% { transform: translateX(150%)  skewX(-20deg); opacity: 1; }
+          63%    { transform: translateX(-150%) skewX(-20deg); opacity: 1; }
+          63.01% { transform: translateX(-150%) skewX(-20deg); opacity: 0; }
+          100%   { opacity: 0; transform: translateX(-150%) skewX(-20deg); }
         }
         .dot-pulse {
           width: 5px;
