@@ -12,9 +12,11 @@ export default function InitialLoader({ onComplete }: { onComplete: () => void }
     if (dismissedRef.current) return;
     dismissedRef.current = true;
     window.scrollTo({ top: 0, behavior: "instant" });
-    // NOTE: we intentionally do NOT toggle overflow here — toggling
-    // document overflow causes a ~17px CLS shift when the scrollbar
-    // reappears. The fixed overlay already blocks interaction visually.
+    // Restore scroll — safe against CLS because globals.css sets
+    // scrollbar-gutter:stable, so the scrollbar reappearing no longer
+    // causes a layout shift.
+    document.documentElement.style.overflow = "";
+    document.body.style.overflow = "";
     setFadingOut(true);
     setTimeout(() => {
       setVisible(false);
@@ -23,11 +25,14 @@ export default function InitialLoader({ onComplete }: { onComplete: () => void }
   };
 
   useEffect(() => {
-    // Block scrolling via pointer-events on the overlay (position:fixed),
-    // NOT via overflow:hidden on the document (which shifts layout)
-    const preventScroll = (e: Event) => e.preventDefault();
-    window.addEventListener("wheel", preventScroll, { passive: false });
-    window.addEventListener("touchmove", preventScroll, { passive: false });
+    // Block page scroll while the loader overlay is visible.
+    // We use overflow:hidden (NOT wheel/touchmove preventDefault) because
+    // preventDefault listeners can get stuck across React Strict Mode
+    // double-invocations, permanently breaking scroll.
+    // CLS from scrollbar width shift is now handled by scrollbar-gutter:stable
+    // in globals.css, so this is safe.
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
 
     // Dismiss as soon as HTML + scripts are ready — don't wait for images
     if (document.readyState === "interactive" || document.readyState === "complete") {
@@ -46,8 +51,12 @@ export default function InitialLoader({ onComplete }: { onComplete: () => void }
       clearTimeout(fallbackTimer);
       clearTimeout(overrideTimer);
       document.removeEventListener("DOMContentLoaded", dismiss);
-      window.removeEventListener("wheel", preventScroll);
-      window.removeEventListener("touchmove", preventScroll);
+      // Always restore scroll on cleanup (handles Strict Mode remount +
+      // any edge-case where component unmounts before dismiss fires)
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+      // Reset dismissed flag so Strict Mode's second mount works correctly
+      dismissedRef.current = false;
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
