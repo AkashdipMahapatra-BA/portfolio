@@ -66,6 +66,9 @@ html {
   scroll-behavior: smooth;
   overflow-x: hidden;
   max-width: 100vw;
+  /* ── CLS fix: reserve scrollbar gutter so the page never shifts when
+     the scrollbar appears or disappears (e.g. after InitialLoader hides) */
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -77,6 +80,8 @@ body {
   overflow-x: hidden;
   max-width: 100vw;
   width: 100%;
+  /* ── CLS fix: prevent body from ever exceeding viewport width */
+  overflow-anchor: auto;
 
   /* ── Geometric SVG grid background ──────────────────────────────────────
      Inline SVG data-URI: 40×40 grid with a single cross-hair dot at origin.

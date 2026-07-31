@@ -12,8 +12,9 @@ export default function InitialLoader({ onComplete }: { onComplete: () => void }
     if (dismissedRef.current) return;
     dismissedRef.current = true;
     window.scrollTo({ top: 0, behavior: "instant" });
-    document.documentElement.style.overflow = "";
-    document.body.style.overflow = "";
+    // NOTE: we intentionally do NOT toggle overflow here — toggling
+    // document overflow causes a ~17px CLS shift when the scrollbar
+    // reappears. The fixed overlay already blocks interaction visually.
     setFadingOut(true);
     setTimeout(() => {
       setVisible(false);
@@ -22,8 +23,11 @@ export default function InitialLoader({ onComplete }: { onComplete: () => void }
   };
 
   useEffect(() => {
-    document.documentElement.style.overflow = "hidden";
-    document.body.style.overflow = "hidden";
+    // Block scrolling via pointer-events on the overlay (position:fixed),
+    // NOT via overflow:hidden on the document (which shifts layout)
+    const preventScroll = (e: Event) => e.preventDefault();
+    window.addEventListener("wheel", preventScroll, { passive: false });
+    window.addEventListener("touchmove", preventScroll, { passive: false });
 
     // Dismiss as soon as HTML + scripts are ready — don't wait for images
     if (document.readyState === "interactive" || document.readyState === "complete") {
@@ -42,8 +46,8 @@ export default function InitialLoader({ onComplete }: { onComplete: () => void }
       clearTimeout(fallbackTimer);
       clearTimeout(overrideTimer);
       document.removeEventListener("DOMContentLoaded", dismiss);
-      document.documentElement.style.overflow = "";
-      document.body.style.overflow = "";
+      window.removeEventListener("wheel", preventScroll);
+      window.removeEventListener("touchmove", preventScroll);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
