@@ -78,6 +78,27 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  // ── Subpath Rewrites (Reverse Proxying External/Hackathon Apps) ─────────
+  async rewrites() {
+    return [
+      {
+        source: "/tcs-ai-hackathon",
+        destination: "https://ai-assisted-airline-customer-refund.vercel.app/",
+      },
+      {
+        source: "/tcs-ai-hackathon/:path*",
+        destination: "https://ai-assisted-airline-customer-refund.vercel.app/:path*",
+      },
+      {
+        source: "/skyassure-ai",
+        destination: "https://ai-assisted-airline-customer-refund.vercel.app/",
+      },
+      {
+        source: "/skyassure-ai/:path*",
+        destination: "https://ai-assisted-airline-customer-refund.vercel.app/:path*",
+      },
+    ];
+  },
 };
 
 export default nextConfig;
