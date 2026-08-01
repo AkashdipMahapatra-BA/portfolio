@@ -150,7 +150,7 @@ export async function POST(req: Request) {
           // Direct Cypher intent routing for specific categories
           if (lowerMsg.includes("badge") || lowerMsg.includes("certif") || lowerMsg.includes("credly")) {
             cypher = `
-              MATCH (c:Candidate {email: 'akashdipmahapatra.official@gmail.com'})-[:EARNED]->(n:Certification)
+              MATCH (c:Candidate)-[:EARNED]->(n:Certification)
               RETURN 
                 'Certification' AS nodeType, 
                 n.name AS title, 
@@ -161,7 +161,7 @@ export async function POST(req: Request) {
             `;
           } else if (lowerMsg.includes("youtube") || lowerMsg.includes("playlist") || lowerMsg.includes("video") || lowerMsg.includes("gallery") || lowerMsg.includes("award")) {
             cypher = `
-              MATCH (c:Candidate {email: 'akashdipmahapatra.official@gmail.com'})-[r:PUBLISHED_PLAYLIST|PUBLISHED_VIDEO|HOSTS_ARCHIVE|WON]->(n)
+              MATCH (c:Candidate)-[r:PUBLISHED_PLAYLIST|PUBLISHED_VIDEO|HOSTS_ARCHIVE|WON]->(n)
               RETURN 
                 labels(n)[0] AS nodeType, 
                 coalesce(n.title, n.name) AS title, 
@@ -172,7 +172,7 @@ export async function POST(req: Request) {
             `;
           } else if (lowerMsg.includes("hobby") || lowerMsg.includes("hobbies") || lowerMsg.includes("anime") || lowerMsg.includes("movie") || lowerMsg.includes("fitness") || lowerMsg.includes("rope") || lowerMsg.includes("physics")) {
             cypher = `
-              MATCH (c:Candidate {email: 'akashdipmahapatra.official@gmail.com'})-[:ENJOYS]->(n:Hobby)
+              MATCH (c:Candidate)-[:ENJOYS]->(n:Hobby)
               RETURN 
                 'Hobby' AS nodeType, 
                 n.name AS title, 
