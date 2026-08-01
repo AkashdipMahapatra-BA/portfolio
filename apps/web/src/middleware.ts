@@ -20,7 +20,7 @@ const VANITY_REDIRECTS: Record<string, string> = {
   "/linkedin": "https://www.linkedin.com/in/akashdip2001",
   "/cv": "/Akashdip_Mahapatra_CV.pdf",
   "/resume": "/Akashdip_Mahapatra_CV.pdf",
-  "/email": "mailto:akashdipmahapatra.official@gmail.com",
+  "/email": "mailto:contact@akashdipmahapatra.in",
   "/twitter": "https://twitter.com/AkashdipM",
   "/x": "https://twitter.com/AkashdipM",
 };

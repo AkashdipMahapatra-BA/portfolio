@@ -11,6 +11,7 @@ export default function Home() {
     "@type": "Person",
     "name": "Akashdip Mahapatra",
     "url": "https://akashdipmahapatra.in",
+    "email": "contact@akashdipmahapatra.in",
     "jobTitle": "Data Engineer & Cloud Automation Specialist",
     "sameAs": [
       "https://github.com/AkashdipMahapatra-BA"

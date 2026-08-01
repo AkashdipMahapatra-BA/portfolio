@@ -306,9 +306,12 @@ const runSquiggly = () => {
 }
 
 const META = [
-  { label: "Location",      value: "Chennai, India" },
-  { label: "Availability",  value: "Open to opportunities" },
-  { label: "Response time", value: "< 24 hours" },
+  { label: "General & Media",  value: "contact@akashdipmahapatra.in" },
+  { label: "Engineering & Dev", value: "dev@akashdipmahapatra.in" },
+  { label: "Cloud & Arch",     value: "cloud@akashdipmahapatra.in" },
+  { label: "Location",         value: "Chennai, India" },
+  { label: "Availability",     value: "Open to opportunities" },
+  { label: "Response time",    value: "< 24 hours" },
 ];
 
 export function Contact() {

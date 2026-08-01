@@ -52,11 +52,16 @@ ABOUT AKASHDIP MAHAPATRA:
     - AWS & Cloud Playlist: https://www.youtube.com/playlist?list=PL_RecMEcs_p_TuIPqY1zVYeGoL5RriWhk
     - Linux vs Windows Tutorials (30 videos): https://www.youtube.com/playlist?list=PL_RecMEcs_p8fyKuAxt8r-m-BCHGc9Wam
 - Contact Details:
-  - Email: akashdipmahapatra.official@gmail.com
+  - General & Media: contact@akashdipmahapatra.in
+  - Engineering & Software: dev@akashdipmahapatra.in
+  - Cloud Architecture & SRE: cloud@akashdipmahapatra.in
   - LinkedIn: https://linkedin.com/in/akashdipmahapatra
   - GitHub (Current Official): https://github.com/AkashdipMahapatra-BA
   - GitHub (Inactive College Account): https://github.com/akashdip2001
   - Website: https://akashdipmahapatra.in
+- Communication Rule for Contact Inquiries:
+  - When asked how to contact Akashdip, share his 3 domain emails (contact@akashdipmahapatra.in, dev@akashdipmahapatra.in, cloud@akashdipmahapatra.in).
+  - Explicitly inform the user: "If you do not receive a response within 24 hours, please scroll to the bottom of this website and submit the interactive Contact Form for a quick response!"
 - Persona & Tone: Professional, articulate, enthusiastic, tech-savvy, and concise. Present Akashdip's accomplishments with clarity and high impact. Ensure you communicate strictly in English. When users ask about his mechanical work or software projects, enthusiastically share the specific YouTube playlist and Archive links!
 
 BEHAVIOURAL GUARDRAILS & TOKEN PROTECTION RULES:
@@ -307,14 +312,14 @@ export async function POST(req: Request) {
         if (nodesText) {
           return NextResponse.json({
             role: "assistant",
-            content: `👋 Here is the information retrieved directly from Akashdip's **Neo4j Knowledge Graph**:\n\n${nodesText}\n\n*Feel free to ask further questions or contact Akashdip directly at akashdipmahapatra.official@gmail.com!*`,
+            content: `👋 Here is the information retrieved directly from Akashdip's **Neo4j Knowledge Graph**:\n\n${nodesText}\n\n*Feel free to reach out directly via email at **contact@akashdipmahapatra.in** (or **dev@akashdipmahapatra.in** / **cloud@akashdipmahapatra.in**). If you don't receive a response within 24 hours, please scroll to the bottom of this page and use the interactive Contact Form for a quick response!*`,
           });
         }
       }
 
       return NextResponse.json({
         role: "assistant",
-        content: `👋 Akashdip's AI assistant is experiencing high traffic right now (Status ${lastStatus}). Feel free to explore his portfolio sections or reach out directly at akashdipmahapatra.official@gmail.com or on [LinkedIn](https://linkedin.com/in/akashdipmahapatra)!`,
+        content: `👋 Akashdip's AI assistant is experiencing high traffic right now (Status ${lastStatus}). Feel free to reach out directly at **contact@akashdipmahapatra.in** or on [LinkedIn](https://linkedin.com/in/akashdipmahapatra). If you don't receive a response within 24 hours, scroll to the bottom of this page and submit the Contact Form!`,
       });
     }
 
@@ -328,7 +333,7 @@ export async function POST(req: Request) {
       {
         role: "assistant",
         content:
-          "An unexpected error occurred while processing your request. Please try sending your message again or contact Akashdip directly at akashdipmahapatra.official@gmail.com!",
+          "An unexpected error occurred while processing your request. Please try sending your message again or email Akashdip directly at contact@akashdipmahapatra.in (or use the Contact Form at the bottom of the page)!",
       },
       { status: 500 }
     );
