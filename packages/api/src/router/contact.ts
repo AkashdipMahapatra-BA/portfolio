@@ -17,11 +17,13 @@ export const contactRouter = router({
         });
       }
 
+      const fromEmail = process.env["RESEND_FROM_EMAIL"] || "Portfolio Contact <contact@akashdipmahapatra.in>";
+
       const resend = new Resend(apiKey);
 
       try {
         const { error } = await resend.emails.send({
-          from: "Portfolio Contact <onboarding@resend.dev>",
+          from: fromEmail,
           to: toEmail,
           replyTo: input.email,
           subject: `[Portfolio] ${input.subject}`,
