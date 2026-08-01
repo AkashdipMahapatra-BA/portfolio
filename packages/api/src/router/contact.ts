@@ -17,7 +17,7 @@ export const contactRouter = router({
         });
       }
 
-      const fromEmail = process.env["RESEND_FROM_EMAIL"] || "Portfolio Contact <contact@akashdipmahapatra.in>";
+      const fromEmail = process.env["RESEND_FROM_EMAIL"] || "Portfolio Contact <onboarding@resend.dev>";
 
       const resend = new Resend(apiKey);
 
