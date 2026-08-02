@@ -32,7 +32,32 @@ export function ChatBot() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [hasUnread, setHasUnread] = useState(true);
+  const [isAtBottom, setIsAtBottom] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Detect when user reaches bottom copyright bar to auto-hide button
+  useEffect(() => {
+    const handleCheckBottom = () => {
+      const el = document.getElementById("footer-copyright");
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        setIsAtBottom(rect.top <= window.innerHeight - 20);
+      } else {
+        const scrollPosition = window.innerHeight + window.scrollY;
+        const threshold = document.documentElement.scrollHeight - 100;
+        setIsAtBottom(scrollPosition >= threshold);
+      }
+    };
+
+    window.addEventListener("scroll", handleCheckBottom, { passive: true });
+    window.addEventListener("resize", handleCheckBottom, { passive: true });
+    handleCheckBottom();
+
+    return () => {
+      window.removeEventListener("scroll", handleCheckBottom);
+      window.removeEventListener("resize", handleCheckBottom);
+    };
+  }, []);
 
   // Auto-scroll to bottom of chat
   const scrollToBottom = () => {
@@ -164,14 +189,17 @@ export function ChatBot() {
             border: "none",
             cursor: "pointer",
             boxShadow: "0 8px 24px color-mix(in srgb, var(--color-accent) 40%, transparent)",
-            transition: "transform 0.2s ease, box-shadow 0.2s ease",
+            transition: "opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease",
             position: "relative",
+            opacity: isAtBottom ? 0 : 1,
+            transform: isAtBottom ? "translateY(24px) scale(0.92)" : "translateY(0) scale(1)",
+            pointerEvents: isAtBottom ? "none" : "auto",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.transform = "scale(1.05)";
+            if (!isAtBottom) e.currentTarget.style.transform = "scale(1.05)";
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.transform = "scale(1)";
+            if (!isAtBottom) e.currentTarget.style.transform = "translateY(0) scale(1)";
           }}
         >
           <div style={{ position: "relative", display: "flex", alignItems: "center" }}>

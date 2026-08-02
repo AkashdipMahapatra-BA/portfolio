@@ -372,6 +372,7 @@ export function Footer() {
 
         {/* Bottom Copyright & Navigation Bar — Always Visible */}
         <div
+          id="footer-copyright"
           style={{
             borderTop: "1px solid rgba(255, 255, 255, 0.08)",
             paddingTop: "1.5rem",
