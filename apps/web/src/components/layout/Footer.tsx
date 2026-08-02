@@ -325,14 +325,9 @@ export function Footer() {
               <h4 style={headingStyle}>🚀 APPS & SOCIAL</h4>
               <ul style={listStyle}>
                 <li>
-                  <a href="/skyassure-ai" style={linkStyle}>
-                    <span>/skyassure-ai (Airline Refund AI)</span>
+                  <a href="https://skyassure-ai.akashdipmahapatra.in" target="_blank" rel="noopener noreferrer" style={linkStyle}>
+                    <span>TCS AI Hackathon (SkyAssure AI)</span>
                     <span style={{ ...tagStyle, background: "rgba(16, 185, 129, 0.15)", color: "#34D399" }}>AI Hackathon</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="/tcs-ai-hackathon" style={linkStyle}>
-                    <span>/tcs-ai-hackathon</span>
                   </a>
                 </li>
                 <li>
