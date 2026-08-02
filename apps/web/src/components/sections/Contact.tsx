@@ -42,6 +42,9 @@ const contactStyles = `
       width: 100%;
       box-sizing: border-box;
     }
+    .contact-email-row {
+      display: none !important;
+    }
   }
 
   /* ── Tablet (641px – 900px): photo left, meta right inline ── */
@@ -372,7 +375,11 @@ export function Contact() {
             <div className="contact-meta-list" style={{ order: 1, alignSelf: "flex-start" }}>
               <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
                 {META.map(({ label, value }) => (
-                  <div key={label} style={{ display: "flex", gap: "0.5rem", alignItems: "baseline", flexWrap: "wrap" }}>
+                  <div
+                    key={label}
+                    className={label.toLowerCase().includes("email") ? "contact-email-row" : ""}
+                    style={{ display: "flex", gap: "0.5rem", alignItems: "baseline", flexWrap: "wrap" }}
+                  >
                     <span style={{
                       fontFamily: "var(--font-mono)",
                       fontSize: "0.62rem",
