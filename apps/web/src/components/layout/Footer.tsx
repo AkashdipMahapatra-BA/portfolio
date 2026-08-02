@@ -10,13 +10,14 @@ export function Footer() {
     <footer
       className="footer-root"
       style={{
-        background: "rgba(10, 15, 29, 0.85)",
+        background: "color-mix(in srgb, var(--color-bg) 95%, var(--color-surface))",
         backdropFilter: "blur(12px)",
         borderTop: "1px solid var(--color-border)",
         color: "var(--color-text)",
         padding: "3.5rem 1.5rem 2rem",
         position: "relative",
         overflow: "hidden",
+        transition: "background 0.3s ease, color 0.3s ease, border-color 0.3s ease",
       }}
     >
       <style>{`
@@ -68,7 +69,12 @@ export function Footer() {
             left: 0;
             right: 0;
             height: 95px;
-            background: linear-gradient(to bottom, transparent 0%, rgba(10, 15, 29, 0.75) 50%, rgba(10, 15, 29, 0.98) 100%);
+            background: linear-gradient(
+              to bottom,
+              transparent 0%,
+              color-mix(in srgb, var(--color-bg) 75%, transparent) 50%,
+              var(--color-bg) 100%
+            );
             backdrop-filter: blur(2px);
             pointer-events: none;
           }
@@ -81,11 +87,11 @@ export function Footer() {
           }
 
           .mobile-expand-btn {
-            background: rgba(15, 23, 42, 0.95);
-            border: 1px solid rgba(6, 182, 212, 0.35);
+            background: var(--color-surface);
+            border: 1px solid color-mix(in srgb, var(--color-accent) 35%, transparent);
             border-radius: 2rem;
             padding: 0.45rem 1.25rem;
-            color: #38BDF8;
+            color: var(--color-accent);
             font-family: var(--font-mono);
             font-size: 0.7rem;
             font-weight: 600;
@@ -94,7 +100,7 @@ export function Footer() {
             display: inline-flex;
             align-items: center;
             gap: 0.6rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
+            box-shadow: 0 4px 15px color-mix(in srgb, var(--color-border) 60%, transparent);
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
@@ -104,7 +110,7 @@ export function Footer() {
             content: "";
             position: absolute;
             inset: 0;
-            background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.35), transparent);
+            background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--color-accent) 35%, transparent), transparent);
             background-size: 200% 100%;
             animation: edge-glow-sweep 3s linear infinite;
             pointer-events: none;
@@ -130,7 +136,7 @@ export function Footer() {
           right: "10%",
           height: "1px",
           background:
-            "linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.4), rgba(59, 130, 246, 0.4), transparent)",
+            "linear-gradient(90deg, transparent, color-mix(in srgb, var(--color-accent) 40%, transparent), transparent)",
         }}
       />
 
@@ -154,7 +160,7 @@ export function Footer() {
                   fontWeight: 700,
                   fontSize: "1.35rem",
                   letterSpacing: "-0.03em",
-                  color: "#06B6D4",
+                  color: "var(--color-accent)",
                 }}
               >
                 akashdip.
@@ -164,9 +170,9 @@ export function Footer() {
                   fontSize: "0.65rem",
                   padding: "0.15rem 0.4rem",
                   borderRadius: "4rem",
-                  background: "rgba(6, 182, 212, 0.15)",
-                  color: "#06B6D4",
-                  border: "1px solid rgba(6, 182, 212, 0.3)",
+                  background: "color-mix(in srgb, var(--color-accent) 15%, transparent)",
+                  color: "var(--color-accent)",
+                  border: "1px solid color-mix(in srgb, var(--color-accent) 30%, transparent)",
                   fontFamily: "var(--font-mono)",
                 }}
               >
@@ -198,7 +204,7 @@ export function Footer() {
               <a
                 href="mailto:contact@akashdipmahapatra.in"
                 style={{
-                  color: "#38BDF8",
+                  color: "var(--color-accent)",
                   textDecoration: "none",
                   display: "inline-flex",
                   alignItems: "center",
@@ -210,7 +216,7 @@ export function Footer() {
               <a
                 href="mailto:dev@akashdipmahapatra.in"
                 style={{
-                  color: "#38BDF8",
+                  color: "var(--color-accent)",
                   textDecoration: "none",
                   display: "inline-flex",
                   alignItems: "center",
@@ -222,7 +228,7 @@ export function Footer() {
               <a
                 href="mailto:cloud@akashdipmahapatra.in"
                 style={{
-                  color: "#38BDF8",
+                  color: "var(--color-accent)",
                   textDecoration: "none",
                   display: "inline-flex",
                   alignItems: "center",
@@ -297,7 +303,7 @@ export function Footer() {
                 <li>
                   <a href="/college-projects" style={linkStyle}>
                     <span>/college-projects (IT & IoT)</span>
-                    <span style={{ ...tagStyle, background: "rgba(59, 130, 246, 0.15)", color: "#60A5FA" }}>Archive</span>
+                    <span style={{ ...tagStyle, background: "color-mix(in srgb, var(--color-accent) 15%, transparent)", color: "var(--color-accent)" }}>Archive</span>
                   </a>
                 </li>
                 <li>
@@ -362,7 +368,7 @@ export function Footer() {
           >
             <span>{isMobileExpanded ? "SHOW LESS" : "EXPLORE ALL SUBDOMAINS & LINKS"}</span>
             <div className={`double-v-icon ${isMobileExpanded ? "open" : ""}`}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="7 7 12 12 17 7" />
                 <polyline points="7 13 12 18 17 13" />
               </svg>
@@ -374,7 +380,7 @@ export function Footer() {
         <div
           id="footer-copyright"
           style={{
-            borderTop: "1px solid rgba(255, 255, 255, 0.08)",
+            borderTop: "1px solid var(--color-border)",
             paddingTop: "1.5rem",
             display: "flex",
             flexWrap: "wrap",
@@ -407,7 +413,7 @@ const headingStyle: React.CSSProperties = {
   fontWeight: 700,
   textTransform: "uppercase",
   letterSpacing: "0.1em",
-  color: "#94A3B8",
+  color: "var(--color-muted)",
   marginBottom: "0.25rem",
 };
 
@@ -436,7 +442,7 @@ const tagStyle: React.CSSProperties = {
   fontSize: "0.62rem",
   padding: "0.08rem 0.35rem",
   borderRadius: "0.25rem",
-  background: "rgba(255, 255, 255, 0.07)",
+  background: "var(--color-border)",
   color: "var(--color-muted)",
   fontFamily: "var(--font-mono)",
   whiteSpace: "nowrap",
