@@ -23,7 +23,7 @@ MERGE (c:Candidate {email: 'akashdipmahapatra.official@gmail.com'})
 SET c.name = 'Akashdip Mahapatra',
     c.role = 'Data Engineer & Cloud Automation Specialist',
     c.company = 'Tata Consultancy Services (TCS)',
-    c.client = 'British Airways',
+    c.client = 'Global Aviation Giant',
     c.degree = 'Bachelor of Technology in Mechanical Engineering',
     c.college = 'Academy of Technology',
     c.graduation = '2021-2025',
