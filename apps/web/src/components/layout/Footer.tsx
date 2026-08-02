@@ -25,8 +25,32 @@ export function Footer() {
           100% { background-position: 200% 0; }
         }
 
-        @media (max-width: 640px) {
+        .footer-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+          gap: 2.5rem;
+        }
+
+        @media (min-width: 641px) {
+          .mobile-expand-bar {
+            display: none !important;
+          }
           .mobile-collapsible-content {
+            display: contents !important;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .footer-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+          }
+
+          .mobile-collapsible-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
             max-height: 125px;
             overflow: hidden;
             position: relative;
@@ -95,19 +119,6 @@ export function Footer() {
             transform: rotate(180deg);
           }
         }
-
-        @media (min-width: 641px) {
-          .mobile-expand-bar {
-            display: none !important;
-          }
-          .mobile-collapsible-content {
-            max-height: none !important;
-            overflow: visible !important;
-          }
-          .mobile-collapsible-content::after {
-            display: none !important;
-          }
-        }
       `}</style>
 
       {/* Decorative Subtle Top Glow Line */}
@@ -132,105 +143,100 @@ export function Footer() {
           gap: "2.5rem",
         }}
       >
-        {/* Brand & Identity Header — Always Visible */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            <span
+        {/* Main Grid Container */}
+        <div className="footer-grid">
+          {/* Column 1: Brand & Identity */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+              <span
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontWeight: 700,
+                  fontSize: "1.35rem",
+                  letterSpacing: "-0.03em",
+                  color: "#06B6D4",
+                }}
+              >
+                akashdip.
+              </span>
+              <span
+                style={{
+                  fontSize: "0.65rem",
+                  padding: "0.15rem 0.4rem",
+                  borderRadius: "4rem",
+                  background: "rgba(6, 182, 212, 0.15)",
+                  color: "#06B6D4",
+                  border: "1px solid rgba(6, 182, 212, 0.3)",
+                  fontFamily: "var(--font-mono)",
+                }}
+              >
+                LIVE
+              </span>
+            </div>
+
+            <p
               style={{
-                fontFamily: "var(--font-mono)",
-                fontWeight: 700,
-                fontSize: "1.35rem",
-                letterSpacing: "-0.03em",
-                color: "#06B6D4",
+                fontSize: "0.85rem",
+                color: "var(--color-muted)",
+                lineHeight: 1.6,
+                maxWidth: "280px",
               }}
             >
-              akashdip.
-            </span>
-            <span
+              Data Engineer & Cloud Automation Specialist. Building unbreakable, scalable enterprise cloud systems and intelligent agentic AI solutions.
+            </p>
+
+            <div
               style={{
-                fontSize: "0.65rem",
-                padding: "0.15rem 0.4rem",
-                borderRadius: "4rem",
-                background: "rgba(6, 182, 212, 0.15)",
-                color: "#06B6D4",
-                border: "1px solid rgba(6, 182, 212, 0.3)",
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.4rem",
+                marginTop: "0.25rem",
+                fontSize: "0.78rem",
                 fontFamily: "var(--font-mono)",
               }}
             >
-              LIVE
-            </span>
+              <a
+                href="mailto:contact@akashdipmahapatra.in"
+                style={{
+                  color: "#38BDF8",
+                  textDecoration: "none",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.4rem",
+                }}
+              >
+                <span style={{ opacity: 0.7 }}>✉</span> contact@akashdipmahapatra.in
+              </a>
+              <a
+                href="mailto:dev@akashdipmahapatra.in"
+                style={{
+                  color: "#38BDF8",
+                  textDecoration: "none",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.4rem",
+                }}
+              >
+                <span style={{ opacity: 0.7 }}>⚡</span> dev@akashdipmahapatra.in
+              </a>
+              <a
+                href="mailto:cloud@akashdipmahapatra.in"
+                style={{
+                  color: "#38BDF8",
+                  textDecoration: "none",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.4rem",
+                }}
+              >
+                <span style={{ opacity: 0.7 }}>☁</span> cloud@akashdipmahapatra.in
+              </a>
+            </div>
           </div>
 
-          <p
-            style={{
-              fontSize: "0.85rem",
-              color: "var(--color-muted)",
-              lineHeight: 1.6,
-              maxWidth: "320px",
-            }}
-          >
-            Data Engineer & Cloud Automation Specialist. Building unbreakable, scalable enterprise cloud systems and intelligent agentic AI solutions.
-          </p>
-
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "0.4rem",
-              marginTop: "0.25rem",
-              fontSize: "0.78rem",
-              fontFamily: "var(--font-mono)",
-            }}
-          >
-            <a
-              href="mailto:contact@akashdipmahapatra.in"
-              style={{
-                color: "#38BDF8",
-                textDecoration: "none",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.4rem",
-              }}
-            >
-              <span style={{ opacity: 0.7 }}>✉</span> contact@akashdipmahapatra.in
-            </a>
-            <a
-              href="mailto:dev@akashdipmahapatra.in"
-              style={{
-                color: "#38BDF8",
-                textDecoration: "none",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.4rem",
-              }}
-            >
-              <span style={{ opacity: 0.7 }}>⚡</span> dev@akashdipmahapatra.in
-            </a>
-            <a
-              href="mailto:cloud@akashdipmahapatra.in"
-              style={{
-                color: "#38BDF8",
-                textDecoration: "none",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.4rem",
-              }}
-            >
-              <span style={{ opacity: 0.7 }}>☁</span> cloud@akashdipmahapatra.in
-            </a>
-          </div>
-        </div>
-
-        {/* Collapsible Section (Subdomains, Galleries, Apps) */}
-        <div className={`mobile-collapsible-content ${isMobileExpanded ? "expanded" : ""}`}>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-              gap: "2.5rem",
-            }}
-          >
-            {/* Subdomains & Linked Hubs */}
+          {/* Columns 2, 3, 4 Wrapper (Collapsible on Mobile, display:contents on Desktop) */}
+          <div className={`mobile-collapsible-content ${isMobileExpanded ? "expanded" : ""}`}>
+            {/* Column 2: Subdomains & Linked Hubs */}
             <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
               <h4 style={headingStyle}>🌐 SUBDOMAINS & HUBS</h4>
               <ul style={listStyle}>
@@ -272,7 +278,7 @@ export function Footer() {
               </ul>
             </div>
 
-            {/* Galleries & Archives */}
+            {/* Column 3: Galleries & Archives */}
             <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
               <h4 style={headingStyle}>🎨 GALLERIES & ARCHIVES</h4>
               <ul style={listStyle}>
@@ -308,7 +314,7 @@ export function Footer() {
               </ul>
             </div>
 
-            {/* Apps & Social Column */}
+            {/* Column 4: Apps & Social Column */}
             <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
               <h4 style={headingStyle}>🚀 APPS & SOCIAL</h4>
               <ul style={listStyle}>
