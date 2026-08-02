@@ -4,6 +4,7 @@ import { Projects } from "@/components/sections/Projects";
 import { Education } from "@/components/sections/Education";
 import { OtherDomains } from "@/components/sections/OtherDomains";
 import { Contact } from "@/components/sections/Contact";
+import { Footer } from "@/components/layout/Footer";
 
 export default function Home() {
   const jsonLd = {
@@ -58,25 +59,3 @@ function Divider() {
   );
 }
 
-function Footer() {
-  return (
-    <footer
-      style={{
-        borderTop: "1px solid var(--color-border)",
-        padding: "1.5rem",
-        textAlign: "center",
-      }}
-    >
-      <p
-        style={{
-          fontFamily: "var(--font-mono)",
-          fontSize: "0.7rem",
-          color: "var(--color-muted)",
-          letterSpacing: "0.06em",
-        }}
-      >
-        © {new Date().getFullYear()} Akashdip Mahapatra — Built with Next.js · tRPC · Tailwind
-      </p>
-    </footer>
-  );
-}
