@@ -26,6 +26,9 @@ export function JiraLogo({ size = 24 }: { size?: number }) {
 export function ConfluenceLogo({ size = 24 }: { size?: number }) {
   return <img src="/logos/Confluence.svg" alt="Confluence" width={size} height={size} style={{ objectFit: "contain" }} />;
 }
+export function ServiceNowLogo({ size = 24 }: { size?: number }) {
+  return <img src="/logos/ServiceNow.svg" alt="ServiceNow" width={size} height={size} style={{ objectFit: "contain" }} />;
+}
 export function GitLogo({ size = 24 }: { size?: number }) {
   return <img src="/logos/Git.svg" alt="Git" width={size} height={size} style={{ objectFit: "contain" }} />;
 }

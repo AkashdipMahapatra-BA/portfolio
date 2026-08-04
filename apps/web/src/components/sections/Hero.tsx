@@ -10,6 +10,7 @@ import {
   SalesforceLogo,
   JiraLogo,
   ConfluenceLogo,
+  ServiceNowLogo,
   GitLogo,
   GithubLogo,
   JenkinsLogo,
@@ -61,6 +62,7 @@ const TECH_STACK = [
   // 🛠️ CI/CD, Agile & Observability
   { name: "Jira", icon: JiraLogo },
   { name: "Confluence", icon: ConfluenceLogo },
+  { name: "ServiceNow", icon: ServiceNowLogo },
   { name: "Git", icon: GitLogo },
   { name: "GitHub Actions", icon: GithubLogo },
   { name: "Jenkins", icon: JenkinsLogo },
