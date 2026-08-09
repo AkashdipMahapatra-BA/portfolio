@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import { X, Download, FileText, ExternalLink, ChevronDown, ChevronUp } from "lucide-react";
+import { X, Download, FileText, ExternalLink } from "lucide-react";
 
 interface CvPreviewModalProps {
   isOpen: boolean;
@@ -9,9 +9,9 @@ interface CvPreviewModalProps {
 }
 
 export function CvPreviewModal({ isOpen, onClose }: CvPreviewModalProps) {
-  const viewportRef = useRef<HTMLDivElement>(null);
+  const backdropRef = useRef<HTMLDivElement>(null);
 
-  // ── Keyboard (Escape) & Strict Body Scroll Lock ────────────────────────────
+  // ── Keyboard (Escape) & Body Scroll Lock ───────────────────────────────────
   useEffect(() => {
     if (!isOpen) return;
 
@@ -21,40 +21,47 @@ export function CvPreviewModal({ isOpen, onClose }: CvPreviewModalProps) {
       }
     };
 
-    // Save original styles
+    // Lock ONLY the background page scroll — do NOT use touchAction:none
+    // (that would swallow touch events going into the iframe too)
     const originalOverflow = document.body.style.overflow;
-    const originalTouchAction = document.body.style.touchAction;
+    const originalPosition = document.body.style.position;
+    const originalWidth = document.body.style.width;
+    const scrollY = window.scrollY;
 
-    // Strict background page freeze (prevents mobile background scrolling)
+    // iOS-safe background scroll lock: freeze body in place
     document.body.style.overflow = "hidden";
-    document.body.style.touchAction = "none";
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = "100%";
 
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
       document.body.style.overflow = originalOverflow;
-      document.body.style.touchAction = originalTouchAction;
+      document.body.style.position = originalPosition;
+      document.body.style.top = "";
+      document.body.style.width = originalWidth;
+      // Restore scroll position after body unfreeze
+      window.scrollTo(0, scrollY);
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
-
-  const handleScroll = (direction: "up" | "down") => {
-    if (viewportRef.current) {
-      const scrollAmount = viewportRef.current.clientHeight * 0.75;
-      viewportRef.current.scrollBy({
-        top: direction === "down" ? scrollAmount : -scrollAmount,
-        behavior: "smooth",
-      });
+  // Intercept touches on the backdrop (but NOT inside the modal) to close
+  const handleBackdropTouch = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (e.target === backdropRef.current) {
+      onClose();
     }
   };
 
+  if (!isOpen) return null;
+
   return (
     <div
+      ref={backdropRef}
       className="cv-modal-backdrop"
-      onClick={onClose}
-      onTouchMove={(e) => e.preventDefault()} // Block mobile background scroll drag
+      onClick={(e) => { if (e.target === backdropRef.current) onClose(); }}
+      onTouchEnd={handleBackdropTouch}
       aria-modal="true"
       role="dialog"
       aria-label="CV Preview"
@@ -70,14 +77,12 @@ export function CvPreviewModal({ isOpen, onClose }: CvPreviewModalProps) {
         backdropFilter: "blur(10px)",
         WebkitBackdropFilter: "blur(10px)",
         animation: "cvModalFadeIn 0.2s ease-out forwards",
-        touchAction: "none",
+        // Do NOT set touchAction or overflow here — that blocks scroll inside iframe
       }}
     >
       {/* ── Modal Main Container ─────────────────────────────────────────── */}
       <div
         className="cv-modal-container"
-        onClick={(e) => e.stopPropagation()}
-        onTouchMove={(e) => e.stopPropagation()} // Keep touch events within modal
         style={{
           position: "relative",
           width: "92vw",
@@ -152,60 +157,16 @@ export function CvPreviewModal({ isOpen, onClose }: CvPreviewModalProps) {
             </div>
           </div>
 
-          {/* Right Controls: Scroll buttons (Mobile) + Download + Close */}
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexShrink: 0 }}>
-            {/* Mobile Scroll Helpers */}
-            <div className="mobile-scroll-controls" style={{ display: "none", gap: "0.25rem", marginRight: "0.25rem" }}>
-              <button
-                type="button"
-                onClick={() => handleScroll("up")}
-                title="Scroll Up"
-                aria-label="Scroll Up"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "2.1rem",
-                  height: "2.1rem",
-                  borderRadius: "6px",
-                  border: "1px solid rgba(255, 255, 255, 0.15)",
-                  backgroundColor: "rgba(255, 255, 255, 0.08)",
-                  color: "#f8fafc",
-                  cursor: "pointer",
-                }}
-              >
-                <ChevronUp size={18} />
-              </button>
-              <button
-                type="button"
-                onClick={() => handleScroll("down")}
-                title="Scroll Down"
-                aria-label="Scroll Down"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "2.1rem",
-                  height: "2.1rem",
-                  borderRadius: "6px",
-                  border: "1px solid rgba(255, 255, 255, 0.15)",
-                  backgroundColor: "rgba(255, 255, 255, 0.08)",
-                  color: "#f8fafc",
-                  cursor: "pointer",
-                }}
-              >
-                <ChevronDown size={18} />
-              </button>
-            </div>
-
-            {/* Direct Open in new tab link (Mobile helper) */}
+          {/* Right Controls: Download + Open in Tab (mobile) + Close */}
+          <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", flexShrink: 0 }}>
+            {/* Open in new tab — useful on mobile where iframe PDF scroll is limited */}
             <a
               href="/Akashdip_Mahapatra_CV.pdf"
               target="_blank"
               rel="noopener noreferrer"
               title="Open full PDF in new tab"
               style={{
-                display: "none",
+                display: "none", // shown via CSS on mobile
                 alignItems: "center",
                 justifyContent: "center",
                 width: "2.25rem",
@@ -286,64 +247,36 @@ export function CvPreviewModal({ isOpen, onClose }: CvPreviewModalProps) {
 
         {/* ── PDF Preview Viewport ────────────────────────────────────────── */}
         <div
-          ref={viewportRef}
-          className="cv-pdf-viewport"
           style={{
             flex: 1,
             position: "relative",
             width: "100%",
-            height: "100%",
+            overflow: "hidden",
             backgroundColor: "#020617",
-            overflowY: "auto",
-            WebkitOverflowScrolling: "touch",
-            touchAction: "pan-y",
           }}
         >
-          <object
-            data="/Akashdip_Mahapatra_CV.pdf#toolbar=1&navpanes=0&scrollbar=1&page=1&view=FitH"
-            type="application/pdf"
+          <iframe
+            src="/Akashdip_Mahapatra_CV.pdf#toolbar=1&navpanes=0&scrollbar=1&page=1&view=FitH"
+            title="Akashdip Mahapatra CV PDF Preview"
             style={{
               width: "100%",
               height: "100%",
-              minHeight: "100%",
               border: "none",
               display: "block",
+              backgroundColor: "#1e293b",
             }}
-          >
-            <iframe
-              src="/Akashdip_Mahapatra_CV.pdf#toolbar=1&navpanes=0&scrollbar=1&page=1&view=FitH"
-              title="Akashdip Mahapatra CV PDF Preview"
-              style={{
-                width: "100%",
-                height: "100%",
-                minHeight: "100%",
-                border: "none",
-                display: "block",
-                backgroundColor: "#1e293b",
-              }}
-            />
-          </object>
+          />
         </div>
 
         {/* ── Embedded CSS Animations & Responsive Helpers ───────────────── */}
         <style jsx>{`
           @keyframes cvModalFadeIn {
-            from {
-              opacity: 0;
-            }
-            to {
-              opacity: 1;
-            }
+            from { opacity: 0; }
+            to   { opacity: 1; }
           }
           @keyframes cvModalScaleUp {
-            from {
-              opacity: 0;
-              transform: scale(0.96) translateY(8px);
-            }
-            to {
-              opacity: 1;
-              transform: scale(1) translateY(0);
-            }
+            from { opacity: 0; transform: scale(0.96) translateY(8px); }
+            to   { opacity: 1; transform: scale(1) translateY(0); }
           }
           @media (max-width: 640px) {
             .cv-modal-container {
@@ -355,9 +288,6 @@ export function CvPreviewModal({ isOpen, onClose }: CvPreviewModalProps) {
               display: none;
             }
             .show-on-mobile-flex {
-              display: flex !important;
-            }
-            .mobile-scroll-controls {
               display: flex !important;
             }
           }
