@@ -63,7 +63,7 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        // CV PDF — short cache so updates roll out quickly
+        // CV PDF — short cache so updates roll out quickly & serve inline for in-modal preview
         source: "/Akashdip_Mahapatra_CV.pdf",
         headers: [
           {
@@ -72,7 +72,11 @@ const nextConfig: NextConfig = {
           },
           {
             key: "Content-Disposition",
-            value: "attachment; filename=\"Akashdip_Mahapatra_CV.pdf\"",
+            value: "inline; filename=\"Akashdip_Mahapatra_CV.pdf\"",
+          },
+          {
+            key: "X-Frame-Options",
+            value: "SAMEORIGIN",
           },
         ],
       },

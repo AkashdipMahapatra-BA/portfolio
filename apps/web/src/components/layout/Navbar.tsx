@@ -1,8 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Eye } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { CvPreviewModal } from "@/components/ui/CvPreviewModal";
 
 const MAIN_NAV = [
   { label: "Experience", href: "#experience" },
@@ -22,92 +25,110 @@ export function Navbar() {
   const pathname = usePathname();
   const isCollegePage = pathname === "/college-projects";
   const navLinks = isCollegePage ? COLLEGE_NAV : MAIN_NAV;
+  const [isCvModalOpen, setIsCvModalOpen] = useState(false);
 
   return (
-    <header
-      className="glass"
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 50,
-        height: "3.5rem",
-      }}
-    >
-      <nav
-        className="nav-container"
+    <>
+      <header
+        className="glass"
         style={{
-          maxWidth: "72rem",
-          margin: "0 auto",
-          height: "100%",
-          padding: "0 1rem",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: "0.5rem",
-          width: "100%",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 50,
+          height: "3.5rem",
         }}
       >
-        {/* Logo — always links back to home */}
-        <Link
-          href="/"
+        <nav
+          className="nav-container"
           style={{
-            fontFamily: "var(--font-mono)",
-            fontWeight: 700,
-            fontSize: "1rem",
-            color: "var(--color-accent)",
-            letterSpacing: "0.05em",
-            textDecoration: "none",
-            flexShrink: 0,
-          }}
-        >
-          akashdip<span style={{ color: "var(--color-muted)" }}>.</span>
-        </Link>
-
-        {/* Nav links — swap based on current page */}
-        <ul
-          style={{
+            maxWidth: "72rem",
+            margin: "0 auto",
+            height: "100%",
+            padding: "0 1rem",
             display: "flex",
-            gap: "1.75rem",
-            listStyle: "none",
-            margin: 0,
-            padding: 0,
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "0.5rem",
+            width: "100%",
           }}
-          className="hidden-mobile"
         >
-          {navLinks.map(({ label, href }) => (
-            <li key={href}>
-              <a
-                href={href}
-                style={{
-                  fontSize: "0.875rem",
-                  color: "var(--color-muted)",
-                  textDecoration: "none",
-                  transition: "color 0.2s ease",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "var(--color-text)")}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "var(--color-muted)")}
-              >
-                {label}
-              </a>
-            </li>
-          ))}
-        </ul>
-
-        {/* Right controls */}
-        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexShrink: 0 }}>
-          <ThemeToggle />
-          <a
-            href="/Akashdip_Mahapatra_CV.pdf"
-            download
-            className="btn-accent"
-            style={{ textDecoration: "none" }}
+          {/* Logo — always links back to home */}
+          <Link
+            href="/"
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontWeight: 700,
+              fontSize: "1rem",
+              color: "var(--color-accent)",
+              letterSpacing: "0.05em",
+              textDecoration: "none",
+              flexShrink: 0,
+            }}
           >
-            Download CV
-          </a>
-        </div>
-      </nav>
-    </header>
+            akashdip<span style={{ color: "var(--color-muted)" }}>.</span>
+          </Link>
+
+          {/* Nav links — swap based on current page */}
+          <ul
+            style={{
+              display: "flex",
+              gap: "1.75rem",
+              listStyle: "none",
+              margin: 0,
+              padding: 0,
+            }}
+            className="hidden-mobile"
+          >
+            {navLinks.map(({ label, href }) => (
+              <li key={href}>
+                <a
+                  href={href}
+                  style={{
+                    fontSize: "0.875rem",
+                    color: "var(--color-muted)",
+                    textDecoration: "none",
+                    transition: "color 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = "var(--color-text)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = "var(--color-muted)")}
+                >
+                  {label}
+                </a>
+              </li>
+            ))}
+          </ul>
+
+          {/* Right controls */}
+          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexShrink: 0 }}>
+            <ThemeToggle />
+            <button
+              type="button"
+              onClick={() => setIsCvModalOpen(true)}
+              className="btn-accent"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.4rem",
+                cursor: "pointer",
+                border: "none",
+                fontFamily: "inherit",
+              }}
+            >
+              <Eye size={15} />
+              Preview CV
+            </button>
+          </div>
+        </nav>
+      </header>
+
+      {/* CV Preview Modal */}
+      <CvPreviewModal
+        isOpen={isCvModalOpen}
+        onClose={() => setIsCvModalOpen(false)}
+      />
+    </>
   );
 }
+
