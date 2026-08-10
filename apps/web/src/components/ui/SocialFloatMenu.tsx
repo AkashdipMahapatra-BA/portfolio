@@ -106,7 +106,7 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
       <style>{`
         .social-float-root {
           position: fixed;
-          bottom: 1.5rem;
+          bottom: 5.5rem;
           right: 1.5rem;
           z-index: 40;
           display: flex;
@@ -215,8 +215,10 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
           width: 22px;
           height: 22px;
           border-radius: 50%;
-          background: var(--color-surface);
-          border: 1px solid var(--color-border);
+          background: rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
           color: var(--color-text);
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
           /* Always visible with smooth wave wiggle */
