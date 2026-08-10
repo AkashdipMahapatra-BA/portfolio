@@ -519,14 +519,12 @@ export function Hero() {
                       aria-label={link.ariaLabel}
                       className={`hero-social-btn${threadsActive ? " threads-on" : ""} ${link.id === "linkedin" ? "linkedin-btn" : ""}`}
                     >
-                      {link.id === "linkedin" && (
-                        <div className="hero-social-rainbow-border" aria-hidden="true" />
-                      )}
+                      <div className="hero-social-rainbow-border" aria-hidden="true" />
                       <span className="hero-social-btn-content-wrapper">
                         <span className="hero-social-btn-icon" style={{ color: link.iconColor }}>
                           {link.icon}
                         </span>
-                        {link.label && (
+                        {link.label && link.id !== "linkedin" && (
                           <span className="hero-social-btn-text">
                             <span className="hero-social-btn-title">{link.label}</span>
                             {link.sublabel && <span className="hero-social-btn-subtitle">{link.sublabel}</span>}

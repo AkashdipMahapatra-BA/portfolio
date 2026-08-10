@@ -113,11 +113,10 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
           flex-direction: column;
           align-items: flex-end;
           gap: 1rem;
-          display: none;
         }
 
-        @media (max-width: 768px), (pointer: coarse) and (orientation: portrait) {
-          .social-float-root { display: flex; }
+        @media (min-width: 769px) {
+          .social-float-root { display: none !important; }
         }
 
         .social-hamburger-btn {
@@ -220,20 +219,26 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
           border: 1px solid var(--color-border);
           color: var(--color-text);
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-          opacity: 0;
-          transform: scale(0.5);
-          transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+          /* Always visible with subtle wiggle */
+          animation: badge-wiggle-mobile 3s ease-in-out infinite alternate;
+          transform-origin: center bottom;
         }
 
         .social-float-item.expanded .social-float-floating-badge {
-          opacity: 1;
-          transform: scale(1);
-          animation: badge-wiggle-mobile 1s ease-in-out infinite alternate;
+          /* Cool bounce animation when tapped/expanded */
+          animation: badge-bounce-mobile 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
 
         @keyframes badge-wiggle-mobile {
-          0% { transform: translateY(0) rotate(-5deg) scale(1); }
-          100% { transform: translateY(-3px) rotate(5deg) scale(1.05); }
+          0% { transform: translateY(0) rotate(-4deg); }
+          100% { transform: translateY(-2px) rotate(4deg); }
+        }
+
+        @keyframes badge-bounce-mobile {
+          0% { transform: scale(1) translateY(0); }
+          40% { transform: scale(1.2) translateY(-6px) rotate(12deg); }
+          70% { transform: scale(1.1) translateY(-2px) rotate(-6deg); }
+          100% { transform: scale(1) translateY(0) rotate(0deg); }
         }
 
         .social-float-rainbow-border {
@@ -247,6 +252,16 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
           -webkit-mask-composite: xor;
           pointer-events: none;
           overflow: hidden;
+          opacity: 0;
+        }
+
+        /* 1. Sync with initial hero threads loading */
+        .social-float-item.threads-on .social-float-rainbow-border {
+          animation: social-btn-reflection-mobile 5s ease-in-out 4.2s both;
+        }
+
+        /* 2. For LinkedIn specifically, show it periodically since we can't hover */
+        .social-float-item:nth-child(1) .social-float-rainbow-border {
           animation: periodic-rainbow-fade 6s ease-in-out infinite;
         }
 
@@ -297,10 +312,11 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
                   onClick={(e) => handleItemClick(e, link.id)}
                   className={`social-float-item social-float-item-enter-${i} ${isExpanded ? "expanded" : ""}`}
                 >
-                  {link.id === "linkedin" && <div className="social-float-rainbow-border" aria-hidden="true" />}
+                  {/* Apply the rainbow border directly so we can reuse the animation logic */}
+                  <div className="social-float-rainbow-border" aria-hidden="true" />
                   <span className="social-float-item-content-wrapper">
                     <span className="social-float-item-icon" style={{ color: link.color }}>{link.icon}</span>
-                    {link.label && (
+                    {link.label && link.id !== "linkedin" && (
                       <span className="social-float-item-text">
                         <span className="social-float-item-title">{link.label}</span>
                         {link.sublabel && <span className="social-float-item-sublabel">{link.sublabel}</span>}
