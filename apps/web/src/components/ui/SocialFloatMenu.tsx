@@ -134,7 +134,9 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
           transition: opacity 0.35s ease, transform 0.35s ease;
           box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
           position: relative;
+          overflow: hidden; /* Ensure the rainbow overlay stays inside the circle */
         }
+
 
         .social-float-items {
           display: flex;
@@ -214,13 +216,7 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
           justify-content: center;
           width: 22px;
           height: 22px;
-          border-radius: 50%;
-          background: rgba(255, 255, 255, 0.1);
-          backdrop-filter: blur(8px);
-          -webkit-backdrop-filter: blur(8px);
-          border: 1px solid rgba(255, 255, 255, 0.2);
           color: var(--color-text);
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
           /* Always visible with smooth wave wiggle */
           animation: badge-wiggle-mobile 4s ease-in-out infinite;
           transform-origin: center bottom;
@@ -267,8 +263,9 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
           background-position: 100% 100%;
         }
 
-        /* 1. Sync with initial hero threads loading */
-        .social-float-item.threads-on .social-float-rainbow-border {
+        /* 1. Sync with initial hero threads loading for both items and the hamburger button */
+        .social-float-item.threads-on .social-float-rainbow-border,
+        .social-hamburger-btn.threads-on .social-float-rainbow-border {
           animation: hero-social-overlay-sweep 5s ease-in-out 4.2s both;
         }
 
@@ -342,6 +339,7 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
           aria-expanded={menuOpen}
           className={`social-hamburger-btn${threadsActive ? " threads-on" : ""}`}
         >
+          <div className="social-float-rainbow-border" aria-hidden="true" />
           <span className={`hamburger-icon${menuOpen ? " open" : ""}`} aria-hidden="true">
             {menuOpen ? (
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
