@@ -219,65 +219,69 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
           border: 1px solid var(--color-border);
           color: var(--color-text);
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-          /* Always visible with subtle wiggle */
-          animation: badge-wiggle-mobile 3s ease-in-out infinite alternate;
+          /* Always visible with smooth wave wiggle */
+          animation: badge-wiggle-mobile 4s ease-in-out infinite;
           transform-origin: center bottom;
         }
 
         .social-float-item.expanded .social-float-floating-badge {
-          /* Cool bounce animation when tapped/expanded */
-          animation: badge-bounce-mobile 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+          /* Cool smooth bounce animation when tapped/expanded */
+          animation: badge-bounce-mobile 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
 
         @keyframes badge-wiggle-mobile {
-          0% { transform: translateY(0) rotate(-4deg); }
-          100% { transform: translateY(-2px) rotate(4deg); }
+          0% { transform: translateY(0) rotate(0deg); }
+          33% { transform: translateY(-2px) rotate(4deg); }
+          66% { transform: translateY(-1px) rotate(-3deg); }
+          100% { transform: translateY(0) rotate(0deg); }
         }
 
         @keyframes badge-bounce-mobile {
-          0% { transform: scale(1) translateY(0); }
-          40% { transform: scale(1.2) translateY(-6px) rotate(12deg); }
-          70% { transform: scale(1.1) translateY(-2px) rotate(-6deg); }
+          0% { transform: scale(1) translateY(0) rotate(0deg); }
+          30% { transform: scale(1.15) translateY(-5px) rotate(15deg); }
+          55% { transform: scale(1.05) translateY(-1px) rotate(-8deg); }
+          80% { transform: scale(1.02) translateY(-3px) rotate(4deg); }
           100% { transform: scale(1) translateY(0) rotate(0deg); }
         }
 
+        /* ── Improved Smooth Rainbow Overlay (Mobile) ── */
         .social-float-rainbow-border {
           position: absolute;
           inset: 0;
           border-radius: inherit;
-          padding: 1.5px;
-          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          mask-composite: exclude;
-          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          -webkit-mask-composite: xor;
           pointer-events: none;
-          overflow: hidden;
           opacity: 0;
+          transition: opacity 0.5s ease;
+          overflow: hidden;
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(6, 182, 212, 0.25) 30%,
+            rgba(168, 85, 247, 0.25) 50%,
+            rgba(250, 204, 21, 0.2) 70%,
+            rgba(255, 255, 255, 0) 100%
+          );
+          background-size: 250% 250%;
+          background-position: 100% 100%;
         }
 
         /* 1. Sync with initial hero threads loading */
         .social-float-item.threads-on .social-float-rainbow-border {
-          animation: social-btn-reflection-mobile 5s ease-in-out 4.2s both;
+          animation: hero-social-overlay-sweep 5s ease-in-out 4.2s both;
         }
 
         /* 2. For LinkedIn specifically, show it periodically since we can't hover */
         .social-float-item:nth-child(1) .social-float-rainbow-border {
-          animation: periodic-rainbow-fade 6s ease-in-out infinite;
+          animation: periodic-overlay-sweep 6s ease-in-out infinite;
         }
 
-        .social-float-rainbow-border::before {
-          content: "";
-          position: absolute;
-          top: -50%;
-          left: -50%;
-          width: 200%;
-          height: 200%;
-          background: conic-gradient(from 0deg, transparent 0deg, transparent 90deg, rgba(6, 182, 212, 1) 120deg, rgba(168, 85, 247, 1) 180deg, rgba(239, 68, 68, 1) 240deg, rgba(250, 204, 21, 1) 300deg, transparent 360deg);
-          animation: rainbow-spin-360-mobile 2.5s linear infinite;
+        @keyframes periodic-overlay-sweep {
+          0%   { opacity: 0; background-position: 100% 100%; }
+          15%  { opacity: 1; }
+          50%  { background-position: 0% 0%; }
+          85%  { opacity: 1; }
+          100% { opacity: 0; background-position: 0% 0%; }
         }
-
-        @keyframes rainbow-spin-360-mobile { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes periodic-rainbow-fade { 0%, 60%, 100% { opacity: 0; } 70%, 90% { opacity: 1; } }
 
         @keyframes social-slide-up {
           from { opacity: 0; transform: translateY(12px) scale(0.95); }
