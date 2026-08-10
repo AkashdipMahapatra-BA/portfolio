@@ -16,6 +16,9 @@ const CV_ABSOLUTE_URL = `${SITE_URL}${CV_PATH}`;
  */
 const GOOGLE_DOCS_VIEWER_URL = `https://docs.google.com/viewer?url=${encodeURIComponent(CV_ABSOLUTE_URL)}&embedded=true`;
 
+/** Gap (px) to keep between the modal edges and the real visible viewport edge */
+const VIEWPORT_GAP = 16;
+
 interface CvPreviewModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -23,53 +26,60 @@ interface CvPreviewModalProps {
 
 export function CvPreviewModal({ isOpen, onClose }: CvPreviewModalProps) {
   const backdropRef = useRef<HTMLDivElement>(null);
-  /**
-   * iframeSrc is decided once on mount:
-   *   • Desktop  → direct PDF URL  (fast, native scroll, no external dependency)
-   *   • Mobile   → Google Docs Viewer (renders PDF as HTML/images — works without extensions)
-   *
-   * navigator.pdfViewerEnabled is true when the browser has a built-in PDF plugin
-   * (Chrome, Edge, Firefox on desktop). It is false / undefined on Android Chrome and
-   * iOS Safari, which cannot render PDFs inline in iframes without an extension.
-   */
+
+  // ── PDF viewer source (desktop = direct iframe, mobile = Google Docs) ──────
   const [iframeSrc, setIframeSrc] = useState<string>(
-    // Default to direct URL for SSR — we'll correct on client mount
     `${CV_PATH}#toolbar=1&navpanes=0&scrollbar=1&page=1&view=FitH`
   );
   const [usingGoogleViewer, setUsingGoogleViewer] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  // ── Real visible viewport height ─────────────────────────────────────────
+  // window.innerHeight = actual visible height excluding mobile browser chrome
+  // (unlike 'vh' which includes the browser address bar on some mobile browsers)
+  const [innerH, setInnerH] = useState(
+    typeof window !== "undefined" ? window.innerHeight : 800
+  );
+
   useEffect(() => {
-    // Runs only in the browser (client-side)
+    const update = () => setInnerH(window.innerHeight);
+    update(); // immediately correct on mount
+    window.addEventListener("resize", update);
+    // Also update when orientation changes on mobile
+    window.addEventListener("orientationchange", () => setTimeout(update, 200));
+    return () => {
+      window.removeEventListener("resize", update);
+      window.removeEventListener("orientationchange", update);
+    };
+  }, []);
+
+  // ── Detect mobile & choose viewer ────────────────────────────────────────
+  useEffect(() => {
     const canInlinePDF =
       typeof navigator !== "undefined" &&
-      (navigator as Navigator & { pdfViewerEnabled?: boolean }).pdfViewerEnabled === true;
+      (navigator as Navigator & { pdfViewerEnabled?: boolean })
+        .pdfViewerEnabled === true;
 
     if (!canInlinePDF) {
-      // Mobile browser — switch to Google Docs Viewer
       setIframeSrc(GOOGLE_DOCS_VIEWER_URL);
       setUsingGoogleViewer(true);
     }
   }, []);
 
-  // ── Keyboard (Escape) & Body Scroll Lock ───────────────────────────────────
+  // ── Keyboard (Escape) & Body Scroll Lock ─────────────────────────────────
   useEffect(() => {
     if (!isOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        onClose();
-      }
+      if (e.key === "Escape") onClose();
     };
 
-    // Lock ONLY the background page scroll — do NOT use touchAction:none
-    // (that would swallow touch events going into the iframe too)
     const originalOverflow = document.body.style.overflow;
     const originalPosition = document.body.style.position;
     const originalWidth = document.body.style.width;
     const scrollY = window.scrollY;
 
-    // iOS-safe background scroll lock: freeze body in place
+    // iOS-safe scroll lock: freeze body in place so background doesn't scroll
     document.body.style.overflow = "hidden";
     document.body.style.position = "fixed";
     document.body.style.top = `-${scrollY}px`;
@@ -82,27 +92,29 @@ export function CvPreviewModal({ isOpen, onClose }: CvPreviewModalProps) {
       document.body.style.position = originalPosition;
       document.body.style.top = "";
       document.body.style.width = originalWidth;
-      // Restore scroll position after body unfreeze
       window.scrollTo(0, scrollY);
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen, onClose]);
 
-  // Intercept touches on the backdrop (but NOT inside the modal) to close
-  const handleBackdropTouch = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (e.target === backdropRef.current) {
-      onClose();
-    }
+  // Intercept touches/clicks on backdrop only (not inside the modal)
+  const handleBackdropInteraction = (e: React.MouseEvent | React.TouchEvent) => {
+    if (e.target === backdropRef.current) onClose();
   };
 
   if (!isOpen) return null;
+
+  // Max height = visible viewport minus top+bottom gap (never clips top or bottom)
+  const modalMaxHeight = innerH - VIEWPORT_GAP * 2;
+  // Cap at 900px on large desktop screens
+  const modalHeight = Math.min(modalMaxHeight, 900);
 
   return (
     <div
       ref={backdropRef}
       className="cv-modal-backdrop"
-      onClick={(e) => { if (e.target === backdropRef.current) onClose(); }}
-      onTouchEnd={handleBackdropTouch}
+      onClick={handleBackdropInteraction}
+      onTouchEnd={handleBackdropInteraction as React.TouchEventHandler}
       aria-modal="true"
       role="dialog"
       aria-label="CV Preview"
@@ -111,32 +123,37 @@ export function CvPreviewModal({ isOpen, onClose }: CvPreviewModalProps) {
         inset: 0,
         zIndex: 99999,
         display: "flex",
-        alignItems: "center",
+        // flex-start + paddingTop ensures the top of the modal is ALWAYS visible
+        alignItems: "flex-start",
         justifyContent: "center",
-        padding: "1rem",
+        // Centre vertically by distributing space: padding = (innerH - modalHeight) / 2
+        // clamped to VIEWPORT_GAP so the top never goes off-screen
+        paddingTop: `${Math.max(VIEWPORT_GAP, Math.floor((innerH - modalHeight) / 2))}px`,
+        paddingBottom: `${VIEWPORT_GAP}px`,
+        paddingLeft: `${VIEWPORT_GAP}px`,
+        paddingRight: `${VIEWPORT_GAP}px`,
         backgroundColor: "rgba(0, 0, 0, 0.88)",
         backdropFilter: "blur(10px)",
         WebkitBackdropFilter: "blur(10px)",
         animation: "cvModalFadeIn 0.2s ease-out forwards",
-        // Do NOT set touchAction or overflow here — that blocks scroll inside iframe
+        boxSizing: "border-box",
       }}
     >
       {/* ── Modal Main Container ─────────────────────────────────────────── */}
       <div
-        className="cv-modal-container"
         style={{
           position: "relative",
-          width: "92vw",
+          width: "100%",
           maxWidth: "1080px",
-          height: "90vh",
-          maxHeight: "900px",
+          // Use the JS-computed height so it NEVER overflows top or bottom
+          height: `${modalHeight}px`,
           display: "flex",
           flexDirection: "column",
           backgroundColor: "#0f172a",
           borderRadius: "12px",
-          /* Crisp, balanced black border as requested */
           border: "2.5px solid #000000",
-          boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.08)",
+          boxShadow:
+            "0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.08)",
           overflow: "hidden",
           animation: "cvModalScaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         }}
@@ -145,6 +162,7 @@ export function CvPreviewModal({ isOpen, onClose }: CvPreviewModalProps) {
         <header
           style={{
             height: "3.5rem",
+            minHeight: "3.5rem",
             padding: "0 1.25rem",
             backgroundColor: "#090d16",
             borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
@@ -178,7 +196,7 @@ export function CvPreviewModal({ isOpen, onClose }: CvPreviewModalProps) {
                 style={{
                   color: "#f8fafc",
                   fontWeight: 600,
-                  fontSize: "0.95rem",
+                  fontSize: "0.875rem",
                   whiteSpace: "nowrap",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
@@ -189,7 +207,7 @@ export function CvPreviewModal({ isOpen, onClose }: CvPreviewModalProps) {
               <span
                 style={{
                   color: "#94a3b8",
-                  fontSize: "0.725rem",
+                  fontSize: "0.7rem",
                   letterSpacing: "0.02em",
                 }}
               >
@@ -198,11 +216,11 @@ export function CvPreviewModal({ isOpen, onClose }: CvPreviewModalProps) {
             </div>
           </div>
 
-          {/* Right Controls: Download + Open in Tab (mobile) + Close */}
-          <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", flexShrink: 0 }}>
-            {/* Open in new tab — useful on mobile where iframe PDF scroll is limited */}
+          {/* Right Controls */}
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexShrink: 0 }}>
+            {/* Open in new tab — shown on mobile */}
             <a
-              href="/Akashdip_Mahapatra_CV.pdf"
+              href={CV_PATH}
               target="_blank"
               rel="noopener noreferrer"
               title="Open full PDF in new tab"
@@ -225,21 +243,22 @@ export function CvPreviewModal({ isOpen, onClose }: CvPreviewModalProps) {
 
             {/* Download CV Button */}
             <a
-              href="/Akashdip_Mahapatra_CV.pdf"
+              href={CV_PATH}
               download="Akashdip_Mahapatra_CV.pdf"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
-                gap: "0.45rem",
+                gap: "0.4rem",
                 backgroundColor: "var(--color-accent, #38bdf8)",
                 color: "#020617",
                 fontWeight: 600,
-                fontSize: "0.85rem",
-                padding: "0.45rem 0.9rem",
+                fontSize: "0.825rem",
+                padding: "0.4rem 0.8rem",
                 borderRadius: "8px",
                 textDecoration: "none",
                 transition: "all 0.2s ease",
                 boxShadow: "0 2px 8px rgba(56, 189, 248, 0.25)",
+                whiteSpace: "nowrap",
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.opacity = "0.9";
@@ -250,11 +269,11 @@ export function CvPreviewModal({ isOpen, onClose }: CvPreviewModalProps) {
                 e.currentTarget.style.transform = "translateY(0)";
               }}
             >
-              <Download size={15} />
+              <Download size={14} />
               <span className="cv-download-btn-text">Download</span>
             </a>
 
-            {/* Close Modal Button */}
+            {/* Close Button */}
             <button
               type="button"
               onClick={onClose}
@@ -271,6 +290,7 @@ export function CvPreviewModal({ isOpen, onClose }: CvPreviewModalProps) {
                 color: "#cbd5e1",
                 cursor: "pointer",
                 transition: "all 0.2s ease",
+                flexShrink: 0,
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor = "rgba(239, 68, 68, 0.2)";
@@ -296,7 +316,7 @@ export function CvPreviewModal({ isOpen, onClose }: CvPreviewModalProps) {
             backgroundColor: "#020617",
           }}
         >
-          {/* Loading shimmer — visible until iframe fires onLoad */}
+          {/* Loading spinner — visible until iframe fires onLoad */}
           {isLoading && (
             <div
               style={{
@@ -326,8 +346,9 @@ export function CvPreviewModal({ isOpen, onClose }: CvPreviewModalProps) {
               </span>
             </div>
           )}
+
           <iframe
-            key={iframeSrc} /* re-mount when src changes */
+            key={iframeSrc}
             src={iframeSrc}
             title="Akashdip Mahapatra CV PDF Preview"
             onLoad={() => setIsLoading(false)}
@@ -343,31 +364,23 @@ export function CvPreviewModal({ isOpen, onClose }: CvPreviewModalProps) {
           />
         </div>
 
-        {/* ── Embedded CSS Animations & Responsive Helpers ───────────────── */}
+        {/* ── Animations & Mobile Helpers ───────────────────────────────── */}
         <style jsx>{`
           @keyframes cvModalFadeIn {
             from { opacity: 0; }
             to   { opacity: 1; }
           }
           @keyframes cvModalScaleUp {
-            from { opacity: 0; transform: scale(0.96) translateY(8px); }
+            from { opacity: 0; transform: scale(0.96) translateY(6px); }
             to   { opacity: 1; transform: scale(1) translateY(0); }
           }
           @keyframes cvSpinner {
             to { transform: rotate(360deg); }
           }
-          @media (max-width: 640px) {
-            .cv-modal-container {
-              width: 96vw !important;
-              height: 88vh !important;
-              border-radius: 10px !important;
-            }
-            .cv-download-btn-text {
-              display: none;
-            }
-            .show-on-mobile-flex {
-              display: flex !important;
-            }
+          /* Hide "Download" text label on small screens to save header space */
+          @media (max-width: 480px) {
+            .cv-download-btn-text { display: none; }
+            .show-on-mobile-flex  { display: flex !important; }
           }
         `}</style>
       </div>
