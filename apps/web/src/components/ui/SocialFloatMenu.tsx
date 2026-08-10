@@ -145,6 +145,11 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
           gap: 0.75rem;
           padding-right: 2px;
           padding-top: 5px;
+          pointer-events: none;
+        }
+
+        .social-float-root.open .social-float-items {
+          pointer-events: auto;
         }
 
         .social-float-item {
@@ -162,8 +167,38 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
           box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 4px 16px rgba(0, 0, 0, 0.25);
           cursor: pointer;
           position: relative;
-          transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease;
+          
+          /* Closed state: absorbed into hamburger */
+          opacity: 0;
+          transform: translateY(30px) scale(0.5);
+          
+          /* Closing transition */
+          transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                      transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s,
+                      opacity 0.2s ease 0.2s,
+                      background 0.3s ease;
         }
+
+        .social-float-root.open .social-float-item {
+          /* Open state */
+          opacity: 1;
+          transform: translateY(0) scale(1);
+          /* Opening transition */
+          transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                      transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                      opacity 0.3s ease,
+                      background 0.3s ease;
+        }
+
+        /* Staggered entrance (opening) */
+        .social-float-root.open .social-float-item:nth-child(3) { transition-delay: 0s, 0s, 0s, 0s; }
+        .social-float-root.open .social-float-item:nth-child(2) { transition-delay: 0s, 0.05s, 0.05s, 0s; }
+        .social-float-root.open .social-float-item:nth-child(1) { transition-delay: 0s, 0.1s, 0.1s, 0s; }
+
+        /* Staggered exit (closing - wait for width to collapse (0.2s) + stagger) */
+        .social-float-root:not(.open) .social-float-item:nth-child(3) { transition-delay: 0s, 0.2s, 0.2s, 0s; }
+        .social-float-root:not(.open) .social-float-item:nth-child(2) { transition-delay: 0s, 0.25s, 0.25s, 0s; }
+        .social-float-root:not(.open) .social-float-item:nth-child(1) { transition-delay: 0s, 0.3s, 0.3s, 0s; }
 
         .social-float-item.expanded {
           width: 200px;
@@ -282,27 +317,17 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
           100% { opacity: 0; background-position: 0% 0%; }
         }
 
-        @keyframes social-slide-up {
-          from { opacity: 0; transform: translateY(12px) scale(0.95); }
-          to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .social-float-item-enter-0 { animation: social-slide-up 0.22s cubic-bezier(0.16,1,0.3,1) 0.00s both; }
-        .social-float-item-enter-1 { animation: social-slide-up 0.22s cubic-bezier(0.16,1,0.3,1) 0.06s both; }
-        .social-float-item-enter-2 { animation: social-slide-up 0.22s cubic-bezier(0.16,1,0.3,1) 0.12s both; }
-
         .hamburger-icon { transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease; }
         .hamburger-icon.open { transform: rotate(90deg); }
       `}</style>
 
       <div
-        className="social-float-root"
+        className={`social-float-root ${menuOpen ? "open" : ""}`}
         style={{ opacity, transform: `translateY(${translateY})`, pointerEvents: isHidden ? "none" : "auto", transition: "all 0.35s ease" }}
         aria-label="Social media links"
       >
-        {menuOpen && (
-          <div className="social-float-items" role="list">
-            {SOCIAL_LINKS.map((link, i) => {
+        <div className="social-float-items" role="list">
+          {SOCIAL_LINKS.map((link, i) => {
               const isExpanded = expandedId === link.id;
               return (
                 <a
@@ -313,17 +338,23 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
                   aria-label={link.ariaLabel}
                   role="listitem"
                   onClick={(e) => handleItemClick(e, link.id)}
-                  className={`social-float-item social-float-item-enter-${i} ${isExpanded ? "expanded" : ""}`}
+                  className={`social-float-item ${isExpanded ? "expanded" : ""}`}
                 >
                   {/* Apply the rainbow border directly so we can reuse the animation logic */}
                   <div className="social-float-rainbow-border" aria-hidden="true" />
                   <span className="social-float-item-content-wrapper">
                     <span className="social-float-item-icon" style={{ color: link.color }}>{link.icon}</span>
-                    {link.label && link.id !== "linkedin" && (
+                    {link.id === "linkedin" ? (
                       <span className="social-float-item-text">
-                        <span className="social-float-item-title">{link.label}</span>
-                        {link.sublabel && <span className="social-float-item-sublabel">{link.sublabel}</span>}
+                        <span className="social-float-item-title" style={{ fontSize: "0.85rem", opacity: 0.85 }}>Click to go ↗</span>
                       </span>
+                    ) : (
+                      link.label && (
+                        <span className="social-float-item-text">
+                          <span className="social-float-item-title">{link.label}</span>
+                          {link.sublabel && <span className="social-float-item-sublabel">{link.sublabel}</span>}
+                        </span>
+                      )
                     )}
                     {link.floatingIcon && <span className="social-float-floating-badge" aria-hidden="true">{link.floatingIcon}</span>}
                   </span>
@@ -331,7 +362,6 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
               );
             })}
           </div>
-        )}
 
         <button
           onClick={() => setMenuOpen((v) => !v)}
