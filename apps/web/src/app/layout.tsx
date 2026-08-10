@@ -4,7 +4,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Navbar } from "@/components/layout/Navbar";
-import { ChatBot } from "@/components/ui/ChatBot";
+import { FloatingWidgets } from "@/components/ui/FloatingWidgets";
 import { TRPCProvider } from "@/lib/trpc-client";
 import "./globals.css";
 
@@ -111,7 +111,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <main style={{ paddingTop: "3.5rem" }}>
               {children}
             </main>
-            <ChatBot />
+            <FloatingWidgets />
           </TRPCProvider>
         </ThemeProvider>
         <Analytics />

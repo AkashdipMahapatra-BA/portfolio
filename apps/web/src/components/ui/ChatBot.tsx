@@ -26,8 +26,14 @@ const INITIAL_WELCOME: Message = {
   timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
 };
 
-export function ChatBot() {
+export function ChatBot({ onOpenChange }: { onOpenChange?: (open: boolean) => void } = {}) {
   const [isOpen, setIsOpen] = useState(false);
+
+  // Notify parent whenever the chat opens or closes
+  const handleSetOpen = (next: boolean) => {
+    setIsOpen(next);
+    onOpenChange?.(next);
+  };
   const [messages, setMessages] = useState<Message[]>([INITIAL_WELCOME]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -174,7 +180,7 @@ export function ChatBot() {
       {/* Floating Toggle Button */}
       {!isOpen && (
         <button
-          onClick={() => setIsOpen(true)}
+          onClick={() => handleSetOpen(true)}
           aria-label="Open Akashdip AI Assistant Chat"
           style={{
             display: "flex",
@@ -316,7 +322,7 @@ export function ChatBot() {
               </button>
 
               <button
-                onClick={() => setIsOpen(false)}
+                onClick={() => handleSetOpen(false)}
                 title="Close chat"
                 style={{
                   background: "transparent",

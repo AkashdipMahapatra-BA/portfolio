@@ -15,7 +15,9 @@ export default function Home() {
     "email": "contact@akashdipmahapatra.in",
     "jobTitle": "Data Engineer & Cloud Automation Specialist",
     "sameAs": [
-      "https://github.com/AkashdipMahapatra-BA"
+      "https://github.com/AkashdipMahapatra-BA",
+      "https://github.com/akashdip2001",
+      "https://www.linkedin.com/in/akashdip2001"
     ],
     "knowsAbout": [
       "Data Engineering",
@@ -58,4 +60,3 @@ function Divider() {
     </div>
   );
 }
-
