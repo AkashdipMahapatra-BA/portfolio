@@ -171,11 +171,11 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
           width: 44px;
           padding: 0;
           border-radius: 0.75rem;
-          background: rgba(30, 41, 59, 0.72);
+          background: rgba(20, 30, 50, 0.88);
           backdrop-filter: blur(12px) saturate(1.4);
           color: var(--color-text);
           text-decoration: none;
-          box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 4px 16px rgba(0, 0, 0, 0.25);
+          box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.16), 0 4px 16px rgba(0, 0, 0, 0.40);
           cursor: pointer;
           position: relative;
           
@@ -214,7 +214,7 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
         .social-float-item.expanded {
           width: 230px;
           justify-content: flex-start;
-          background: rgba(30, 41, 59, 0.95);
+          background: rgba(20, 30, 50, 0.97);
         }
 
         /* LinkedIn expanded: center icon + text together */
@@ -320,9 +320,23 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
           animation: hero-social-overlay-sweep 5s ease-in-out 4.2s both;
         }
 
-        /* 2. For LinkedIn specifically, show it periodically since we can't hover */
+        /* 2. For LinkedIn specifically, show it periodically since we can't tap-hover */
         .social-float-item:nth-child(1) .social-float-rainbow-border {
           animation: periodic-overlay-sweep 6s ease-in-out infinite;
+        }
+
+        /* 3. Light theme: richer rainbow so it's visible on the beige/white background */
+        [data-theme="light"] .social-float-rainbow-border {
+          background: linear-gradient(
+            135deg,
+            rgba(37, 99, 235, 0) 0%,
+            rgba(6, 182, 212, 0.45) 25%,
+            rgba(168, 85, 247, 0.45) 50%,
+            rgba(234, 88, 12, 0.35) 75%,
+            rgba(37, 99, 235, 0) 100%
+          );
+          background-size: 250% 250%;
+          background-position: 100% 100%;
         }
 
         @keyframes periodic-overlay-sweep {
@@ -384,7 +398,7 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
                   aria-label={link.ariaLabel}
                   role="listitem"
                   onClick={(e) => handleItemClick(e, link.id)}
-                  className={`social-float-item ${isExpanded ? "expanded" : ""} ${link.id === "linkedin" ? "linkedin-item" : ""}`}
+                  className={`social-float-item ${isExpanded ? "expanded" : ""} ${link.id === "linkedin" ? "linkedin-item" : ""} ${threadsActive ? "threads-on" : ""}`}
                 >
                   {/* Apply the rainbow border directly so we can reuse the animation logic */}
                   <div className="social-float-rainbow-border" aria-hidden="true" />
