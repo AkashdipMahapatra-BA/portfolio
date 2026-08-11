@@ -200,6 +200,7 @@ export function ChatBot({ onOpenChange }: { onOpenChange?: (open: boolean) => vo
             opacity: isAtBottom ? 0 : 1,
             transform: isAtBottom ? "translateY(24px) scale(0.92)" : "translateY(0) scale(1)",
             pointerEvents: isAtBottom ? "none" : "auto",
+            textShadow: "0 1px 3px rgba(0, 20, 40, 0.35)",
           }}
           onMouseEnter={(e) => {
             if (!isAtBottom) e.currentTarget.style.transform = "scale(1.05)";

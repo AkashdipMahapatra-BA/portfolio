@@ -41,6 +41,7 @@ const SOCIAL_LINKS = [
       </svg>
     ),
     color: "#e2e8f0",
+    lightColor: "#1e293b",
     floatingIcon: BriefcaseIcon,
   },
   {
@@ -55,6 +56,7 @@ const SOCIAL_LINKS = [
       </svg>
     ),
     color: "#e2e8f0",
+    lightColor: "#1e293b",
     floatingIcon: HatIcon,
   },
 ] as const;
@@ -64,6 +66,15 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
   const [isAtBottom, setIsAtBottom] = useState(false);
   const [threadsActive, setThreadsActive] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [isLight, setIsLight] = useState(false);
+
+  useEffect(() => {
+    const checkTheme = () => setIsLight(document.documentElement.dataset.theme === "light");
+    checkTheme();
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -137,7 +148,6 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
           overflow: hidden; /* Ensure the rainbow overlay stays inside the circle */
         }
 
-
         .social-float-items {
           display: flex;
           flex-direction: column;
@@ -160,11 +170,11 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
           width: 44px;
           padding: 0;
           border-radius: 0.75rem;
-          background: rgba(30, 41, 59, 0.72);
+          background: rgba(20, 30, 50, 0.88);
           backdrop-filter: blur(12px) saturate(1.4);
           color: var(--color-text);
           text-decoration: none;
-          box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 4px 16px rgba(0, 0, 0, 0.25);
+          box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.16), 0 4px 16px rgba(0, 0, 0, 0.40);
           cursor: pointer;
           position: relative;
           
@@ -201,9 +211,14 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
         .social-float-root:not(.open) .social-float-item:nth-child(1) { transition-delay: 0s, 0.3s, 0.3s, 0s; }
 
         .social-float-item.expanded {
-          width: 200px;
+          width: 230px;
           justify-content: flex-start;
-          background: rgba(30, 41, 59, 0.95);
+          background: rgba(20, 30, 50, 0.97);
+        }
+
+        /* LinkedIn expanded: center icon + text together */
+        .social-float-item.expanded.linkedin-item {
+          justify-content: center;
         }
 
         .social-float-item-content-wrapper {
@@ -235,7 +250,7 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
         }
 
         .social-float-item.expanded .social-float-item-text {
-          width: 140px;
+          width: 160px;
           opacity: 1;
         }
 
@@ -277,7 +292,7 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
           100% { transform: scale(1) translateY(0) rotate(0deg); }
         }
 
-        /* ── Improved Smooth Rainbow Overlay (Mobile) ── */
+        /* ── Rainbow overlay (both themes) ── */
         .social-float-rainbow-border {
           position: absolute;
           inset: 0;
@@ -286,6 +301,7 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
           opacity: 0;
           transition: opacity 0.5s ease;
           overflow: hidden;
+          /* Dark theme: subtle cyan → purple → yellow diagonal sweep */
           background: linear-gradient(
             135deg,
             rgba(255, 255, 255, 0) 0%,
@@ -298,13 +314,27 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
           background-position: 100% 100%;
         }
 
-        /* 1. Sync with initial hero threads loading for both items and the hamburger button */
+        /* Light theme: richer opacity so the sweep is visible on white/beige glass */
+        [data-theme="light"] .social-float-rainbow-border {
+          background: linear-gradient(
+            135deg,
+            rgba(37, 99, 235, 0) 0%,
+            rgba(6, 182, 212, 0.45) 25%,
+            rgba(168, 85, 247, 0.45) 50%,
+            rgba(234, 88, 12, 0.35) 75%,
+            rgba(37, 99, 235, 0) 100%
+          );
+          background-size: 250% 250%;
+          background-position: 100% 100%;
+        }
+
+        /* 1. Sync with hero threads loading — fires on both hamburger and all pills */
         .social-float-item.threads-on .social-float-rainbow-border,
         .social-hamburger-btn.threads-on .social-float-rainbow-border {
           animation: hero-social-overlay-sweep 5s ease-in-out 4.2s both;
         }
 
-        /* 2. For LinkedIn specifically, show it periodically since we can't hover */
+        /* 2. LinkedIn: periodic sweep since there's no tap-hover on mobile */
         .social-float-item:nth-child(1) .social-float-rainbow-border {
           animation: periodic-overlay-sweep 6s ease-in-out infinite;
         }
@@ -319,6 +349,31 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
 
         .hamburger-icon { transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease; }
         .hamburger-icon.open { transform: rotate(90deg); }
+
+        /* ── Light theme overrides for the mobile float menu ── */
+        [data-theme="light"] .social-hamburger-btn {
+          background: rgba(255, 255, 255, 0.88);
+          border: 1px solid rgba(15, 23, 42, 0.14);
+          color: var(--color-text);
+          box-shadow: 0 4px 16px rgba(15, 23, 42, 0.12);
+        }
+
+        [data-theme="light"] .social-float-item {
+          background: rgba(255, 255, 255, 0.88);
+          box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.12), 0 4px 16px rgba(15, 23, 42, 0.10);
+          color: var(--color-text);
+        }
+
+        [data-theme="light"] .social-float-item.expanded {
+          background: rgba(255, 255, 255, 0.97);
+          box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.16), 0 6px 20px rgba(15, 23, 42, 0.14);
+        }
+
+        /* Badge: fully transparent so no box appears around the SVG */
+        [data-theme="light"] .social-float-floating-badge {
+          background: transparent;
+          color: var(--color-text);
+        }
       `}</style>
 
       <div
@@ -338,12 +393,12 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
                   aria-label={link.ariaLabel}
                   role="listitem"
                   onClick={(e) => handleItemClick(e, link.id)}
-                  className={`social-float-item ${isExpanded ? "expanded" : ""}`}
+                  className={`social-float-item ${isExpanded ? "expanded" : ""} ${link.id === "linkedin" ? "linkedin-item" : ""} ${threadsActive ? "threads-on" : ""}`}
                 >
                   {/* Apply the rainbow border directly so we can reuse the animation logic */}
                   <div className="social-float-rainbow-border" aria-hidden="true" />
                   <span className="social-float-item-content-wrapper">
-                    <span className="social-float-item-icon" style={{ color: link.color }}>{link.icon}</span>
+                    <span className="social-float-item-icon" style={{ color: isLight ? (link.id === "linkedin" ? link.color : (link as { lightColor?: string }).lightColor ?? link.color) : link.color }}>{link.icon}</span>
                     {link.id === "linkedin" ? (
                       <span className="social-float-item-text">
                         <span className="social-float-item-title" style={{ fontSize: "0.85rem", opacity: 0.85 }}>Click to go ↗</span>

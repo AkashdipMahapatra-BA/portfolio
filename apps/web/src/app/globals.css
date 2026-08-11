@@ -131,6 +131,11 @@ body {
   transform: translateY(-1px);
 }
 
+/* Dark mode only: micro text-shadow to tighten white text contrast on the accent background */
+[data-theme="dark"] .btn-accent {
+  text-shadow: 0 1px 3px rgba(0, 20, 40, 0.35);
+}
+
 @media (max-width: 640px) {
   .hidden-mobile { display: none !important; }
   .hero-body { padding: 1.25rem 1rem 1.5rem !important; }
@@ -342,31 +347,25 @@ body {
 
 .hero-social-btn {
   position: relative;
-  /* Instead of hidden, we use flex to arrange icon + content wrapper */
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 40px; /* Fixed height for squares */
-  min-width: 40px; /* Start as a square */
+  height: 40px;
+  min-width: 40px;
   padding: 0;
-  border-radius: 0.75rem; /* Rounded square like the image */
+  border-radius: 0.75rem;
   background: rgba(30, 41, 59, 0.55);
   backdrop-filter: blur(12px) saturate(1.4);
   -webkit-backdrop-filter: blur(12px) saturate(1.4);
   color: var(--color-text);
   text-decoration: none;
   cursor: pointer;
+  /* Border via box-shadow so pseudo-elements stay free for the rainbow overlay */
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 2px 12px rgba(0, 0, 0, 0.25);
   transition:
     background 0.3s ease,
     transform 0.2s ease,
     box-shadow 0.2s ease;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
-  /* The border is applied using a pseudo-element for the moving reflection */
-}
-
-/* Base static border (using box-shadow to free up pseudo-elements) */
-.hero-social-btn {
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 2px 12px rgba(0, 0, 0, 0.25);
 }
 
 .hero-social-btn:hover {
@@ -505,13 +504,19 @@ body {
 
 /* Light theme overrides */
 [data-theme="light"] .hero-social-btn {
-  background: rgba(241, 240, 234, 0.65);
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.10), 0 2px 12px rgba(15, 23, 42, 0.12);
+  background: rgba(255, 255, 255, 0.80);
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.12), 0 2px 12px rgba(15, 23, 42, 0.10);
   color: var(--color-text);
 }
 
+[data-theme="light"] .hero-social-btn:hover {
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.20), 0 6px 20px rgba(15, 23, 42, 0.14);
+}
+
+/* Light theme: badge background transparent so the SVG icon is not boxed */
 [data-theme="light"] .hero-social-floating-badge {
-  background: #fff;
-  border-color: rgba(0, 0, 0, 0.15);
+  background: transparent;
+  color: var(--color-text);
 }
 
