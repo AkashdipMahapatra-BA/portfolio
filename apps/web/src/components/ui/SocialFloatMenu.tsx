@@ -201,9 +201,14 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
         .social-float-root:not(.open) .social-float-item:nth-child(1) { transition-delay: 0s, 0.3s, 0.3s, 0s; }
 
         .social-float-item.expanded {
-          width: 200px;
+          width: 230px;
           justify-content: flex-start;
           background: rgba(30, 41, 59, 0.95);
+        }
+
+        /* LinkedIn expanded: center icon + text together */
+        .social-float-item.expanded.linkedin-item {
+          justify-content: center;
         }
 
         .social-float-item-content-wrapper {
@@ -235,7 +240,7 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
         }
 
         .social-float-item.expanded .social-float-item-text {
-          width: 140px;
+          width: 160px;
           opacity: 1;
         }
 
@@ -338,7 +343,7 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
                   aria-label={link.ariaLabel}
                   role="listitem"
                   onClick={(e) => handleItemClick(e, link.id)}
-                  className={`social-float-item ${isExpanded ? "expanded" : ""}`}
+                  className={`social-float-item ${isExpanded ? "expanded" : ""} ${link.id === "linkedin" ? "linkedin-item" : ""}`}
                 >
                   {/* Apply the rainbow border directly so we can reuse the animation logic */}
                   <div className="social-float-rainbow-border" aria-hidden="true" />

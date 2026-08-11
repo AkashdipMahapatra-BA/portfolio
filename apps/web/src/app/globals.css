@@ -131,6 +131,11 @@ body {
   transform: translateY(-1px);
 }
 
+/* Dark mode only: micro text-shadow to tighten white text contrast on the accent background */
+[data-theme="dark"] .btn-accent {
+  text-shadow: 0 1px 3px rgba(0, 20, 40, 0.35);
+}
+
 @media (max-width: 640px) {
   .hidden-mobile { display: none !important; }
   .hero-body { padding: 1.25rem 1rem 1.5rem !important; }
