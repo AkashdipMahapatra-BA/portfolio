@@ -148,7 +148,6 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
           overflow: hidden; /* Ensure the rainbow overlay stays inside the circle */
         }
 
-
         .social-float-items {
           display: flex;
           flex-direction: column;
@@ -293,7 +292,7 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
           100% { transform: scale(1) translateY(0) rotate(0deg); }
         }
 
-        /* ── Improved Smooth Rainbow Overlay (Mobile) ── */
+        /* ── Rainbow overlay (both themes) ── */
         .social-float-rainbow-border {
           position: absolute;
           inset: 0;
@@ -302,6 +301,7 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
           opacity: 0;
           transition: opacity 0.5s ease;
           overflow: hidden;
+          /* Dark theme: subtle cyan → purple → yellow diagonal sweep */
           background: linear-gradient(
             135deg,
             rgba(255, 255, 255, 0) 0%,
@@ -314,18 +314,7 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
           background-position: 100% 100%;
         }
 
-        /* 1. Sync with initial hero threads loading for both items and the hamburger button */
-        .social-float-item.threads-on .social-float-rainbow-border,
-        .social-hamburger-btn.threads-on .social-float-rainbow-border {
-          animation: hero-social-overlay-sweep 5s ease-in-out 4.2s both;
-        }
-
-        /* 2. For LinkedIn specifically, show it periodically since we can't tap-hover */
-        .social-float-item:nth-child(1) .social-float-rainbow-border {
-          animation: periodic-overlay-sweep 6s ease-in-out infinite;
-        }
-
-        /* 3. Light theme: richer rainbow so it's visible on the beige/white background */
+        /* Light theme: richer opacity so the sweep is visible on white/beige glass */
         [data-theme="light"] .social-float-rainbow-border {
           background: linear-gradient(
             135deg,
@@ -337,6 +326,17 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
           );
           background-size: 250% 250%;
           background-position: 100% 100%;
+        }
+
+        /* 1. Sync with hero threads loading — fires on both hamburger and all pills */
+        .social-float-item.threads-on .social-float-rainbow-border,
+        .social-hamburger-btn.threads-on .social-float-rainbow-border {
+          animation: hero-social-overlay-sweep 5s ease-in-out 4.2s both;
+        }
+
+        /* 2. LinkedIn: periodic sweep since there's no tap-hover on mobile */
+        .social-float-item:nth-child(1) .social-float-rainbow-border {
+          animation: periodic-overlay-sweep 6s ease-in-out infinite;
         }
 
         @keyframes periodic-overlay-sweep {
@@ -369,15 +369,10 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
           box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.16), 0 6px 20px rgba(15, 23, 42, 0.14);
         }
 
-        /* Badge: fully transparent background so no box shows */
+        /* Badge: fully transparent so no box appears around the SVG */
         [data-theme="light"] .social-float-floating-badge {
           background: transparent;
           color: var(--color-text);
-        }
-
-        /* Subtitle text in light mode */
-        [data-theme="light"] .social-float-item-sublabel {
-          color: var(--color-muted);
         }
       `}</style>
 
