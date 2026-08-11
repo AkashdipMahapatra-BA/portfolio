@@ -41,6 +41,7 @@ const SOCIAL_LINKS = [
       </svg>
     ),
     color: "#e2e8f0",
+    lightColor: "#1e293b",
     floatingIcon: BriefcaseIcon,
   },
   {
@@ -55,6 +56,7 @@ const SOCIAL_LINKS = [
       </svg>
     ),
     color: "#e2e8f0",
+    lightColor: "#1e293b",
     floatingIcon: HatIcon,
   },
 ] as const;
@@ -64,6 +66,15 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
   const [isAtBottom, setIsAtBottom] = useState(false);
   const [threadsActive, setThreadsActive] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [isLight, setIsLight] = useState(false);
+
+  useEffect(() => {
+    const checkTheme = () => setIsLight(document.documentElement.dataset.theme === "light");
+    checkTheme();
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -324,6 +335,36 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
 
         .hamburger-icon { transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease; }
         .hamburger-icon.open { transform: rotate(90deg); }
+
+        /* ── Light theme overrides for the mobile float menu ── */
+        [data-theme="light"] .social-hamburger-btn {
+          background: rgba(255, 255, 255, 0.88);
+          border: 1px solid rgba(15, 23, 42, 0.14);
+          color: var(--color-text);
+          box-shadow: 0 4px 16px rgba(15, 23, 42, 0.12);
+        }
+
+        [data-theme="light"] .social-float-item {
+          background: rgba(255, 255, 255, 0.88);
+          box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.12), 0 4px 16px rgba(15, 23, 42, 0.10);
+          color: var(--color-text);
+        }
+
+        [data-theme="light"] .social-float-item.expanded {
+          background: rgba(255, 255, 255, 0.97);
+          box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.16), 0 6px 20px rgba(15, 23, 42, 0.14);
+        }
+
+        /* Badge: fully transparent background so no box shows */
+        [data-theme="light"] .social-float-floating-badge {
+          background: transparent;
+          color: var(--color-text);
+        }
+
+        /* Subtitle text in light mode */
+        [data-theme="light"] .social-float-item-sublabel {
+          color: var(--color-muted);
+        }
       `}</style>
 
       <div
@@ -348,7 +389,7 @@ export function SocialFloatMenu({ chatIsOpen }: { chatIsOpen: boolean }) {
                   {/* Apply the rainbow border directly so we can reuse the animation logic */}
                   <div className="social-float-rainbow-border" aria-hidden="true" />
                   <span className="social-float-item-content-wrapper">
-                    <span className="social-float-item-icon" style={{ color: link.color }}>{link.icon}</span>
+                    <span className="social-float-item-icon" style={{ color: isLight ? (link.id === "linkedin" ? link.color : (link as { lightColor?: string }).lightColor ?? link.color) : link.color }}>{link.icon}</span>
                     {link.id === "linkedin" ? (
                       <span className="social-float-item-text">
                         <span className="social-float-item-title" style={{ fontSize: "0.85rem", opacity: 0.85 }}>Click to go ↗</span>

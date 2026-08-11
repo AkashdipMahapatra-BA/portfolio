@@ -510,13 +510,19 @@ body {
 
 /* Light theme overrides */
 [data-theme="light"] .hero-social-btn {
-  background: rgba(241, 240, 234, 0.65);
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.10), 0 2px 12px rgba(15, 23, 42, 0.12);
+  background: rgba(255, 255, 255, 0.80);
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.12), 0 2px 12px rgba(15, 23, 42, 0.10);
   color: var(--color-text);
 }
 
+[data-theme="light"] .hero-social-btn:hover {
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.20), 0 6px 20px rgba(15, 23, 42, 0.14);
+}
+
+/* Fix 1: Badge background must be transparent so the SVG is not boxed */
 [data-theme="light"] .hero-social-floating-badge {
-  background: #fff;
-  border-color: rgba(0, 0, 0, 0.15);
+  background: transparent;
+  color: var(--color-text);
 }
 
