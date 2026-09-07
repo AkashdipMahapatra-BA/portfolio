@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { AchievementsCarousel } from "./AchievementsCarousel";
 
 /* ─── Experience calculator ─────────────────────────────────────────────── */
 const CAREER_START = new Date("2025-08-01");
@@ -269,6 +270,8 @@ export function ExperienceSkills() {
           </div>
         </div>
       </div>
+
+      <AchievementsCarousel />
     </section>
   );
 }

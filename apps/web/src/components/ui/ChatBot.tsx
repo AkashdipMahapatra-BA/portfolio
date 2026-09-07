@@ -135,10 +135,17 @@ export function ChatBot({ onOpenChange }: { onOpenChange?: (open: boolean) => vo
   const formatMarkdown = (text: string) => {
     let formatted = text;
 
-    // 1. Parse markdown links: [Text](URL)
+    // 0. Parse images: ![Alt Text](URL)
     formatted = formatted.replace(
-      /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
-      "<a href='$2' target='_blank' rel='noopener noreferrer' class='chat-link'>$1</a>"
+      /!\[([^\]]+)\]\(([^)]+)\)/g,
+      "<a href='$2' target='_blank' rel='noopener noreferrer'><img src='$2' alt='$1' class='chat-image' style='max-width: 100%; border-radius: 0.5rem; margin-top: 0.5rem;' /></a>"
+    );
+
+    // 1. Parse markdown links: [Text](URL)
+    // Make sure we don't double-parse images if we didn't use the '!' prefix correctly, but since we parsed images first, and they are now HTML, the [Text](URL) regex won't match if it's already HTML. Wait, it might. So let's make sure it doesn't match `src='...'`
+    formatted = formatted.replace(
+      /(^|[^!])\[([^\]]+)\]\(([^)]+)\)/g,
+      "$1<a href='$3' target='_blank' rel='noopener noreferrer' class='chat-link'>$2</a>"
     );
 
     // 2. Parse triple backtick code blocks (```text ... ```)
