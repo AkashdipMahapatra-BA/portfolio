@@ -214,17 +214,10 @@ export function AchievementsCarousel() {
           >
             <button 
               onClick={() => setSelectedImage(null)}
-              style={{
-                position: "absolute",
-                top: "-3rem",
-                right: 0,
-                color: "white",
-                background: "none",
-                border: "none",
-                cursor: "pointer"
-              }}
+              className="fixed top-4 right-4 md:top-6 md:right-8 z-[110] p-2 bg-black/60 hover:bg-black/90 text-white rounded-full transition-colors cursor-pointer"
+              aria-label="Close fullscreen"
             >
-              <X size={32} />
+              <X size={28} />
             </button>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img 
