@@ -8,20 +8,26 @@ const ACHIEVEMENTS = [
   {
     id: "star-of-month",
     title: "Star of the Month",
+    company: "Tata Consultancy Services (TCS)",
+    date: "July 10, 2026",
     image: "/achievements/star-of-the-month.jpg",
-    description: "Awarded for outstanding contribution to the organisation."
+    description: "Awarded by my Manager for automating the complete vulnerability fix cycle from a full-day manual process down to 15 minutes. The pipeline automatically updates the main branch, deploys across all AWS environments, validates the infrastructure, and triggers auto-rollback on error."
   },
   {
     id: "emerging-ai-champion",
     title: "Emerging AI Champion",
+    company: "TCS Global Aviation Client",
+    date: "August 25, 2026",
     image: "/achievements/emerging-ai-champion.jpg",
-    description: "Recognized for continuous learning and embracing the power of AI."
+    description: "Honored out of the entire account by global leaders and customers. Recognized during discussions on future roadmaps and how our engineering teams tackle the hardest technical bottlenecks."
   },
   {
     id: "ai-fridays-s2",
     title: "AI Fridays Season 2",
+    company: "Tata Consultancy Services (TCS)",
+    date: "July 24, 2026",
     image: "/achievements/ai-fridays-s2.png",
-    description: "Certificate of achievement for completing the AI innovation challenge."
+    description: "Certificate of achievement for completing the AI innovation challenge during the TCS AI Friday Hackathon."
   }
 ];
 
@@ -147,10 +153,18 @@ export function AchievementsCarousel() {
                   className="group-hover/card:scale-105"
                 />
               </div>
-              <div style={{ marginTop: "1rem" }}>
-                <h4 style={{ fontSize: "0.95rem", fontWeight: 600, color: "var(--color-text)", marginBottom: "0.25rem" }}>
-                  {achievement.title}
-                </h4>
+              <div style={{ marginTop: "1rem", display: "flex", flexDirection: "column", flexGrow: 1 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.25rem" }}>
+                  <h4 style={{ fontSize: "0.95rem", fontWeight: 600, color: "var(--color-text)", lineHeight: 1.2 }}>
+                    {achievement.title}
+                  </h4>
+                  <span style={{ fontSize: "0.65rem", color: "var(--color-accent)", whiteSpace: "nowrap", marginLeft: "0.5rem", marginTop: "0.1rem", fontFamily: "var(--font-mono)" }}>
+                    {achievement.date}
+                  </span>
+                </div>
+                <p style={{ fontSize: "0.7rem", color: "var(--color-text)", opacity: 0.8, marginBottom: "0.5rem", fontWeight: 500 }}>
+                  {achievement.company}
+                </p>
                 <p style={{ fontSize: "0.78rem", color: "var(--color-muted)", lineHeight: 1.5 }}>
                   {achievement.description}
                 </p>
