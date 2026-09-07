@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { AchievementsCarousel } from "./AchievementsCarousel";
 
 /* ─── Experience calculator ─────────────────────────────────────────────── */
 const CAREER_START = new Date("2025-08-01");
@@ -18,29 +19,29 @@ function formatTenure(from: Date, to: Date): string {
 const EXPERIENCE = [
   {
     id: "de",
-    role: "Data Engineer (DevOps & Infrastructure)",
+    role: "Assistant System Engineer (Site Reliability & AI Infrastructure)",
     company: "Tata Consultancy Services — Global Aviation Client",
     period: "August 2025 – Present",
     active: true,
     tools: [] as string[],
     bullets: [
-      "Engineered an automated post-deployment validation engine using Python/Boto3, cutting cycle time from 30 min to a 5-minute zero-error pipeline.",
-      "Built a UAT data pipeline and health-check automation script, reducing complex validation from 1.5 hours to 5 minutes.",
-      "Transformed OS/Python vulnerability remediation from a full-day manual process into a 30-minute automated, zero-touch execution.",
-      "Eliminated manual S3 data extraction, reducing cross-functional tasks from 30 minutes to a 2-minute event-driven trigger.",
+      "Emerging AI Champion Award: Architected and deployed \"SkyAssure,\" an enterprise AI platform utilizing a deterministic rules engine and a RAG pipeline powered by Google Gemini 2.0 Flash, Qdrant Vector DB, and FastAPI.",
+      "Star of the Month (Automation): Engineered custom Python/Boto3 workflows that reduced manual vulnerability remediation and infrastructure deployment cycles from 24 hours to under 15 minutes (a 96% toil reduction).",
+      "Platform Reliability: Manage the operational health and observability of real-time aviation data streams using AWS MSK (Kafka), ECS Fargate, Lambda, and Datadog.",
+      "DevSecOps: Automated UAT/Prod environment validations, replacing 1.5-hour manual checks with 5-minute automated scripts that dynamically generate alert diagrams.",
     ],
   },
   {
     id: "ilp",
-    role: "Network & DevOps Trainee (ILP)",
-    company: "Tata Consultancy Services — Global Technology Client / Apple",
+    role: "System Engineer Trainee (Network & Cloud ILP)",
+    company: "Tata Consultancy Services",
     period: "Prior to August 2025",
     active: false,
     tools: ["Wireshark", "Nmap", "tcpdump", "Nginx", "Linux", "Bash"],
     bullets: [
-      "Executed hands-on troubleshooting for deep Linux OS and networking issues using tcpdump and Wireshark.",
+      "Executed hands-on troubleshooting for deep Linux OS and networking issues utilizing tcpdump, Wireshark, and OSI layer analysis.",
       "Deployed and configured Nginx reverse proxies and load balancers to resolve HTTP/DNS failures.",
-      "Hardened server security via strict file permissions and network firewalls (UFW, iptables).",
+      "Hardened server security via strict file permissions, IAM policies, and network firewalls (UFW, iptables).",
     ],
   },
 ] as const;
@@ -48,23 +49,23 @@ const EXPERIENCE = [
 const SKILL_GROUPS: { label: string; tags: string[] }[] = [
   {
     label: "Cloud & Infrastructure",
-    tags: ["AWS", "Azure", "GCP", "Terraform", "Docker", "S3", "EC2", "Vercel", "Netlify"],
+    tags: ["AWS", "Terraform", "Docker", "ECS", "S3", "EC2", "Lambda", "EventBridge"],
   },
   {
     label: "Languages & Scripting",
-    tags: ["Python (Boto3)", "Bash", "SQL", "TypeScript", "FastAPI"],
+    tags: ["Python", "Bash", "Boto3", "SQL", "TypeScript"],
   },
   {
-    label: "Data, Streaming & AI/LLMs",
-    tags: ["Amazon Bedrock", "Ollama", "Hugging Face", "RAG Pipelines", "Agentic AI", "Qdrant", "Neo4j", "Redis / Valkey", "SQLite", "Apache Kafka"],
+    label: "Data, Streaming & AI",
+    tags: ["Generative AI", "Large Language Models (LLMs)", "RAG", "Agentic AI", "Google Gemini", "Qdrant", "Neo4j", "Apache Kafka", "Redis"],
   },
   {
     label: "Networking & Security",
-    tags: ["Wireshark", "tcpdump", "Nginx", "Linux (Ubuntu/RHEL)", "Kali Linux", "Auth0"],
+    tags: ["Wireshark", "tcpdump", "Nginx", "Linux (Ubuntu/RHEL)", "TCP/IP", "IAM"],
   },
   {
     label: "Engineering & Practices",
-    tags: ["System Design", "CI/CD (Jenkins/GitHub)", "Datadog Observability", "SolidWorks", "Salesforce"],
+    tags: ["Site Reliability Engineering (SRE)", "System Design", "CI/CD (GitHub Actions / Jenkins)", "Datadog", "Observability", "FastAPI"],
   },
 ];
 
@@ -100,18 +101,41 @@ export function ExperienceSkills() {
               gap: "0.5rem",
             }}
           >
-            <h3
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.7rem",
-                letterSpacing: "0.12em",
-                color: "var(--color-muted)",
-                textTransform: "uppercase",
-                margin: 0,
-              }}
-            >
-              Work History
-            </h3>
+            <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+              <h3
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "0.7rem",
+                  letterSpacing: "0.12em",
+                  color: "var(--color-muted)",
+                  textTransform: "uppercase",
+                  margin: 0,
+                }}
+              >
+                Work History
+              </h3>
+              <a
+                href="https://www.linkedin.com/in/akashdip2001/details/experience/"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "0.6rem",
+                  fontWeight: 600,
+                  color: "#DC143C",
+                  background: "color-mix(in srgb, #DC143C 10%, transparent)",
+                  border: "1px solid color-mix(in srgb, #DC143C 25%, transparent)",
+                  borderRadius: "9999px",
+                  padding: "0.15rem 0.6rem",
+                  letterSpacing: "0.05em",
+                  textDecoration: "none",
+                  transition: "all 0.2s"
+                }}
+                className="hover:bg-[#DC143C]/20 hover:border-[#DC143C]/50"
+              >
+                See on LinkedIn ↗
+              </a>
+            </div>
             <span
               style={{
                 fontFamily: "var(--font-mono)",
@@ -232,18 +256,41 @@ export function ExperienceSkills() {
 
         {/* ── Right: Skills ── */}
         <div>
-          <h3
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "0.7rem",
-              letterSpacing: "0.12em",
-              color: "var(--color-muted)",
-              textTransform: "uppercase",
-              marginBottom: "1.5rem",
-            }}
-          >
-            Technical Skills
-          </h3>
+          <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1.5rem" }}>
+            <h3
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "0.7rem",
+                letterSpacing: "0.12em",
+                color: "var(--color-muted)",
+                textTransform: "uppercase",
+                margin: 0,
+              }}
+            >
+              Technical Skills
+            </h3>
+            <a
+              href="https://www.linkedin.com/in/akashdip2001/details/certifications/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "0.6rem",
+                fontWeight: 600,
+                color: "#DC143C",
+                background: "color-mix(in srgb, #DC143C 10%, transparent)",
+                border: "1px solid color-mix(in srgb, #DC143C 25%, transparent)",
+                borderRadius: "9999px",
+                padding: "0.15rem 0.6rem",
+                letterSpacing: "0.05em",
+                textDecoration: "none",
+                transition: "all 0.2s"
+              }}
+              className="hover:bg-[#DC143C]/20 hover:border-[#DC143C]/50"
+            >
+              See on LinkedIn ↗
+            </a>
+          </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
             {SKILL_GROUPS.map((group) => (
@@ -269,6 +316,8 @@ export function ExperienceSkills() {
           </div>
         </div>
       </div>
+
+      <AchievementsCarousel />
     </section>
   );
 }
