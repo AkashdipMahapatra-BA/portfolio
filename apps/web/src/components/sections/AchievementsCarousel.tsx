@@ -130,27 +130,32 @@ export function AchievementsCarousel() {
                 scrollSnapAlign: "start",
                 display: "flex",
                 flexDirection: "column",
-                cursor: "pointer"
+                cursor: "pointer",
+                perspective: "1200px"
               }}
               className="group/card"
               onClick={() => setSelectedImage(achievement.image)}
             >
               <div 
+                className="transition-all duration-500 ease-out group-hover/card:[transform:translateZ(30px)_rotateX(5deg)_rotateY(-10deg)_scale(1.08)] group-hover/card:z-10 group-hover/card:shadow-[15px_20px_35px_rgba(0,0,0,0.4)] group-hover/card:border-accent/80"
                 style={{ 
                   aspectRatio: "4/3",
                   position: "relative",
-                  borderRadius: "0.5rem",
+                  borderRadius: "0.75rem",
                   overflow: "hidden",
                   border: "1px solid var(--color-border)",
                   backgroundColor: "var(--color-surface)",
+                  transformStyle: "preserve-3d",
+                  transformOrigin: "center"
                 }}
               >
+                {/* We use object-contain on hover to 'reveal the full ratio' without cropping, and a nice dark background so the empty space looks intentional */}
                 <Image
                   src={achievement.image}
                   alt={achievement.title}
                   fill
-                  style={{ objectFit: "cover", transition: "transform 0.5s" }}
-                  className="group-hover/card:scale-105"
+                  style={{ transition: "all 0.5s ease-out" }}
+                  className="object-cover group-hover/card:object-contain group-hover/card:bg-black/80"
                 />
               </div>
               <div style={{ marginTop: "1rem", display: "flex", flexDirection: "column", flexGrow: 1 }}>
