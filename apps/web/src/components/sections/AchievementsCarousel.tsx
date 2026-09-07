@@ -11,6 +11,7 @@ const ACHIEVEMENTS = [
     company: "Tata Consultancy Services (TCS)",
     date: "July 10, 2026",
     image: "/achievements/star-of-the-month.jpg",
+    alt: "Akashdip Mahapatra - Star of the Month Award Certificate by Tata Consultancy Services (TCS) for AWS Automation and DevOps Excellence",
     description: "Awarded by my Manager for automating the complete vulnerability fix cycle from a full-day manual process down to 15 minutes. The pipeline automatically updates the main branch, deploys across all AWS environments, validates the infrastructure, and triggers auto-rollback on error."
   },
   {
@@ -19,6 +20,7 @@ const ACHIEVEMENTS = [
     company: "TCS Global Aviation Client",
     date: "August 25, 2026",
     image: "/achievements/emerging-ai-champion.jpg",
+    alt: "Akashdip Mahapatra holding the Emerging AI Champion Trophy awarded by TCS Global Aviation Client for Enterprise AI Innovation",
     description: "Honored out of the entire account by global leaders and customers. Recognized during discussions on future roadmaps and how our engineering teams tackle the hardest technical bottlenecks."
   },
   {
@@ -27,6 +29,7 @@ const ACHIEVEMENTS = [
     company: "Tata Consultancy Services (TCS)",
     date: "July 24, 2026",
     image: "/achievements/ai-fridays-s2.png",
+    alt: "Akashdip Mahapatra - AI Fridays Season 2 Certificate of Achievement for Artificial Intelligence Hackathon by TCS",
     description: "Certificate of achievement for completing the AI innovation challenge during the TCS AI Friday Hackathon."
   }
 ];
@@ -156,7 +159,7 @@ export function AchievementsCarousel() {
                 {/* We use object-contain on hover to 'reveal the full ratio' without cropping, and a nice dark background so the empty space looks intentional */}
                 <Image
                   src={achievement.image}
-                  alt={achievement.title}
+                  alt={achievement.alt}
                   fill
                   style={{ transition: "all 0.5s ease-out" }}
                   className="object-cover group-hover/card:object-contain group-hover/card:bg-black/80"
@@ -222,7 +225,7 @@ export function AchievementsCarousel() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img 
               src={selectedImage} 
-              alt="Achievement Full View" 
+              alt={ACHIEVEMENTS.find(a => a.image === selectedImage)?.alt || "Achievement Full View"} 
               style={{
                 maxWidth: "100%",
                 maxHeight: "90vh",
