@@ -115,7 +115,11 @@ export function AchievementsCarousel() {
             overflowX: "auto",
             scrollSnapType: "x mandatory",
             gap: "1.5rem",
-            paddingBottom: "1rem",
+            paddingTop: "2rem",
+            paddingBottom: "3rem",
+            paddingLeft: "1rem",
+            paddingRight: "1rem",
+            margin: "-2rem -1rem -3rem -1rem", // compensate for padding to avoid layout shift
             scrollbarWidth: "none", // Firefox
             msOverflowStyle: "none", // IE/Edge
           }}
