@@ -156,13 +156,22 @@ export function AchievementsCarousel() {
                   transformOrigin: "center"
                 }}
               >
-                {/* We use object-contain on hover to 'reveal the full ratio' without cropping, and a nice dark background so the empty space looks intentional */}
+                {/* Bottom image: uncropped (contain) with dark background. This is revealed on hover. */}
                 <Image
                   src={achievement.image}
                   alt={achievement.alt}
                   fill
-                  style={{ transition: "all 0.5s ease-out" }}
-                  className="object-cover group-hover/card:object-contain group-hover/card:bg-black/80"
+                  style={{ objectFit: "contain" }}
+                  className="bg-black/90"
+                />
+                
+                {/* Top image: cropped (cover). This fades out smoothly on hover to eliminate the object-fit jump. */}
+                <Image
+                  src={achievement.image}
+                  alt={achievement.alt}
+                  fill
+                  style={{ objectFit: "cover", transition: "opacity 0.5s ease-out" }}
+                  className="opacity-100 group-hover/card:opacity-0"
                 />
               </div>
               <div style={{ marginTop: "1rem", display: "flex", flexDirection: "column", flexGrow: 1 }}>
