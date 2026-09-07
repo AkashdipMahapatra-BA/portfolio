@@ -101,18 +101,41 @@ export function ExperienceSkills() {
               gap: "0.5rem",
             }}
           >
-            <h3
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.7rem",
-                letterSpacing: "0.12em",
-                color: "var(--color-muted)",
-                textTransform: "uppercase",
-                margin: 0,
-              }}
-            >
-              Work History
-            </h3>
+            <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+              <h3
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "0.7rem",
+                  letterSpacing: "0.12em",
+                  color: "var(--color-muted)",
+                  textTransform: "uppercase",
+                  margin: 0,
+                }}
+              >
+                Work History
+              </h3>
+              <a
+                href="https://www.linkedin.com/in/akashdip2001/details/experience/"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "0.6rem",
+                  fontWeight: 600,
+                  color: "#DC143C",
+                  background: "color-mix(in srgb, #DC143C 10%, transparent)",
+                  border: "1px solid color-mix(in srgb, #DC143C 25%, transparent)",
+                  borderRadius: "9999px",
+                  padding: "0.15rem 0.6rem",
+                  letterSpacing: "0.05em",
+                  textDecoration: "none",
+                  transition: "all 0.2s"
+                }}
+                className="hover:bg-[#DC143C]/20 hover:border-[#DC143C]/50"
+              >
+                See on LinkedIn ↗
+              </a>
+            </div>
             <span
               style={{
                 fontFamily: "var(--font-mono)",
@@ -233,18 +256,41 @@ export function ExperienceSkills() {
 
         {/* ── Right: Skills ── */}
         <div>
-          <h3
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "0.7rem",
-              letterSpacing: "0.12em",
-              color: "var(--color-muted)",
-              textTransform: "uppercase",
-              marginBottom: "1.5rem",
-            }}
-          >
-            Technical Skills
-          </h3>
+          <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1.5rem" }}>
+            <h3
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "0.7rem",
+                letterSpacing: "0.12em",
+                color: "var(--color-muted)",
+                textTransform: "uppercase",
+                margin: 0,
+              }}
+            >
+              Technical Skills
+            </h3>
+            <a
+              href="https://www.linkedin.com/in/akashdip2001/details/certifications/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "0.6rem",
+                fontWeight: 600,
+                color: "#DC143C",
+                background: "color-mix(in srgb, #DC143C 10%, transparent)",
+                border: "1px solid color-mix(in srgb, #DC143C 25%, transparent)",
+                borderRadius: "9999px",
+                padding: "0.15rem 0.6rem",
+                letterSpacing: "0.05em",
+                textDecoration: "none",
+                transition: "all 0.2s"
+              }}
+              className="hover:bg-[#DC143C]/20 hover:border-[#DC143C]/50"
+            >
+              See on LinkedIn ↗
+            </a>
+          </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
             {SKILL_GROUPS.map((group) => (
