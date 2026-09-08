@@ -122,16 +122,16 @@ export function ExperienceSkills() {
                   fontFamily: "var(--font-mono)",
                   fontSize: "0.6rem",
                   fontWeight: 600,
-                  color: "#DC143C",
-                  background: "color-mix(in srgb, #DC143C 10%, transparent)",
-                  border: "1px solid color-mix(in srgb, #DC143C 25%, transparent)",
+                  color: "#FF3366",
+                  background: "color-mix(in srgb, #FF3366 10%, transparent)",
+                  border: "1px solid color-mix(in srgb, #FF3366 25%, transparent)",
                   borderRadius: "9999px",
                   padding: "0.15rem 0.6rem",
                   letterSpacing: "0.05em",
                   textDecoration: "none",
                   transition: "all 0.2s"
                 }}
-                className="hover:bg-[#DC143C]/20 hover:border-[#DC143C]/50"
+                className="hover:bg-[#FF3366]/20 hover:border-[#FF3366]/50"
               >
                 See on LinkedIn ↗
               </a>
@@ -277,16 +277,16 @@ export function ExperienceSkills() {
                 fontFamily: "var(--font-mono)",
                 fontSize: "0.6rem",
                 fontWeight: 600,
-                color: "#DC143C",
-                background: "color-mix(in srgb, #DC143C 10%, transparent)",
-                border: "1px solid color-mix(in srgb, #DC143C 25%, transparent)",
+                color: "#FF3366",
+                background: "color-mix(in srgb, #FF3366 10%, transparent)",
+                border: "1px solid color-mix(in srgb, #FF3366 25%, transparent)",
                 borderRadius: "9999px",
                 padding: "0.15rem 0.6rem",
                 letterSpacing: "0.05em",
                 textDecoration: "none",
                 transition: "all 0.2s"
               }}
-              className="hover:bg-[#DC143C]/20 hover:border-[#DC143C]/50"
+              className="hover:bg-[#FF3366]/20 hover:border-[#FF3366]/50"
             >
               See on LinkedIn ↗
             </a>

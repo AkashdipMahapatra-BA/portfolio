@@ -12,7 +12,8 @@ const ACHIEVEMENTS = [
     date: "July 10, 2026",
     image: "/achievements/star-of-the-month.jpg",
     alt: "Akashdip Mahapatra - Star of the Month Award Certificate by Tata Consultancy Services (TCS) for AWS Automation and DevOps Excellence",
-    description: "Awarded by my Manager for automating the complete vulnerability fix cycle from a full-day manual process down to 15 minutes. The pipeline automatically updates the main branch, deploys across all AWS environments, validates the infrastructure, and triggers auto-rollback on error."
+    description: "Awarded by my Manager for automating the complete vulnerability fix cycle from a full-day manual process down to 15 minutes. The pipeline automatically updates the main branch, deploys across all AWS environments, validates the infrastructure, and triggers auto-rollback on error.",
+    postUrl: "https://www.linkedin.com/posts/akashdip2001_star-of-the-month-activity-7481447319113175041-KBmO"
   },
   {
     id: "emerging-ai-champion",
@@ -21,7 +22,8 @@ const ACHIEVEMENTS = [
     date: "August 25, 2026",
     image: "/achievements/emerging-ai-champion.jpg",
     alt: "Akashdip Mahapatra holding the Emerging AI Champion Trophy awarded by TCS Global Aviation Client for Enterprise AI Innovation",
-    description: "Honored out of the entire account by global leaders and customers. Recognized during discussions on future roadmaps and how our engineering teams tackle the hardest technical bottlenecks."
+    description: "Honored out of the entire account by global leaders and customers. Recognized during discussions on future roadmaps and how our engineering teams tackle the hardest technical bottlenecks.",
+    postUrl: "https://www.linkedin.com/posts/akashdip2001_sitereliabilityengineering-sre-aws-activity-7497984349234069504-5ymy"
   },
   {
     id: "ai-fridays-s2",
@@ -30,7 +32,8 @@ const ACHIEVEMENTS = [
     date: "July 24, 2026",
     image: "/achievements/ai-fridays-s2.png",
     alt: "Akashdip Mahapatra - AI Fridays Season 2 Certificate of Achievement for Artificial Intelligence Hackathon by TCS",
-    description: "Certificate of achievement for completing the AI innovation challenge during the TCS AI Friday Hackathon."
+    description: "Certificate of achievement for completing the AI innovation challenge during the TCS AI Friday Hackathon.",
+    postUrl: "https://www.linkedin.com/posts/akashdip2001_tcs-aifridays-generativeai-activity-7486434371344809985-LnLz"
   }
 ];
 
@@ -189,6 +192,34 @@ export function AchievementsCarousel() {
                 <p style={{ fontSize: "0.78rem", color: "var(--color-muted)", lineHeight: 1.5 }}>
                   {achievement.description}
                 </p>
+                {achievement.postUrl && (
+                  <div style={{ marginTop: "auto", paddingTop: "1rem" }}>
+                    <a
+                      href={achievement.postUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        fontFamily: "var(--font-mono)",
+                        fontSize: "0.65rem",
+                        fontWeight: 600,
+                        color: "#FF3366",
+                        background: "color-mix(in srgb, #FF3366 10%, transparent)",
+                        border: "1px solid color-mix(in srgb, #FF3366 25%, transparent)",
+                        borderRadius: "9999px",
+                        padding: "0.25rem 0.75rem",
+                        letterSpacing: "0.05em",
+                        textDecoration: "none",
+                        transition: "all 0.2s"
+                      }}
+                      className="hover:bg-[#FF3366]/20 hover:border-[#FF3366]/50"
+                    >
+                      See Post on LinkedIn ↗
+                    </a>
+                  </div>
+                )}
               </div>
             </div>
           ))}
